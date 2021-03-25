@@ -1,11 +1,11 @@
 Project Template
 ================
 
-[![Build Status](https://img.shields.io/github/workflow/status/kevinoid/node-project-template/Node.js%20CI/main.svg?style=flat&label=build)](https://github.com/kevinoid/node-project-template/actions?query=branch%3Amain)
-[![Coverage](https://img.shields.io/codecov/c/github/kevinoid/project-template.svg?style=flat)](https://codecov.io/github/kevinoid/project-template?branch=main)
-[![Dependency Status](https://img.shields.io/david/kevinoid/project-template.svg?style=flat)](https://david-dm.org/kevinoid/project-template)
-[![Supported Node Version](https://img.shields.io/node/v/@kevinoid/project-template.svg?style=flat)](https://www.npmjs.com/package/@kevinoid/project-template)
-[![Version on NPM](https://img.shields.io/npm/v/@kevinoid/project-template.svg?style=flat)](https://www.npmjs.com/package/@kevinoid/project-template)
+[![Build Status](https://img.shields.io/github/workflow/status/kevinoid/openapi-transformers/Node.js%20CI/main.svg?style=flat&label=build)](https://github.com/kevinoid/openapi-transformers/actions?query=branch%3Amain)
+[![Coverage](https://img.shields.io/codecov/c/github/kevinoid/openapi-transformers.svg?style=flat)](https://codecov.io/github/kevinoid/openapi-transformers?branch=main)
+[![Dependency Status](https://img.shields.io/david/kevinoid/openapi-transformers.svg?style=flat)](https://david-dm.org/kevinoid/openapi-transformers)
+[![Supported Node Version](https://img.shields.io/node/v/@kevinoid/openapi-transformers.svg?style=flat)](https://www.npmjs.com/package/@kevinoid/openapi-transformers)
+[![Version on NPM](https://img.shields.io/npm/v/@kevinoid/openapi-transformers.svg?style=flat)](https://www.npmjs.com/package/@kevinoid/openapi-transformers)
 
 A Node.js/npm project template with [codecov](https://codecov.io/),
 [coveralls](https://coveralls.io/), [ESLint](https://eslint.org/),
@@ -29,23 +29,23 @@ in case it may be useful to others with similar tastes.
 
 ## Installation
 
-[This package](https://www.npmjs.com/package/@kevinoid/project-template) can be
+[This package](https://www.npmjs.com/package/@kevinoid/openapi-transformers) can be
 installed using [npm](https://www.npmjs.com/), either globally or locally, by
 running:
 
 ```sh
-npm install @kevinoid/project-template
+npm install @kevinoid/openapi-transformers
 ```
 
 ## Recipes
 
 More examples can be found in the [test
-specifications](https://kevinoid.github.io/project-template/spec).
+specifications](https://kevinoid.github.io/openapi-transformers/spec).
 
 ## API Docs
 
 To use this module as a library, see the [API
-Documentation](https://kevinoid.github.io/project-template/api).
+Documentation](https://kevinoid.github.io/openapi-transformers/api).
 
 ## Contributing
 
@@ -66,7 +66,3 @@ save a lot of time and effort.
 
 This project is available under the terms of the [MIT License](LICENSE.txt).
 See the [summary at TLDRLegal](https://tldrlegal.com/license/mit-license).
-
-The [template](https://github.com/kevinoid/node-project-template) upon which
-this project is based is available under the terms of
-[CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/).

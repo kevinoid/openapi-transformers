@@ -11,7 +11,9 @@
         "test-lib/**",
         "test/**"
       ]
-    }]
+    }],
+
+    "node/shebang": "off"
   },
 
   "overrides": [
