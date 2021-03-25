@@ -110,7 +110,7 @@ class ServerVarsToPathParamsTransformer extends OpenApiTransformerBase {
         const variable = variables[varName];
         if (pathSuffixVarNames.includes(varName)) {
           // Variable in path suffix
-          if (this.options.omitDefaults.includes(varName)
+          if (this.options.omitDefault.includes(varName)
             && hasOwnProperty.call(variable, 'default')) {
             const newVariable = { ...variable };
             delete newVariable.default;
@@ -225,9 +225,9 @@ function main(args, options, cb) {
     return;
   }
 
-  const omitDefaults = [];
+  const omitDefault = [];
   while (args[i] === '-D' || args[i] === '--omit-default') {
-    omitDefaults.push(args[i + 1]);
+    omitDefault.push(args[i + 1]);
     i += 2;
   }
 
@@ -239,7 +239,7 @@ function main(args, options, cb) {
   readFile(inputPathOrDesc, { encoding: 'utf8' })
     .then((specStr) => serverVarsToPathParams(
       JSON.parse(specStr),
-      { ...options, omitDefaults },
+      { ...options, omitDefault },
     ))
     .then((spec) => writeFile(
       outputPathOrDesc,
