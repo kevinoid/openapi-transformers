@@ -5,7 +5,7 @@
  *
  * https://github.com/Azure/autorest/issues/3371
  *
- * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
+ * @copyright Copyright 2019-2021 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
 
