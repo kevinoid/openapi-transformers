@@ -14,7 +14,9 @@
 const OpenApiTransformerBase = require('openapi-transformer-base');
 const { readFile, writeFile } = require('./lib/file-utils.js');
 
-function makeEscapeString(lang, options) {
+const escapeStringSymbol = Symbol('escapeString');
+
+function makeEscapeString(lang) {
   let charToEscape = {
     '\0': '\\0',
     '\x07': '\\a',
@@ -143,14 +145,13 @@ function makeEscapeString(lang, options) {
   };
 }
 
-function escapeInSchema(schema, options) {
+function escapeInSchema(schema, escapeString) {
   const xMsEnum = schema['x-ms-enum'];
   if (!xMsEnum || schema.type !== 'string') {
     // Schema won't generate a class/enum with string values
     return schema;
   }
 
-  const { escapeString } = options;
   const xMsEnumValues = xMsEnum.values;
   if (xMsEnumValues) {
     // generator uses .x-ms-enum.values instead of .enum
@@ -175,15 +176,36 @@ function escapeInSchema(schema, options) {
 class EscapeEnumValuesTransformer extends OpenApiTransformerBase {
   constructor(options) {
     super();
-    this.options = options;
+
+    const { language } = options;
+    const typeofLanguage = typeof language;
+    switch (typeofLanguage) {
+      case 'string':
+        this[escapeStringSymbol] = makeEscapeString(language);
+        break;
+      case 'function':
+        this[escapeStringSymbol] = language;
+        break;
+      default:
+        throw new TypeError(
+          `options.language must be a string or function, got ${
+            typeofLanguage}`,
+        );
+    }
   }
 
   transformSchema(schema) {
-    return escapeInSchema(super.transformSchema(schema), this.options);
+    return escapeInSchema(
+      super.transformSchema(schema),
+      this[escapeStringSymbol],
+    );
   }
 
   transformParameter(parameter) {
-    return escapeInSchema(super.transformParameter(parameter), this.options);
+    return escapeInSchema(
+      super.transformParameter(parameter),
+      this[escapeStringSymbol],
+    );
   }
 }
 
@@ -195,40 +217,36 @@ function escapeEnumValues(spec, options) {
 }
 
 function main(args, options, cb) {
-  const firstOpt = args[2];
-  const usage = `Usage: ${args[1]} <--lang> [input] [output]\n`;
-  if (!firstOpt || !firstOpt.startsWith('--')) {
-    options.stderr.write(usage);
-    cb(1);
-    return;
-  }
+  const usage = `Usage: ${args[1]} --language <lang> [input] [output]\n`;
 
-  if (firstOpt === '--help') {
+  const firstArg = args[2];
+  if (firstArg === '--help') {
     options.stdout.write(usage);
     cb(0);
     return;
   }
 
-  let escapeString;
-  try {
-    escapeString = makeEscapeString(firstOpt.slice(2));
-  } catch (err) {
-    options.stderr.write(err);
+  if (firstArg !== '--language') {
+    options.stderr.write(`Error: First argument must be --language.\n${usage}`);
     cb(1);
     return;
   }
 
-  const inputPathOrDesc = !args[3] || args[3] === '-' ? 0 : args[3];
-  const outputPathOrDesc = !args[4] || args[4] === '-' ? 1 : args[4];
+  if (args.length < 3) {
+    options.stderr.write(`Error: --language requires an argument.\n${usage}`);
+    cb(1);
+    return;
+  }
+
+  const language = args[3];
+  const inputPathOrDesc = !args[4] || args[4] === '-' ? 0 : args[4];
+  const outputPathOrDesc = !args[5] || args[5] === '-' ? 1 : args[5];
 
   // eslint-disable-next-line promise/catch-or-return
   readFile(inputPathOrDesc, { encoding: 'utf8' })
     .then((specStr) => escapeEnumValues(
       JSON.parse(specStr),
-      {
-        ...options,
-        escapeString,
-      },
+      { language },
     ))
     .then((spec) => writeFile(
       outputPathOrDesc,
