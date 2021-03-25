@@ -55,7 +55,19 @@ function serverVariableToParameter(name, serverVar) {
 class ServerVarsToParamHostTransformer extends OpenApiTransformerBase {
   constructor(options) {
     super();
-    this.options = options;
+
+    if (options !== undefined && typeof options !== 'object') {
+      throw new TypeError('options must be an object');
+    }
+
+    const { omitDefault } = options || {};
+    if (omitDefault !== undefined && !Array.isArray(omitDefault)) {
+      throw new TypeError('options.omitDefault must be an Array');
+    }
+
+    this.options = {
+      omitDefault: omitDefault || [],
+    };
   }
 
   transformOpenApi(spec) {
