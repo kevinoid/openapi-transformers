@@ -10,8 +10,8 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 /** Applies a predicate to each schema which contributes to the generated
  * type of a given schema.
@@ -51,7 +51,7 @@ function replaceAdditionalProperties(schema) {
 
   const newSchema = { ...schema };
 
-  ['additionalProperties', 'patternProperties'].forEach((key) => {
+  for (const key of ['additionalProperties', 'patternProperties']) {
     const propSchema = newSchema[key];
     if (typeof propSchema === 'object' && propSchema !== null) {
       // Note: Use {} instead of true to work around
@@ -60,19 +60,19 @@ function replaceAdditionalProperties(schema) {
       // only covers additionalProperties on top-level schemas)
       newSchema[key] = {};
     }
-  });
+  }
 
-  ['then', 'else'].forEach((key) => {
+  for (const key of ['then', 'else']) {
     if (newSchema[key] !== undefined) {
       newSchema[key] = replaceAdditionalProperties(newSchema[key]);
     }
-  });
+  }
 
-  ['allOf', 'anyOf', 'oneOf'].forEach((key) => {
+  for (const key of ['allOf', 'anyOf', 'oneOf']) {
     if (Array.isArray(newSchema[key])) {
       newSchema[key] = newSchema[key].map(replaceAdditionalProperties);
     }
-  });
+  }
 
   return newSchema;
 }

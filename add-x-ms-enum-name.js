@@ -11,8 +11,8 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 class AddXMsEnumNameTransformer extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this

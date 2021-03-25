@@ -15,8 +15,8 @@
 
 const assert = require('assert');
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 /** Gets the scheme and authority portions of a URL template.
  *
@@ -95,10 +95,10 @@ class ServerVarsToParamHostTransformer extends OpenApiTransformerBase {
 
     // Get variables for scheme+authority
     let hostTemplateVars;
-    spec.servers.forEach((server) => {
+    for (const server of spec.servers) {
       const variables = server.variables || {};
       const serverHostTemplateVars = {};
-      hostTemplateVarNames.forEach((varName) => {
+      for (const varName of hostTemplateVarNames) {
         const variable = variables[varName];
         if (!variable) {
           throw new Error(`Variable {${varName}} in url, not in variables`);
@@ -112,7 +112,7 @@ class ServerVarsToParamHostTransformer extends OpenApiTransformerBase {
         } else {
           serverHostTemplateVars[varName] = variable;
         }
-      });
+      }
 
       if (hostTemplateVars === undefined) {
         hostTemplateVars = serverHostTemplateVars;
@@ -123,7 +123,7 @@ class ServerVarsToParamHostTransformer extends OpenApiTransformerBase {
           'shared host variables must be the same in all servers',
         );
       }
-    });
+    }
 
     return {
       ...spec,

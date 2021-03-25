@@ -11,13 +11,13 @@
 
 'use strict';
 
-const util = require('util');
+const { debuglog } = require('util');
 const { JsonPointer } = require('json-ptr');
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
-const debuglog = util.debuglog('inline-non-object-schemas');
+const debug = debuglog('inline-non-object-schemas');
 
 // JSON Schema validation keywords supported by Autorest which must be inlined
 // https://github.com/Azure/azure-sdk-for-net/blob/master/sdk/mgmtcommon/ClientRuntime/ClientRuntime/ValidationRules.cs
@@ -48,30 +48,30 @@ class InlineNonObjectSchemaTransformer extends OpenApiTransformerBase {
 
     const refSchema = this.options.resolveRef($ref);
     if (refSchema === undefined) {
-      debuglog('Unable to resolve $ref %s', $ref);
+      debug('Unable to resolve $ref %s', $ref);
       return super.transformSchema(schema);
     }
 
     if (!refSchema || !refSchema.type || refSchema.type === 'object') {
-      debuglog('Not inlining %s: type %s', $ref, refSchema && refSchema.type);
+      debug('Not inlining %s: type %s', $ref, refSchema && refSchema.type);
       return super.transformSchema(schema);
     }
 
     if (refSchema.enum) {
-      debuglog('Not inlining %s: enum', $ref);
+      debug('Not inlining %s: enum', $ref);
       return super.transformSchema(schema);
     }
 
     if (!this.options.inlineAll
       && !Object.keys(refSchema).some((prop) => validationKeywords[prop])) {
-      debuglog(
+      debug(
         'Not inlining %s: No validation keywords require inlining',
         $ref,
       );
       return super.transformSchema(schema);
     }
 
-    debuglog('Inlining %s.', $ref);
+    debug('Inlining %s.', $ref);
     return {
       ...super.transformSchema(refSchema),
       // Like Autorest, allow properties other than $ref
@@ -92,7 +92,7 @@ function inlineNonObjectSchemas(openapi, options) {
     resolveRef,
   });
   return transformer.transformOpenApi(openapi);
-};
+}
 
 function main(args, options, cb) {
   if (args[2] === '--help') {
@@ -118,7 +118,7 @@ function main(args, options, cb) {
         cb(1);  // eslint-disable-line promise/no-callback-in-promise
       },
     );
-};
+}
 
 if (require.main === module) {
   // This file was invoked directly.

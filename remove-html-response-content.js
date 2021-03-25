@@ -17,8 +17,8 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 function isHtml(mediaType) {
   return /^\s*text\/html\s*(;.*)?$/i.test(mediaType);
@@ -34,17 +34,17 @@ class RemoveHtmlResponseContentTransformer extends OpenApiTransformerBase {
     let newResponse = response;
 
     // Remove schema from OpenAPI 3 Media Type Objects
-    const { content } = newResponse;
+    const { content, schema } = newResponse;
     if (content) {
       const htmlTypes = Object.keys(content).filter(isHtml);
       if (htmlTypes.length > 0) {
         const newContent = { ...content };
-        htmlTypes.forEach((htmlType) => {
+        for (const htmlType of htmlTypes) {
           const newMediaType = { ...content[htmlType] };
           delete newMediaType.schema;
           delete newMediaType.encoding;
           newContent[htmlType] = newMediaType;
-        });
+        }
         newResponse = {
           ...newResponse,
           content: newContent,
@@ -53,7 +53,7 @@ class RemoveHtmlResponseContentTransformer extends OpenApiTransformerBase {
     }
 
     // Remove schema from OpenAPI 2 response.schema
-    if (newResponse.schema !== undefined) {
+    if (schema !== undefined) {
       newResponse = { ...newResponse };
       delete newResponse.schema;
     }

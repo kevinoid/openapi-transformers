@@ -12,8 +12,8 @@
 'use strict';
 
 const assert = require('assert');
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 class RefPathParametersTransformer extends OpenApiTransformerBase {
   transformPathItem(pathItem) {

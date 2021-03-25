@@ -10,8 +10,8 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 function isFormData(mediaType) {
   return /^multipart\/form-data\s*(;.*)?$/i.test(mediaType);
@@ -38,8 +38,8 @@ class UrlencodedToStringTransformer extends OpenApiTransformerBase {
     }
 
     // Ensure enums are modeled as string
-    const { 'x-ms-enum': xMsEnum } = newSchema;
-    if (newSchema.type === 'string'
+    const { type, 'x-ms-enum': xMsEnum } = newSchema;
+    if (type === 'string'
       && xMsEnum
       && xMsEnum.modelAsString !== true) {
       newSchema = { ...newSchema };

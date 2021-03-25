@@ -12,9 +12,9 @@
 'use strict';
 
 const assert = require('assert');
+const OpenApiTransformerBase = require('openapi-transformer-base');
 const microsoftCase = require('./lib/microsoft-case.js');
 const { readFile, writeFile } = require('./lib/file-utils.js');
-const OpenApiTransformerBase = require('openapi-transformer-base');
 
 assert(/\p{L}/u.test('X'), 'Unicode property escapes are supported.');
 

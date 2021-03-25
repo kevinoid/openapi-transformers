@@ -11,12 +11,17 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 function isNullable(schema, propName) {
-  const { properties } = schema;
-  const { additionalProperties } = schema;
+  const {
+    additionalProperties,
+    allOf,
+    anyOf,
+    oneOf,
+    properties,
+  } = schema;
   if (properties && hasOwnProperty.call(properties, propName)) {
     const propSchema = properties[propName];
     if (!propSchema.nullable && !propSchema['x-nullable']) {
@@ -26,28 +31,27 @@ function isNullable(schema, propName) {
   } else if (additionalProperties === false) {
     // would fail validation if property is present
     return false;
-  } else if (typeof additionalProperties === 'object') {
-    if (!additionalProperties.nullable
+  } else if (typeof additionalProperties === 'object'
+      && !additionalProperties.nullable
       && !additionalProperties['x-nullable']) {
-      // schema in additionalProperties does not allow null
-      return false;
-    }
+    // schema in additionalProperties does not allow null
+    return false;
   }
 
-  if (schema.allOf
-    && !schema.allOf.every((allSchema) => isNullable(allSchema, propName))) {
+  if (allOf
+    && !allOf.every((allSchema) => isNullable(allSchema, propName))) {
     // at least one schema in allOf does not allow null
     return false;
   }
 
-  if (schema.anyOf
-    && !schema.anyOf.some((anySchema) => isNullable(anySchema, propName))) {
+  if (anyOf
+    && !anyOf.some((anySchema) => isNullable(anySchema, propName))) {
     // no schema in anyOf allows null
     return false;
   }
 
-  if (schema.oneOf
-    && !schema.oneOf.some((oneSchema) => isNullable(oneSchema, propName))) {
+  if (oneOf
+    && !oneOf.some((oneSchema) => isNullable(oneSchema, propName))) {
     // no schema in oneOf allows null
     return false;
   }

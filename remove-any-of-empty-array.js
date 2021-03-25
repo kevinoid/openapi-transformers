@@ -11,8 +11,8 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 function isNotEmptyArraySchema(schema) {
   return schema.type !== 'array' || schema.maxItems !== 0;
@@ -22,7 +22,7 @@ class RemoveAnyOfEmptyArrayTransformer extends OpenApiTransformerBase {
   transformSchema(schema) {
     let newSchema = super.transformSchema(schema);
 
-    ['anyOf', 'oneOf'].forEach((anyOneOfName) => {
+    for (const anyOneOfName of ['anyOf', 'oneOf']) {
       const anyOneOf = newSchema[anyOneOfName];
       if (Array.isArray(anyOneOf)) {
         const newAnyOneOf = anyOneOf.filter(isNotEmptyArraySchema);
@@ -39,7 +39,7 @@ class RemoveAnyOfEmptyArrayTransformer extends OpenApiTransformerBase {
           }
         }
       }
-    });
+    }
 
     return newSchema;
   }

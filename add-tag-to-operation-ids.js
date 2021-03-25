@@ -12,8 +12,8 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 class AddTagToOperationIdsTransformer extends OpenApiTransformerBase {
   constructor(options) {

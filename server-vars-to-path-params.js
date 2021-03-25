@@ -13,8 +13,8 @@
 
 const assert = require('assert');
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 /** Gets the longest common suffix of two strings.
  *
@@ -66,8 +66,10 @@ function transformPaths(paths, serverPath, serverParams) {
   return Object.keys(paths)
     .reduce((newPaths, path) => {
       const pathItem = paths[path];
+      const { parameters } = pathItem;
       newPaths[serverPath + path] = {
-        parameters: serverParams.concat(pathItem.parameters || []),
+        parameters:
+          parameters ? [...serverParams, ...parameters] : serverParams,
         ...pathItem,
       };
       return newPaths;
@@ -104,7 +106,7 @@ class ServerVarsToPathParamsTransformer extends OpenApiTransformerBase {
       let haveNewVars = false;
       const newVars = {};
       const suffixVars = {};
-      Object.keys(variables).forEach((varName) => {
+      for (const varName of Object.keys(variables)) {
         const variable = variables[varName];
         if (pathSuffixVarNames.includes(varName)) {
           // Variable in path suffix
@@ -126,7 +128,7 @@ class ServerVarsToPathParamsTransformer extends OpenApiTransformerBase {
           haveNewVars = true;
           newVars[varName] = variable;
         }
-      });
+      }
 
       if (pathSuffixVars === undefined) {
         pathSuffixVars = suffixVars;

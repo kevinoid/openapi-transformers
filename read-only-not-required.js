@@ -20,8 +20,8 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 class ReadOnlyNotRequiredTransformer extends OpenApiTransformerBase {
   constructor(options) {
@@ -56,7 +56,7 @@ class ReadOnlyNotRequiredTransformer extends OpenApiTransformerBase {
       newProperties = { ...properties };
       const readOnlyRequired = required
         .filter((propName) => readOnlyNames.includes(propName));
-      readOnlyRequired.forEach((readOnlyName) => {
+      for (const readOnlyName of readOnlyRequired) {
         const newProperty = { ...properties[readOnlyName] };
 
         if (this.options.removeValidation) {
@@ -82,7 +82,7 @@ class ReadOnlyNotRequiredTransformer extends OpenApiTransformerBase {
         }
 
         newProperties[readOnlyName] = newProperty;
-      });
+      }
     }
 
     const updatedSchema = {

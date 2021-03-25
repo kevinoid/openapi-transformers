@@ -24,14 +24,14 @@ function moveXMsPaths(spec) {
 
   const paths = { ...spec.paths };
   const xMsPaths = { ...spec['x-ms-paths'] };
-  queryPaths.forEach((path) => {
+  for (const path of queryPaths) {
     assert(
       !hasOwnProperty.call(xMsPaths, path),
       `${path} already present in x-ms-paths`,
     );
     xMsPaths[path] = paths[path];
     delete paths[path];
-  });
+  }
 
   return {
     ...spec,

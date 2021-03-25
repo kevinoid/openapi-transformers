@@ -10,8 +10,8 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 function transformXDeprecated(schema) {
   const xDeprecated = schema['x-deprecated'];

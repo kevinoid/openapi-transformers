@@ -21,8 +21,8 @@
 // https://github.com/epoberezkin/fast-json-stable-stringify#benchmark
 const stringify = require('fast-json-stable-stringify');
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 const parametersSymbol = Symbol('parameters');
 const parametersMapSymbol = Symbol('parametersMap');
@@ -53,7 +53,7 @@ function parameterToKey(parameter) {
 
 function buildParametersMap(parameters) {
   const parametersMap = new Map();
-  Object.keys(parameters).forEach((paramName) => {
+  for (const paramName of Object.keys(parameters)) {
     const parameter = parameters[paramName];
     if (parameter) {
       parametersMap.set(
@@ -61,7 +61,7 @@ function buildParametersMap(parameters) {
         encodeJsonPointerComponent(paramName),
       );
     }
-  });
+  }
   return parametersMap;
 }
 
@@ -104,7 +104,7 @@ class ClientParamsToGlobalTransformer extends OpenApiTransformerBase {
       return openApi;
     }
 
-    const { components, openapi } = openApi;
+    const { components, openapi, paths } = openApi;
     if (/^3(?:\.|$)/.test(openapi)
       || (typeof components === 'object' && components !== null)) {
       const newParameters = { ...components && components.parameters };
@@ -118,7 +118,7 @@ class ClientParamsToGlobalTransformer extends OpenApiTransformerBase {
           ...components,
           parameters: newParameters,
         },
-        paths: this.transformPaths(openApi.paths),
+        paths: this.transformPaths(paths),
       };
     }
 

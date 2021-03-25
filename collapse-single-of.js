@@ -17,19 +17,19 @@
 
 'use strict';
 
-const util = require('util');
+const { debuglog, isDeepStrictEqual } = require('util');
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
-const debuglog = util.debuglog('collapse-single-of');
+const debug = debuglog('collapse-single-of');
 
 function hasCollision(schema, ofSchema, ofName) {
   return Object.keys(schema)
     .some((prop) => {
       if (hasOwnProperty.call(ofSchema, prop)
-        && !util.isDeepStrictEqual(schema[prop], ofSchema[prop])) {
-        debuglog(`Not collapsing ${ofName} due to differing ${prop}`);
+        && !isDeepStrictEqual(schema[prop], ofSchema[prop])) {
+        debug('Not collapsing %O due to differing %O', ofName, prop);
         return true;
       }
 
@@ -41,7 +41,7 @@ class CollapseSingleOfTransformer extends OpenApiTransformerBase {
   transformSchema(schema) {
     let newSchema = super.transformSchema(schema);
 
-    ['allOf', 'anyOf', 'oneOf'].forEach((ofName) => {
+    for (const ofName of ['allOf', 'anyOf', 'oneOf']) {
       const ofSchemas = newSchema[ofName];
       if (Array.isArray(ofSchemas)
           && ofSchemas.length === 1
@@ -52,7 +52,7 @@ class CollapseSingleOfTransformer extends OpenApiTransformerBase {
         };
         delete newSchema[ofName];
       }
-    });
+    }
 
     return newSchema;
   }

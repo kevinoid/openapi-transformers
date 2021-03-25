@@ -10,8 +10,8 @@
 
 'use strict';
 
-const { readFile, writeFile } = require('./lib/file-utils.js');
 const OpenApiTransformerBase = require('openapi-transformer-base');
+const { readFile, writeFile } = require('./lib/file-utils.js');
 
 const PATH_METHODS = [
   'delete',
@@ -36,7 +36,7 @@ class PathParametersToOperationTransformer extends OpenApiTransformerBase {
       parameters,
       ...newPathItem
     } = pathItem;
-    PATH_METHODS.forEach((method) => {
+    for (const method of PATH_METHODS) {
       if (hasOwnProperty.call(pathItem, method)) {
         const operation = pathItem[method];
         const opParams = operation.parameters;
@@ -46,10 +46,10 @@ class PathParametersToOperationTransformer extends OpenApiTransformerBase {
           // .name and .in match).  Either can be $ref.  Handle these.
           parameters:
             !Array.isArray(opParams) || opParams.length === 0 ? parameters
-              : parameters.concat(opParams),
+              : [...parameters, ...opParams],
         };
       }
-    });
+    }
 
     return newPathItem;
   }
