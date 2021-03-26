@@ -24,8 +24,13 @@ const OpenApiTransformerBase = require('openapi-transformer-base');
 const { readFile, writeFile } = require('./lib/file-utils.js');
 
 class ReadOnlyNotRequiredTransformer extends OpenApiTransformerBase {
-  constructor(options) {
+  constructor(options = {}) {
     super();
+
+    if (!options || typeof options !== 'object') {
+      throw new TypeError('options must be an object');
+    }
+
     this.options = options;
   }
 
