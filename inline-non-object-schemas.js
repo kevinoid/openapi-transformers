@@ -19,6 +19,9 @@ const { readFile, writeFile } = require('./lib/file-utils.js');
 
 const debug = debuglog('inline-non-object-schemas');
 
+const inlineAllSymbol = Symbol('inlineAll');
+const resolveRefSymbol = Symbol('resolveRef');
+
 // JSON Schema validation keywords supported by Autorest which must be inlined
 // https://github.com/Azure/azure-sdk-for-net/blob/master/sdk/mgmtcommon/ClientRuntime/ClientRuntime/ValidationRules.cs
 // Note: exclusiveMaximum/Minimum only modify maximum/minimum validation.
@@ -37,7 +40,23 @@ const validationKeywords = {
 class InlineNonObjectSchemaTransformer extends OpenApiTransformerBase {
   constructor(options) {
     super();
-    this.options = options;
+
+    if (options !== undefined
+      && (options === null || typeof options !== 'object')) {
+      throw new TypeError('options must be an object');
+    }
+
+    const { inlineAll, resolveRef } = options || {};
+    if (inlineAll !== undefined && typeof inlineAll !== 'boolean') {
+      throw new TypeError('inlineAll must be a boolean');
+    }
+
+    if (resolveRef !== undefined && typeof resolveRef !== 'function') {
+      throw new TypeError('resolveRef must be a function');
+    }
+
+    this[inlineAllSymbol] = Boolean(inlineAll);
+    this[resolveRefSymbol] = resolveRef;
   }
 
   transformSchema(schema) {
@@ -46,7 +65,7 @@ class InlineNonObjectSchemaTransformer extends OpenApiTransformerBase {
       return super.transformSchema(schema);
     }
 
-    const refSchema = this.options.resolveRef($ref);
+    const refSchema = this[resolveRefSymbol]($ref);
     if (refSchema === undefined) {
       debug('Unable to resolve $ref %s', $ref);
       return super.transformSchema(schema);
@@ -62,7 +81,7 @@ class InlineNonObjectSchemaTransformer extends OpenApiTransformerBase {
       return super.transformSchema(schema);
     }
 
-    if (!this.options.inlineAll
+    if (!this[inlineAllSymbol]
       && !Object.keys(refSchema).some((prop) => validationKeywords[prop])) {
       debug(
         'Not inlining %s: No validation keywords require inlining',
@@ -78,19 +97,32 @@ class InlineNonObjectSchemaTransformer extends OpenApiTransformerBase {
       ...nonRef,
     };
   }
+
+  transformOpenApi(openapi) {
+    // If resolveRefSymbol was not set from options, resolve against OpenAPI
+    // Object being transformed.
+    const optResolve = this[resolveRefSymbol];
+    if (!optResolve) {
+      this[resolveRefSymbol] = function resolveRef($ref) {
+        // JsonPointer.get would throw for non-local refs
+        return $ref[0] === '#' ? JsonPointer.get(openapi, $ref) : undefined;
+      };
+    }
+
+    try {
+      return super.transformOpenApi(openapi);
+    } finally {
+      if (optResolve) {
+        this[resolveRefSymbol] = optResolve;
+      }
+    }
+  }
 }
 
 module.exports = InlineNonObjectSchemaTransformer;
 
 function inlineNonObjectSchemas(openapi, options) {
-  function resolveRef($ref) {
-    // JsonPointer.get would throw for non-local refs
-    return $ref[0] === '#' ? JsonPointer.get(openapi, $ref) : undefined;
-  }
-  const transformer = new InlineNonObjectSchemaTransformer({
-    ...options,
-    resolveRef,
-  });
+  const transformer = new InlineNonObjectSchemaTransformer(options);
   return transformer.transformOpenApi(openapi);
 }
 
