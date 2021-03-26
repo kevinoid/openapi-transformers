@@ -33,7 +33,8 @@ class RemoveResponseHeadersTransformer extends OpenApiTransformerBase {
     if (components.responses) {
       return {
         ...components,
-        responses: this.transformResponses(components.responses),
+        responses:
+          this.transformMap(components.responses, this.transformResponse),
       };
     }
 
