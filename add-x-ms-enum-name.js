@@ -56,21 +56,44 @@ class AddXMsEnumNameTransformer extends OpenApiTransformerBase {
   }
 
   // Optimization: Only transform schemas
-  transformOpenApi(spec) {
-    const newSpec = { ...spec };
-
-    if (spec.components && spec.components.schemas) {
-      newSpec.components = {
-        ...newSpec.components,
-        schemas: this.transformSchemas(newSpec.components.schemas),
-      };
+  transformComponents(components) {
+    if (!components) {
+      return components;
     }
 
-    if (spec.definitions) {
-      newSpec.definitions = this.transformSchemas(spec.definitions);
+    const { schemas } = components;
+    if (!schemas) {
+      return components;
     }
 
-    return newSpec;
+    return {
+      ...components,
+      schemas: this.transformSchemas(schemas),
+    };
+  }
+
+  // Optimization: Only transform components/definitions
+  transformOpenApi(openApi) {
+    if (!openApi) {
+      return openApi;
+    }
+
+    const { components, definitions } = openApi;
+    if (!components && !definitions) {
+      return openApi;
+    }
+
+    const newOpenApi = { ...openApi };
+
+    if (components) {
+      newOpenApi.components = this.transformComponents(components);
+    }
+
+    if (definitions) {
+      newOpenApi.definitions = this.transformSchemas(definitions);
+    }
+
+    return newOpenApi;
   }
 }
 
