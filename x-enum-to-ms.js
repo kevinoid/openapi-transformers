@@ -15,8 +15,6 @@
 const OpenApiTransformerBase = require('openapi-transformer-base');
 const { readFile, writeFile } = require('./lib/file-utils.js');
 
-const schemaDepthSymbol = Symbol('schemaDepth');
-
 function transformSchemaXEnumToXMsEnum(schema, schemaName, options) {
   if ((!schema['x-enum-descriptions'] && !schema['x-enum-varnames'])
       || (schema['x-ms-enum'] && schema['x-ms-enum'].values)) {
@@ -62,27 +60,19 @@ class XEnumToXMsEnumTransformer extends OpenApiTransformerBase {
   constructor(options) {
     super();
     this.options = options;
-    this[schemaDepthSymbol] = 0;
   }
 
   transformSchema(schema, schemaName) {
-    this[schemaDepthSymbol] += 1;
-    try {
-      return transformSchemaXEnumToXMsEnum(
-        super.transformSchema(schema),
-        schemaName,
-        this.options,
-      );
-    } finally {
-      this[schemaDepthSymbol] -= 1;
-    }
+    return transformSchemaXEnumToXMsEnum(
+      super.transformSchema(schema),
+      schemaName,
+      this.options,
+    );
   }
 
   // Override to pass schemaName as second argument to transformSchema
   transformMap(obj, transform) {
-    // Note: When this[schemaDepthSymbol] > 0, transformMap is being called on
-    // .properties and the property name is not the schema name.
-    if (this[schemaDepthSymbol] > 0 || transform !== this.transformSchema) {
+    if (transform !== this.transformSchema) {
       return super.transformMap(obj, transform);
     }
 
