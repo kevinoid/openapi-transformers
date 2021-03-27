@@ -30,14 +30,29 @@ class AddXMsEnumNameTransformer extends OpenApiTransformerBase {
     };
   }
 
-  // Override to pass schemaName as second argument to transformSchema
+  /** Transforms Map[string,Schema] with named schemas by passing the
+   * name as the second argument to transformSchema.
+   *
+   * @param {!object<string,object>|*} schemas Schmea map to transform.
+   * @returns {!object<string,object>|*} If obj is a Map, a plain object with
+   * the same own enumerable string-keyed properties as obj with values
+   * returned by transformSchema.  Otherwise, obj is returned unchanged.
+   */
   transformSchemas(schemas) {
-    return Object.keys(schemas)
-      .reduce((newSchemas, schemaName) => {
-        newSchemas[schemaName] =
-          this.transformSchema(schemas[schemaName], schemaName);
-        return newSchemas;
-      }, Object.create(Object.getPrototypeOf(schemas)));
+    if (typeof schemas !== 'object'
+      || schemas === null
+      || Array.isArray(schemas)) {
+      return schemas;
+    }
+
+    const newSchemas = { ...schemas };
+    for (const [schemaName, schema] of Object.entries(schemas)) {
+      if (schema !== undefined) {
+        newSchemas[schemaName] = this.transformSchema(schema, schemaName);
+      }
+    }
+
+    return newSchemas;
   }
 
   // Optimization: Only transform schemas
