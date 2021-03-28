@@ -133,10 +133,21 @@ class RenameComponentsTransformer extends OpenApiTransformerBase {
 
     const renameFuncs = {};
     for (const componentFieldName of componentFieldNames) {
-      const renameFunc = options[componentFieldName];
-      if (typeof renameFunc === 'function') {
-        renameFuncs[componentFieldName] = renameFunc;
-      } else if (renameFunc !== undefined) {
+      const renameFuncOrMap = options[componentFieldName];
+      if (typeof renameFuncOrMap === 'function') {
+        renameFuncs[componentFieldName] = renameFuncOrMap;
+      } else if (typeof renameFuncOrMap === 'object') {
+        const patterns = Object.entries(renameFuncOrMap)
+          .map(([k, v]) => [new RegExp(k, 'g'), v]);
+        renameFuncs[componentFieldName] = (name) => {
+          for (const [pat, repl] of patterns) {
+            if (pat.test(name)) {
+              return name.replace(pat, repl);
+            }
+          }
+          return name;
+        };
+      } else if (renameFuncOrMap !== undefined) {
         throw new TypeError(`options.${componentFieldName} must be a function`);
       }
     }
