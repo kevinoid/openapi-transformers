@@ -22,11 +22,6 @@ class PatternPropertiesToAdditionalPropertiesTransformer
 
     schema = super.transformSchema(schema);
 
-    const { additionalProperties } = schema;
-    if (additionalProperties !== undefined) {
-      return schema;
-    }
-
     const {
       patternProperties,
       ...newSchema
@@ -46,6 +41,13 @@ class PatternPropertiesToAdditionalPropertiesTransformer
     if (uniquePropSchemas.length === 0) {
       // Remove empty patternProperties object.
       return newSchema;
+    }
+
+    const { additionalProperties } = schema;
+    if (additionalProperties !== undefined
+      && !uniquePropSchemas
+        .some((s) => isDeepStrictEqual(s, additionalProperties))) {
+      uniquePropSchemas.push(additionalProperties);
     }
 
     if (uniquePropSchemas.length === 1) {
