@@ -44,7 +44,8 @@ class PatternPropertiesToAdditionalPropertiesTransformer
     }
 
     if (uniquePropSchemas.length === 0) {
-      return schema;
+      // Remove empty patternProperties object.
+      return newSchema;
     }
 
     if (uniquePropSchemas.length === 1) {
