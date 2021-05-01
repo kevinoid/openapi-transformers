@@ -13,7 +13,10 @@
       ]
     }],
 
-    "node/shebang": "off"
+    "node/shebang": "off",
+
+    // Allow CommonJS modules
+    "unicorn/prefer-module": "off"
   },
 
   "overrides": [
