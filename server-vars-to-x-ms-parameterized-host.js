@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Convert Server Variables in host portion to x-ms-parameterized-host for use
  * with OpenAPI 2.
@@ -16,7 +15,6 @@
 const assert = require('assert');
 
 const OpenApiTransformerBase = require('openapi-transformer-base');
-const { readFile, writeFile } = require('./lib/file-utils.js');
 
 /** Gets the scheme and authority portions of a URL template.
  *
@@ -154,54 +152,3 @@ class ServerVarsToParamHostTransformer extends OpenApiTransformerBase {
 }
 
 module.exports = ServerVarsToParamHostTransformer;
-
-function serverVarsToParamHost(spec, options) {
-  const transformer = new ServerVarsToParamHostTransformer(options);
-  return transformer.transformOpenApi(spec);
-}
-
-function main(args, options, cb) {
-  // TODO: Proper command-line parsing
-
-  let i = 2;
-  if (args[i] === '--help') {
-    options.stdout.write(`Usage: ${args[1]} [options] [input] [output]\n`);
-    cb(0);
-    return;
-  }
-
-  const omitDefault = [];
-  while (args[i] === '-D' || args[i] === '--omit-default') {
-    omitDefault.push(args[i + 1]);
-    i += 2;
-  }
-
-  const inputPathOrDesc = !args[i] || args[i] === '-' ? 0 : args[i];
-  i += 1;
-  const outputPathOrDesc = !args[i] || args[i] === '-' ? 1 : args[i];
-
-  // eslint-disable-next-line promise/catch-or-return
-  readFile(inputPathOrDesc, { encoding: 'utf8' })
-    .then((specStr) => serverVarsToParamHost(
-      JSON.parse(specStr),
-      { ...options, omitDefault },
-    ))
-    .then((spec) => writeFile(
-      outputPathOrDesc,
-      JSON.stringify(spec, undefined, 2),
-    ))
-    .then(
-      () => cb(0),  // eslint-disable-line promise/no-callback-in-promise
-      (err) => {
-        options.stderr.write(`${err.stack}\n`);
-        cb(1);  // eslint-disable-line promise/no-callback-in-promise
-      },
-    );
-}
-
-if (require.main === module) {
-  // This file was invoked directly.
-  main(process.argv, process, (exitCode) => {
-    process.exitCode = exitCode;
-  });
-}

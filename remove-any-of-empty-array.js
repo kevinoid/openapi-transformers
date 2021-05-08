@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Script to remove empty arrays from anyOf and oneOf schemas.  Empty arrays
  * are returned in place of empty objects by the BambooHR API in some places
@@ -12,7 +11,6 @@
 'use strict';
 
 const OpenApiTransformerBase = require('openapi-transformer-base');
-const { readFile, writeFile } = require('./lib/file-utils.js');
 
 function isNotEmptyArraySchema(schema) {
   return schema.type !== 'array' || schema.maxItems !== 0;
@@ -46,41 +44,3 @@ class RemoveAnyOfEmptyArrayTransformer extends OpenApiTransformerBase {
 }
 
 module.exports = RemoveAnyOfEmptyArrayTransformer;
-
-function removeAnyOfEmptyArray(spec) {
-  const transformer = new RemoveAnyOfEmptyArrayTransformer();
-  return transformer.transformOpenApi(spec);
-}
-
-function main(args, options, cb) {
-  if (args[2] === '--help') {
-    options.stdout.write(`Usage: ${args[1]} [input] [output]\n`);
-    cb(0);
-    return;
-  }
-
-  const inputPathOrDesc = !args[2] || args[2] === '-' ? 0 : args[2];
-  const outputPathOrDesc = !args[3] || args[3] === '-' ? 1 : args[3];
-
-  // eslint-disable-next-line promise/catch-or-return
-  readFile(inputPathOrDesc, { encoding: 'utf8' })
-    .then((specStr) => removeAnyOfEmptyArray(JSON.parse(specStr)))
-    .then((spec) => writeFile(
-      outputPathOrDesc,
-      JSON.stringify(spec, undefined, 2),
-    ))
-    .then(
-      () => cb(0),  // eslint-disable-line promise/no-callback-in-promise
-      (err) => {
-        options.stderr.write(`${err.stack}\n`);
-        cb(1);  // eslint-disable-line promise/no-callback-in-promise
-      },
-    );
-}
-
-if (require.main === module) {
-  // This file was invoked directly.
-  main(process.argv, process, (exitCode) => {
-    process.exitCode = exitCode;
-  });
-}
