@@ -8,9 +8,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const assert = require('assert');
+import assert from 'assert';
 
 function moveXMsPaths(spec) {
   const queryPaths = Object.keys(spec.paths)
@@ -38,7 +36,8 @@ function moveXMsPaths(spec) {
   };
 }
 
-module.exports = function factory(options) {
+// eslint-disable-next-line import/no-unused-modules
+export default function factory(options) {
   // TODO: Inherit from OpenApiTransformerBase
   return { transformOpenApi: moveXMsPaths };
-};
+}

@@ -14,11 +14,9 @@
  * @license MIT
  */
 
-'use strict';
+import { debuglog, isDeepStrictEqual } from 'util';
 
-const { debuglog, isDeepStrictEqual } = require('util');
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const debug = debuglog('collapse-single-of');
 
@@ -35,7 +33,9 @@ function hasCollision(schema, ofSchema, ofName) {
     });
 }
 
-class CollapseSingleOfTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class CollapseSingleOfTransformer
+  extends OpenApiTransformerBase {
   transformSchema(schema) {
     let newSchema = super.transformSchema(schema);
 
@@ -55,5 +55,3 @@ class CollapseSingleOfTransformer extends OpenApiTransformerBase {
     return newSchema;
   }
 }
-
-module.exports = CollapseSingleOfTransformer;

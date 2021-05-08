@@ -6,11 +6,11 @@
  * @license MIT
  */
 
-'use strict';
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const OpenApiTransformerBase = require('openapi-transformer-base');
-
-class AdditionalPropertiesToObjectTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class AdditionalPropertiesToObjectTransformer
+  extends OpenApiTransformerBase {
   transformSchema(schema) {
     if (typeof schema !== 'object' || schema === null) {
       return schema;
@@ -32,5 +32,3 @@ class AdditionalPropertiesToObjectTransformer extends OpenApiTransformerBase {
     };
   }
 }
-
-module.exports = AdditionalPropertiesToObjectTransformer;

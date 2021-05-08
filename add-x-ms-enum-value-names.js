@@ -8,11 +8,9 @@
  * @license MIT
  */
 
-'use strict';
-
-const assert = require('assert');
-const OpenApiTransformerBase = require('openapi-transformer-base');
-const microsoftCase = require('./lib/microsoft-case.js');
+import assert from 'assert';
+import OpenApiTransformerBase from 'openapi-transformer-base';
+import microsoftCase from './lib/microsoft-case.js';
 
 assert(/\p{L}/u.test('X'), 'Unicode property escapes are supported.');
 
@@ -125,7 +123,9 @@ function addXMsEnumValueNamesToSchema(schema, schemaName, options) {
   };
 }
 
-class AddXMsEnumValueNamesTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class AddXMsEnumValueNamesTransformer
+  extends OpenApiTransformerBase {
   constructor(options) {
     super();
     this.options = options;
@@ -145,5 +145,3 @@ class AddXMsEnumValueNamesTransformer extends OpenApiTransformerBase {
     );
   }
 }
-
-module.exports = AddXMsEnumValueNamesTransformer;

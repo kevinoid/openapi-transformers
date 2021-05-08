@@ -8,11 +8,9 @@
  * @license MIT
  */
 
-'use strict';
+import assert from 'assert';
 
-const assert = require('assert');
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /** Gets the longest common suffix of two strings.
  *
@@ -74,7 +72,9 @@ function transformPaths(paths, serverPath, serverParams) {
     }, Object.create(Object.getPrototypeOf(paths)));
 }
 
-class ServerVarsToPathParamsTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class ServerVarsToPathParamsTransformer
+  extends OpenApiTransformerBase {
   constructor(options) {
     super();
 
@@ -217,5 +217,3 @@ class ServerVarsToPathParamsTransformer extends OpenApiTransformerBase {
     return newSpec;
   }
 }
-
-module.exports = ServerVarsToPathParamsTransformer;

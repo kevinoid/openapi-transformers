@@ -8,9 +8,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function isNullable(schema, propName) {
   const {
@@ -57,7 +55,9 @@ function isNullable(schema, propName) {
   return true;
 }
 
-class NullableNotRequiredTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class NullableNotRequiredTransformer
+  extends OpenApiTransformerBase {
   transformSchema(schema) {
     const newSchema = super.transformSchema(schema);
     if (!newSchema.required) {
@@ -71,5 +71,3 @@ class NullableNotRequiredTransformer extends OpenApiTransformerBase {
     };
   }
 }
-
-module.exports = NullableNotRequiredTransformer;

@@ -7,9 +7,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const PATH_METHODS = [
   'delete',
@@ -22,7 +20,9 @@ const PATH_METHODS = [
   'trace',
 ];
 
-class PathParametersToOperationTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class PathParametersToOperationTransformer
+  extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformPathItem(pathItem) {
     if (!Array.isArray(pathItem.parameters)
@@ -60,5 +60,3 @@ class PathParametersToOperationTransformer extends OpenApiTransformerBase {
     };
   }
 }
-
-module.exports = PathParametersToOperationTransformer;

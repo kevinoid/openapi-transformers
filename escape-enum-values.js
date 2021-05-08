@@ -8,9 +8,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const escapeStringSymbol = Symbol('escapeString');
 
@@ -171,7 +169,9 @@ function escapeInSchema(schema, escapeString) {
   };
 }
 
-class EscapeEnumValuesTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class EscapeEnumValuesTransformer
+  extends OpenApiTransformerBase {
   constructor(options) {
     super();
 
@@ -206,5 +206,3 @@ class EscapeEnumValuesTransformer extends OpenApiTransformerBase {
     );
   }
 }
-
-module.exports = EscapeEnumValuesTransformer;

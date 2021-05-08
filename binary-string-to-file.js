@@ -6,9 +6,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function transformSchemaType(schema) {
   if (schema.type === 'string'
@@ -24,7 +22,9 @@ function transformSchemaType(schema) {
   return schema;
 }
 
-class BinaryStringToFileTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class BinaryStringToFileTransformer
+  extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformSchema(schema) {
     // Don't call super, since `type: file` is only allowed on root schema of
@@ -41,5 +41,3 @@ class BinaryStringToFileTransformer extends OpenApiTransformerBase {
     return transformSchemaType(parameter);
   }
 }
-
-module.exports = BinaryStringToFileTransformer;

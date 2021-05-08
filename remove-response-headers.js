@@ -10,11 +10,11 @@
  * @license MIT
  */
 
-'use strict';
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const OpenApiTransformerBase = require('openapi-transformer-base');
-
-class RemoveResponseHeadersTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class RemoveResponseHeadersTransformer
+  extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformResponse(response) {
     if (response.headers) {
@@ -39,5 +39,3 @@ class RemoveResponseHeadersTransformer extends OpenApiTransformerBase {
     return components;
   }
 }
-
-module.exports = RemoveResponseHeadersTransformer;

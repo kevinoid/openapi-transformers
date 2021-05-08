@@ -10,11 +10,9 @@
  * @license MIT
  */
 
-'use strict';
+import assert from 'assert';
 
-const assert = require('assert');
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /** Gets the scheme and authority portions of a URL template.
  *
@@ -50,7 +48,9 @@ function serverVariableToParameter(name, serverVar) {
   return serverParam;
 }
 
-class ServerVarsToParamHostTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class ServerVarsToParamHostTransformer
+  extends OpenApiTransformerBase {
   constructor(options) {
     super();
 
@@ -150,5 +150,3 @@ class ServerVarsToParamHostTransformer extends OpenApiTransformerBase {
     };
   }
 }
-
-module.exports = ServerVarsToParamHostTransformer;

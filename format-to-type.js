@@ -8,9 +8,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function transformSchemaType(schema) {
   if (schema.type === 'string') {
@@ -39,7 +37,8 @@ function transformSchemaType(schema) {
   return schema;
 }
 
-class FormatToTypeTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class FormatToTypeTransformer extends OpenApiTransformerBase {
   transformSchema(schema) {
     return transformSchemaType(super.transformSchema(schema));
   }
@@ -52,5 +51,3 @@ class FormatToTypeTransformer extends OpenApiTransformerBase {
     return transformSchemaType(super.transformHeader(header));
   }
 }
-
-module.exports = FormatToTypeTransformer;

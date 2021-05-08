@@ -6,12 +6,11 @@
  * @license MIT
  */
 
-'use strict';
+import OpenApiTransformerBase from 'openapi-transformer-base';
+import { isDeepStrictEqual } from 'util';
 
-const OpenApiTransformerBase = require('openapi-transformer-base');
-const { isDeepStrictEqual } = require('util');
-
-class PatternPropertiesToAdditionalPropertiesTransformer
+// eslint-disable-next-line import/no-unused-modules
+export default class PatternPropertiesToAdditionalPropertiesTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {
     if (typeof schema !== 'object' || schema === null) {
@@ -49,7 +48,6 @@ class PatternPropertiesToAdditionalPropertiesTransformer
     }
 
     if (uniquePropSchemas.length === 1) {
-      // eslint-disable-next-line prefer-destructuring
       newSchema.additionalProperties = uniquePropSchemas[0];
     } else {
       newSchema.additionalProperties = { anyOf: uniquePropSchemas };
@@ -58,5 +56,3 @@ class PatternPropertiesToAdditionalPropertiesTransformer
     return newSchema;
   }
 }
-
-module.exports = PatternPropertiesToAdditionalPropertiesTransformer;

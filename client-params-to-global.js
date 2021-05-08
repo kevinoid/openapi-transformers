@@ -12,15 +12,13 @@
  * @license MIT
  */
 
-'use strict';
-
 // Any unique, deterministic stringify function would work.
 // TODO: Benchmark against native JSON.stringify result of sort-keys deep
 // https://github.com/sindresorhus/hash-obj/blob/master/index.js#L17
 // https://github.com/epoberezkin/fast-json-stable-stringify#benchmark
-const stringify = require('fast-json-stable-stringify');
+import stringify from 'fast-json-stable-stringify';
 
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const parametersSymbol = Symbol('parameters');
 const parametersMapSymbol = Symbol('parametersMap');
@@ -75,7 +73,9 @@ function getUnusedPropName(obj, propName) {
   }
 }
 
-class ClientParamsToGlobalTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class ClientParamsToGlobalTransformer
+  extends OpenApiTransformerBase {
   transformParameter(parameter) {
     if (!parameter || parameter['x-ms-parameter-location'] !== 'client') {
       return parameter;
@@ -138,5 +138,3 @@ class ClientParamsToGlobalTransformer extends OpenApiTransformerBase {
     return openApi;
   }
 }
-
-module.exports = ClientParamsToGlobalTransformer;

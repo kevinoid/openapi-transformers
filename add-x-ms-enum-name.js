@@ -8,11 +8,10 @@
  * @license MIT
  */
 
-'use strict';
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const OpenApiTransformerBase = require('openapi-transformer-base');
-
-class AddXMsEnumNameTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class AddXMsEnumNameTransformer extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformSchema(schema, schemaName) {
     if (!schema.enum || (schema['x-ms-enum'] && schema['x-ms-enum'].name)) {
@@ -94,5 +93,3 @@ class AddXMsEnumNameTransformer extends OpenApiTransformerBase {
     return newOpenApi;
   }
 }
-
-module.exports = AddXMsEnumNameTransformer;

@@ -9,9 +9,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function transformSchemaXEnumToXMsEnum(schema, schemaName, options) {
   if ((!schema['x-enum-descriptions'] && !schema['x-enum-varnames'])
@@ -54,7 +52,8 @@ function transformSchemaXEnumToXMsEnum(schema, schemaName, options) {
   return newSchema;
 }
 
-class XEnumToXMsEnumTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class XEnumToXMsEnumTransformer extends OpenApiTransformerBase {
   constructor(options) {
     super();
     this.options = options;
@@ -96,5 +95,3 @@ class XEnumToXMsEnumTransformer extends OpenApiTransformerBase {
     );
   }
 }
-
-module.exports = XEnumToXMsEnumTransformer;

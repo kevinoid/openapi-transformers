@@ -5,9 +5,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const renameFuncsSymbol = Symbol('renameFuncs');
 
@@ -120,7 +118,9 @@ function renameRefObj(jsonPtrRegexp, obj, renameFunc) {
   return undefined;
 }
 
-class RenameComponentsTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class RenameComponentsTransformer
+  extends OpenApiTransformerBase {
   constructor(options) {
     super();
 
@@ -273,5 +273,3 @@ class RenameComponentsTransformer extends OpenApiTransformerBase {
     return openApi;
   }
 }
-
-module.exports = RenameComponentsTransformer;

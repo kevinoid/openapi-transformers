@@ -14,15 +14,15 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function isHtml(mediaType) {
   return /^\s*text\/html\s*(;.*)?$/i.test(mediaType);
 }
 
-class RemoveHtmlResponseContentTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class RemoveHtmlResponseContentTransformer
+  extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformResponse(response) {
     if (!response) {
@@ -74,5 +74,3 @@ class RemoveHtmlResponseContentTransformer extends OpenApiTransformerBase {
     return super.transformOperation(operation);
   }
 }
-
-module.exports = RemoveHtmlResponseContentTransformer;

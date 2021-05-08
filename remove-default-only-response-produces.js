@@ -11,11 +11,10 @@
  * @license MIT
  */
 
-'use strict';
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const OpenApiTransformerBase = require('openapi-transformer-base');
-
-class RemoveDefaultOnlyResponseProducesTransformer
+// eslint-disable-next-line import/no-unused-modules
+export default class RemoveDefaultOnlyResponseProducesTransformer
   extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformOperation(operation) {
@@ -40,7 +39,7 @@ class RemoveDefaultOnlyResponseProducesTransformer
     // removing the schema type (which is what we are trying to return).
     if (!openApi || openApi.swagger !== '2.0') {
       throw new Error(
-        `${__filename} can only be applied to OpenAPI 2.0 documents`,
+        `${this.constructor.name} can only be applied to OpenAPI 2.0 documents`,
       );
     }
 
@@ -56,5 +55,3 @@ class RemoveDefaultOnlyResponseProducesTransformer
     };
   }
 }
-
-module.exports = RemoveDefaultOnlyResponseProducesTransformer;

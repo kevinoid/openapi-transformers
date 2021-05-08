@@ -8,12 +8,10 @@
  * @license MIT
  */
 
-'use strict';
+import { debuglog } from 'util';
+import { JsonPointer } from 'json-ptr';
 
-const { debuglog } = require('util');
-const { JsonPointer } = require('json-ptr');
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const debug = debuglog('inline-non-object-schemas');
 
@@ -35,7 +33,9 @@ const validationKeywords = {
   uniqueItems: true,
 };
 
-class InlineNonObjectSchemaTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class InlineNonObjectSchemaTransformer
+  extends OpenApiTransformerBase {
   constructor(options) {
     super();
 
@@ -116,5 +116,3 @@ class InlineNonObjectSchemaTransformer extends OpenApiTransformerBase {
     }
   }
 }
-
-module.exports = InlineNonObjectSchemaTransformer;

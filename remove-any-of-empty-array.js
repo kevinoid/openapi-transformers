@@ -8,15 +8,15 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function isNotEmptyArraySchema(schema) {
   return schema.type !== 'array' || schema.maxItems !== 0;
 }
 
-class RemoveAnyOfEmptyArrayTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class RemoveAnyOfEmptyArrayTransformer
+  extends OpenApiTransformerBase {
   transformSchema(schema) {
     let newSchema = super.transformSchema(schema);
 
@@ -42,5 +42,3 @@ class RemoveAnyOfEmptyArrayTransformer extends OpenApiTransformerBase {
     return newSchema;
   }
 }
-
-module.exports = RemoveAnyOfEmptyArrayTransformer;

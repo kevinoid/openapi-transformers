@@ -9,11 +9,11 @@
  * @license MIT
  */
 
-'use strict';
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const OpenApiTransformerBase = require('openapi-transformer-base');
-
-class AddTagToOperationIdsTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class AddTagToOperationIdsTransformer
+  extends OpenApiTransformerBase {
   constructor(options) {
     super();
     this.tagSuffix = String((options && options.tagSuffix) || '');
@@ -38,5 +38,3 @@ class AddTagToOperationIdsTransformer extends OpenApiTransformerBase {
     };
   }
 }
-
-module.exports = AddTagToOperationIdsTransformer;

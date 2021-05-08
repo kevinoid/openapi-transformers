@@ -6,11 +6,10 @@
  * @license MIT
  */
 
-'use strict';
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const OpenApiTransformerBase = require('openapi-transformer-base');
-
-class RemovePathsWithServers extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class RemovePathsWithServers extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformPaths(paths) {
     return Object.keys(paths)
@@ -31,5 +30,3 @@ class RemovePathsWithServers extends OpenApiTransformerBase {
     };
   }
 }
-
-module.exports = RemovePathsWithServers;

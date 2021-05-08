@@ -7,9 +7,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function isFormData(mediaType) {
   return /^multipart\/form-data\s*(;.*)?$/i.test(mediaType);
@@ -19,7 +17,9 @@ function isUrlencoded(mediaType) {
   return /^application\/x-www-form-urlencoded\s*(;.*)?$/i.test(mediaType);
 }
 
-class UrlencodedToStringTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class UrlencodedToStringTransformer
+  extends OpenApiTransformerBase {
   transformSchema(schema) {
     if (typeof schema !== 'object' || schema === null) {
       return schema;
@@ -112,5 +112,3 @@ class UrlencodedToStringTransformer extends OpenApiTransformerBase {
     };
   }
 }
-
-module.exports = UrlencodedToStringTransformer;

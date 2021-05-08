@@ -7,9 +7,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function transformXDeprecated(schema) {
   const xDeprecated = schema['x-deprecated'];
@@ -28,7 +26,9 @@ function transformXDeprecated(schema) {
   return schema;
 }
 
-class ReplacedByToDescriptionTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class ReplacedByToDescriptionTransformer
+  extends OpenApiTransformerBase {
   transformSchema(schema) {
     return transformXDeprecated(super.transformSchema(schema));
   }
@@ -45,5 +45,3 @@ class ReplacedByToDescriptionTransformer extends OpenApiTransformerBase {
     return transformXDeprecated(super.transformOperation(operation));
   }
 }
-
-module.exports = ReplacedByToDescriptionTransformer;

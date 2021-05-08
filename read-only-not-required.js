@@ -17,11 +17,11 @@
  * @license MIT
  */
 
-'use strict';
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const OpenApiTransformerBase = require('openapi-transformer-base');
-
-class ReadOnlyNotRequiredTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class ReadOnlyNotRequiredTransformer
+  extends OpenApiTransformerBase {
   constructor(options = {}) {
     super();
 
@@ -99,5 +99,3 @@ class ReadOnlyNotRequiredTransformer extends OpenApiTransformerBase {
     return updatedSchema;
   }
 }
-
-module.exports = ReadOnlyNotRequiredTransformer;

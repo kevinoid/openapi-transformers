@@ -8,12 +8,12 @@
  * @license MIT
  */
 
-'use strict';
+import assert from 'assert';
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const assert = require('assert');
-const OpenApiTransformerBase = require('openapi-transformer-base');
-
-class RefPathParametersTransformer extends OpenApiTransformerBase {
+// eslint-disable-next-line import/no-unused-modules
+export default class RefPathParametersTransformer
+  extends OpenApiTransformerBase {
   transformPathItem(pathItem) {
     if (!pathItem.parameters) {
       return pathItem;
@@ -57,5 +57,3 @@ class RefPathParametersTransformer extends OpenApiTransformerBase {
     return newSpec;
   }
 }
-
-module.exports = RefPathParametersTransformer;

@@ -7,9 +7,7 @@
  * @license MIT
  */
 
-'use strict';
-
-const OpenApiTransformerBase = require('openapi-transformer-base');
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /** Applies a predicate to each schema which contributes to the generated
  * type of a given schema.
@@ -98,7 +96,8 @@ function hasConstrainedAdditionalProps(schema) {
         && Object.keys(schema.patternProperties).length > 0));
 }
 
-class AdditionalPropertiesToUnconstrainedTransformer
+// eslint-disable-next-line import/no-unused-modules
+export default class AdditionalPropertiesToUnconstrainedTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {
     let newSchema;
@@ -113,5 +112,3 @@ class AdditionalPropertiesToUnconstrainedTransformer
     return super.transformSchema(newSchema);
   }
 }
-
-module.exports = AdditionalPropertiesToUnconstrainedTransformer;
