@@ -36,8 +36,18 @@ export default class BinaryStringToFileTransformer
 
   // eslint-disable-next-line class-methods-use-this
   transformParameter(parameter) {
-    // Since `type: file` is not supported in OAS3,
-    // no need to transform .schema property
-    return transformSchemaType(parameter);
+    if (parameter === null || typeof parameter !== 'object') {
+      return parameter;
+    }
+
+    let newParameter = transformSchemaType(parameter);
+    if (newParameter.schema) {
+      newParameter = {
+        ...newParameter,
+        schema: transformSchemaType(newParameter.schema),
+      };
+    }
+
+    return newParameter;
   }
 }
