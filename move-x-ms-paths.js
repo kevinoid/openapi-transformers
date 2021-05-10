@@ -4,6 +4,15 @@
  *
  * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-paths
  *
+ * This is used to work around lack of support for multiple operations with the
+ * same path and method:
+ * https://github.com/OAI/OpenAPI-Specification/issues/791
+ *
+ * Putting query in path is not allowed by any current version of OpenAPI
+ * https://github.com/OAI/OpenAPI-Specification/issues/468#issuecomment-142393969
+ * but it has the benefit of working with lots of tooling without support for
+ * x-ms-paths (e.g. for linting, docs generation, etc.)
+ *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
