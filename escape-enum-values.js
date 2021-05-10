@@ -108,10 +108,13 @@ function makeEscapeString(lang) {
 
     case 'ruby':
       // Note: AutoRest currently produces single-quoted strings.
-      // Can only escape ' and \
+      // Single-quoted strings only accept \' and \\ escapes.
+      // https://docs.ruby-lang.org/en/2.4.0/syntax/literals_rdoc.html#label-Strings
       charRange = "'\\\\";
-      charToEscape = {};
-      charToEscape['\x1B'] = '\\e';
+      charToEscape = {
+        "'": "\\'",
+        '\\': '\\\\',
+      };
       toCodeEscape = (c) => c;
       break;
 
