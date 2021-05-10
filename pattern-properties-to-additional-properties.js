@@ -1,8 +1,10 @@
 /**
- * Script to replace boolean additionalProperties with an object schema to
- * work around https://github.com/Azure/autorest/issues/3439.
+ * Script to combine any patternProperties into additionalProperties (for
+ * conversion from OpenAPI 3.1 to prior versions before patternProperties
+ * was supported).
+ * https://github.com/OAI/OpenAPI-Specification/issues/687
  *
- * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
+ * @copyright Copyright 2021 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
 
