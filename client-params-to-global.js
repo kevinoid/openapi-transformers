@@ -66,7 +66,7 @@ function getUnusedPropName(obj, propName) {
     return propName;
   }
 
-  for (let i = 0; ; i += 1) {
+  for (let i = 2; ; i += 1) {
     if (!hasOwnProperty.call(obj, propName + i)) {
       return propName + i;
     }
