@@ -60,7 +60,8 @@ export default class NullableNotRequiredTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {
     const newSchema = super.transformSchema(schema);
-    if (!newSchema.required) {
+    if (!Array.isArray(newSchema.required)
+      || newSchema.required.length === 0) {
       return newSchema;
     }
 
