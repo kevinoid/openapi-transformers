@@ -29,6 +29,16 @@ export default class ReadOnlyNotRequiredTransformer
       throw new TypeError('options must be an object');
     }
 
+    if (options.removeValidation !== undefined
+      && typeof options.removeValidation !== 'boolean') {
+      throw new TypeError('options.removeValidation must be boolean');
+    }
+
+    if (options.setNonNullable !== undefined
+      && typeof options.setNonNullable !== 'boolean') {
+      throw new TypeError('options.setNonNullable must be boolean');
+    }
+
     this.options = options;
   }
 
