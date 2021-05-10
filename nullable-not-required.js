@@ -64,10 +64,16 @@ export default class NullableNotRequiredTransformer
       return newSchema;
     }
 
-    return {
+    const transformed = {
       ...newSchema,
       required: newSchema.required
         .filter((reqName) => !isNullable(newSchema, reqName)),
     };
+
+    if (transformed.required.length === 0) {
+      delete transformed.required;
+    }
+
+    return transformed;
   }
 }
