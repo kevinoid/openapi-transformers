@@ -54,13 +54,20 @@ export default class ServerVarsToParamHostTransformer
       throw new TypeError('options must be an object');
     }
 
-    const { omitDefault } = options;
+    const { omitDefault, xMsParameterizedHost } = options;
     if (omitDefault !== undefined && !Array.isArray(omitDefault)) {
       throw new TypeError('options.omitDefault must be an Array');
     }
 
+    if (xMsParameterizedHost !== undefined
+      && (xMsParameterizedHost === null
+        || typeof xMsParameterizedHost !== 'object')) {
+      throw new TypeError('options.xMsParameterizedHost must be a object');
+    }
+
     this.options = {
       omitDefault: omitDefault || [],
+      xMsParameterizedHost,
     };
   }
 
@@ -136,12 +143,12 @@ export default class ServerVarsToParamHostTransformer
       'x-ms-parameterized-host': {
         hostTemplate,
         useSchemePrefix,
-        positionInOperation: this.options.positionInOperation,
         parameters: hostTemplateVarNames
           .map((varName) => serverVariableToParameter(
             varName,
             hostTemplateVars[varName],
           )),
+        ...this.options.xMsParameterizedHost,
       },
     };
   }
