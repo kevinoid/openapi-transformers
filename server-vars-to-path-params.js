@@ -166,8 +166,8 @@ export default class ServerVarsToPathParamsTransformer
     // client, rather than the method, by default (which is what we want here).
     // https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-parameter-location
     let parameters, paramRefPrefix;
-    if (spec.components) {
-      parameters = { ...spec.components.parameters };
+    if (spec.openapi) {
+      parameters = { ...spec.components && spec.components.parameters };
       paramRefPrefix = '#/components/parameters/';
     } else {
       parameters = { ...spec.parameters };
@@ -180,15 +180,22 @@ export default class ServerVarsToPathParamsTransformer
         name,
         in: 'path',
         required: true,
-        schema: {
+      };
+      if (spec.openapi) {
+        serverParam.schema = {
           type: 'string',
           ...serverVar,
-        },
-      };
-      if (hasOwnProperty.call(serverVar, 'description')) {
-        serverParam.description = serverVar.description;
-        delete serverParam.schema.description;
+        };
+
+        if (hasOwnProperty.call(serverVar, 'description')) {
+          serverParam.description = serverVar.description;
+          delete serverParam.schema.description;
+        }
+      } else {
+        serverParam.type = 'string';
+        Object.assign(serverParam, serverVar);
       }
+
       if (hasOwnProperty.call(parameters, name)) {
         throw new Error(
           `Server variable ${name} conflicts with parameter of same name.`,
@@ -205,7 +212,7 @@ export default class ServerVarsToPathParamsTransformer
       paths: transformPaths(spec.paths, newPathPrefix, serverParamRefs),
     };
 
-    if (spec.components) {
+    if (spec.openapi) {
       newSpec.components = {
         ...spec.components,
         parameters,
