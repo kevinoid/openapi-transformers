@@ -9,9 +9,13 @@
  * @license MIT
  */
 
+import { debuglog } from 'util';
+
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
-function transformSchemaXEnumToXMsEnum(schema, schemaName, options) {
+const debug = debuglog('x-enum-to-ms');
+
+function transformSchemaXEnumToXMsEnum(schema, schemaName) {
   if ((!schema['x-enum-descriptions'] && !schema['x-enum-varnames'])
       || (schema['x-ms-enum'] && schema['x-ms-enum'].values)) {
     // Schema doesn't have enum varnames/descriptions to convert,
@@ -38,10 +42,7 @@ function transformSchemaXEnumToXMsEnum(schema, schemaName, options) {
 
   if (!xMsEnum.name) {
     if (!schemaName) {
-      // x-ms-enum.name is required.  Bail if it can't be determined.
-      options.stderr.write(
-        'Error converting x-ms-enum: Unable to determine schema name.\n',
-      );
+      debug('Unable to determine required x-ms-enum.name for %O', schema);
       return schema;
     }
 
@@ -54,16 +55,10 @@ function transformSchemaXEnumToXMsEnum(schema, schemaName, options) {
 
 // eslint-disable-next-line import/no-unused-modules
 export default class XEnumToXMsEnumTransformer extends OpenApiTransformerBase {
-  constructor(options) {
-    super();
-    this.options = options;
-  }
-
   transformSchema(schema, schemaName) {
     return transformSchemaXEnumToXMsEnum(
       super.transformSchema(schema),
       schemaName,
-      this.options,
     );
   }
 
@@ -91,7 +86,6 @@ export default class XEnumToXMsEnumTransformer extends OpenApiTransformerBase {
     return transformSchemaXEnumToXMsEnum(
       super.transformParameter(parameter),
       undefined,
-      this.options,
     );
   }
 }
