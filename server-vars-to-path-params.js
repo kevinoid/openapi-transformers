@@ -75,14 +75,14 @@ function transformPaths(paths, serverPath, serverParams) {
 // eslint-disable-next-line import/no-unused-modules
 export default class ServerVarsToPathParamsTransformer
   extends OpenApiTransformerBase {
-  constructor(options) {
+  constructor(options = {}) {
     super();
 
-    if (options !== undefined && typeof options !== 'object') {
+    if (options === null || typeof options !== 'object') {
       throw new TypeError('options must be an object');
     }
 
-    const { omitDefault } = options || {};
+    const { omitDefault } = options;
     if (omitDefault !== undefined && !Array.isArray(omitDefault)) {
       throw new TypeError('options.omitDefault must be an Array');
     }
