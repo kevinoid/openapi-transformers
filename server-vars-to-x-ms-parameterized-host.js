@@ -6,6 +6,9 @@
  *
  * TODO: Roll this into OpenAPI 3 -> 2 conversion?
  *
+ * Note: Currently expects OAS3 input (required for Server Objects) but
+ * produces OAS2 parameters as specified for x-ms-parameterized-host.
+ *
  * @copyright Copyright 2019-2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
