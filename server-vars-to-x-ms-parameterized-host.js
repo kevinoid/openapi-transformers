@@ -32,18 +32,11 @@ function getSchemeAuthority(url) {
 function serverVariableToParameter(name, serverVar) {
   const serverParam = {
     name,
-    schema: {
-      type: 'string',
-    },
+    type: 'string',
     ...serverVar,
     in: 'path',
     required: true,
   };
-
-  if (hasOwnProperty.call(serverVar, 'enum')) {
-    serverParam.schema.enum = serverVar.enum;
-    delete serverParam.enum;
-  }
 
   return serverParam;
 }
