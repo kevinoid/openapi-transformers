@@ -80,7 +80,18 @@ export default class InlineNonObjectSchemaTransformer
     }
 
     if (!this[inlineAllSymbol]
-      && !Object.keys(refSchema).some((prop) => validationKeywords[prop])) {
+      && !Object.keys(refSchema).some((prop) => validationKeywords[prop])
+      // exclusiveMaximum/exclusiveMinimum are numbers in JSON Schema
+      // Draft 2020-12 referenced by OAS 3.1.0 and apply on their own:
+      // https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema-validation-00#section-6.2.3
+      // exclusiveMaximum/exclusiveMinimum are boolean in JSON Schema Write 00
+      // referenced by OAS 3.0:
+      // https://datatracker.ietf.org/doc/html/draft-wright-json-schema-validation-00#section-5.3
+      // and JSON Schema Draft 4 referenced by OAS 2:
+      // https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.2
+      // which only affect minimum/maximum and have no effect on their own.
+      && typeof refSchema.exclusiveMaximum !== 'number'
+      && typeof refSchema.exclusiveMinimum !== 'number') {
       debug(
         'Not inlining %s: No validation keywords require inlining',
         $ref,
