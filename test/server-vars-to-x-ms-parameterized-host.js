@@ -16,13 +16,6 @@ describe('ServerVarsToParamHostTransformer', () => {
     );
   });
 
-  it('throws TypeError with number options', () => {
-    assert.throws(
-      () => new ServerVarsToParamHostTransformer(1),
-      TypeError,
-    );
-  });
-
   it('throws TypeError with non-Array options.omitDefault', () => {
     assert.throws(
       () => new ServerVarsToParamHostTransformer({ omitDefault: {} }),

@@ -15,20 +15,6 @@ describe('InlineNonObjectSchemaTransformer', () => {
     );
   });
 
-  it('throws TypeError with number options', () => {
-    assert.throws(
-      () => new InlineNonObjectSchemaTransformer(1),
-      TypeError,
-    );
-  });
-
-  it('throws TypeError with number options.inlineAll', () => {
-    assert.throws(
-      () => new InlineNonObjectSchemaTransformer({ inlineAll: 1 }),
-      TypeError,
-    );
-  });
-
   it('throws TypeError with number options.resolveRef', () => {
     assert.throws(
       () => new InlineNonObjectSchemaTransformer({ resolveRef: 1 }),

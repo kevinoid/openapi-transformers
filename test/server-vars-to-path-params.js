@@ -16,13 +16,6 @@ describe('ServerVarsToPathParamsTransformer', () => {
     );
   });
 
-  it('throws TypeError with number options', () => {
-    assert.throws(
-      () => new ServerVarsToPathParamsTransformer(1),
-      TypeError,
-    );
-  });
-
   it('throws TypeError with non-Array options.omitDefault', () => {
     assert.throws(
       () => new ServerVarsToPathParamsTransformer({ omitDefault: {} }),

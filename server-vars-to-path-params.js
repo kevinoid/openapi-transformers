@@ -76,14 +76,9 @@ function transformPaths(paths, serverPath, serverParams) {
  */
 export default class ServerVarsToPathParamsTransformer
   extends OpenApiTransformerBase {
-  constructor(options = {}) {
+  constructor({ omitDefault } = {}) {
     super();
 
-    if (options === null || typeof options !== 'object') {
-      throw new TypeError('options must be an object');
-    }
-
-    const { omitDefault } = options;
     if (omitDefault !== undefined && !Array.isArray(omitDefault)) {
       throw new TypeError('options.omitDefault must be an Array');
     }

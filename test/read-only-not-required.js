@@ -15,13 +15,6 @@ describe('ReadOnlyNotRequiredTransformer', () => {
     );
   });
 
-  it('throws TypeError with number options', () => {
-    assert.throws(
-      () => new ReadOnlyNotRequiredTransformer(1),
-      TypeError,
-    );
-  });
-
   it('throws TypeError with number options.removeValidation', () => {
     assert.throws(
       () => new ReadOnlyNotRequiredTransformer({ removeValidation: 1 }),

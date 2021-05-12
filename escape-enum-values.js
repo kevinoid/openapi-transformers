@@ -176,10 +176,9 @@ function escapeInSchema(schema, escapeString) {
  */
 export default class EscapeEnumValuesTransformer
   extends OpenApiTransformerBase {
-  constructor(options) {
+  constructor({ language }) {
     super();
 
-    const { language } = options;
     const typeofLanguage = typeof language;
     switch (typeofLanguage) {
       case 'string':

@@ -23,24 +23,23 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
  */
 export default class ReadOnlyNotRequiredTransformer
   extends OpenApiTransformerBase {
-  constructor(options = {}) {
+  constructor({ removeValidation, setNonNullable } = {}) {
     super();
 
-    if (!options || typeof options !== 'object') {
-      throw new TypeError('options must be an object');
-    }
-
-    if (options.removeValidation !== undefined
-      && typeof options.removeValidation !== 'boolean') {
+    if (removeValidation !== undefined
+      && typeof removeValidation !== 'boolean') {
       throw new TypeError('options.removeValidation must be boolean');
     }
 
-    if (options.setNonNullable !== undefined
-      && typeof options.setNonNullable !== 'boolean') {
+    if (setNonNullable !== undefined
+      && typeof setNonNullable !== 'boolean') {
       throw new TypeError('options.setNonNullable must be boolean');
     }
 
-    this.options = options;
+    this.options = {
+      removeValidation,
+      setNonNullable,
+    };
   }
 
   transformSchema(schema) {

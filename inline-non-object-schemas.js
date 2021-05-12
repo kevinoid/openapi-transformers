@@ -37,18 +37,8 @@ const validationKeywords = {
  */
 export default class InlineNonObjectSchemaTransformer
   extends OpenApiTransformerBase {
-  constructor(options) {
+  constructor({ inlineAll, resolveRef } = {}) {
     super();
-
-    if (options !== undefined
-      && (options === null || typeof options !== 'object')) {
-      throw new TypeError('options must be an object');
-    }
-
-    const { inlineAll, resolveRef } = options || {};
-    if (inlineAll !== undefined && typeof inlineAll !== 'boolean') {
-      throw new TypeError('inlineAll must be a boolean');
-    }
 
     if (resolveRef !== undefined && typeof resolveRef !== 'function') {
       throw new TypeError('resolveRef must be a function');
