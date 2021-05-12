@@ -33,7 +33,6 @@ function hasCollision(schema, ofSchema, ofName) {
     });
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class CollapseSingleOfTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

@@ -55,7 +55,6 @@ function isNullable(schema, propName) {
   return true;
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class NullableNotRequiredTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

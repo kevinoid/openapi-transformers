@@ -44,7 +44,6 @@ function serverVariableToParameter(name, serverVar) {
   return serverParam;
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class ServerVarsToParamHostTransformer
   extends OpenApiTransformerBase {
   constructor(options = {}) {

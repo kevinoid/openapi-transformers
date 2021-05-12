@@ -118,7 +118,6 @@ function renameRefObj(jsonPtrRegexp, obj, renameFunc) {
   return undefined;
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class RenameComponentsTransformer
   extends OpenApiTransformerBase {
   constructor(options) {

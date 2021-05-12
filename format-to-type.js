@@ -37,7 +37,6 @@ function transformSchemaType(schema) {
   return schema;
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class FormatToTypeTransformer extends OpenApiTransformerBase {
   transformSchema(schema) {
     return transformSchemaType(super.transformSchema(schema));

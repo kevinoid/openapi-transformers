@@ -8,7 +8,6 @@
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
-// eslint-disable-next-line import/no-unused-modules
 export default class AdditionalPropertiesToObjectTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

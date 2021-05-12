@@ -11,7 +11,6 @@
 import OpenApiTransformerBase from 'openapi-transformer-base';
 import { isDeepStrictEqual } from 'util';
 
-// eslint-disable-next-line import/no-unused-modules
 export default class PatternPropertiesToAdditionalPropertiesTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

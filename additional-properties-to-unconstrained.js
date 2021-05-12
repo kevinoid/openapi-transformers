@@ -96,7 +96,6 @@ function hasConstrainedAdditionalProps(schema) {
         && Object.keys(schema.patternProperties).length > 0));
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class AdditionalPropertiesToUnconstrainedTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

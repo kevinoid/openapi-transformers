@@ -15,7 +15,6 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const debug = debuglog('add-tag-to-operation-ids');
 
-// eslint-disable-next-line import/no-unused-modules
 export default class AddTagToOperationIdsTransformer
   extends OpenApiTransformerBase {
   constructor({ tagSuffix = '' } = {}) {

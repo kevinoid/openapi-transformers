@@ -73,7 +73,6 @@ function getUnusedPropName(obj, propName) {
   }
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class ClientParamsToGlobalTransformer
   extends OpenApiTransformerBase {
   transformParameter(parameter) {

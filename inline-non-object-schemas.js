@@ -33,7 +33,6 @@ const validationKeywords = {
   uniqueItems: true,
 };
 
-// eslint-disable-next-line import/no-unused-modules
 export default class InlineNonObjectSchemaTransformer
   extends OpenApiTransformerBase {
   constructor(options) {

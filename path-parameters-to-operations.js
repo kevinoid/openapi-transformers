@@ -20,7 +20,6 @@ const PATH_METHODS = [
   'trace',
 ];
 
-// eslint-disable-next-line import/no-unused-modules
 export default class PathParametersToOperationTransformer
   extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this

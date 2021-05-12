@@ -172,7 +172,6 @@ function escapeInSchema(schema, escapeString) {
   };
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class EscapeEnumValuesTransformer
   extends OpenApiTransformerBase {
   constructor(options) {

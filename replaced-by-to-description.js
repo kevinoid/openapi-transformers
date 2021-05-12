@@ -27,7 +27,6 @@ function transformXDeprecated(schema) {
   return schema;
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class ReplacedByToDescriptionTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

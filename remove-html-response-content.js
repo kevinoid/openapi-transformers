@@ -20,7 +20,6 @@ function isHtml(mediaType) {
   return /^\s*text\/html\s*(;.*)?$/i.test(mediaType);
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class RemoveHtmlResponseContentTransformer
   extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this

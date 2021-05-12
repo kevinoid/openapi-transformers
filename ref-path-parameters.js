@@ -11,7 +11,6 @@
 import assert from 'assert';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
-// eslint-disable-next-line import/no-unused-modules
 export default class RefPathParametersTransformer
   extends OpenApiTransformerBase {
   transformPathItem(pathItem) {

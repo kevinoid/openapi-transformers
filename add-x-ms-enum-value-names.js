@@ -123,7 +123,6 @@ function addXMsEnumValueNamesToSchema(schema, schemaName, options) {
   };
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class AddXMsEnumValueNamesTransformer
   extends OpenApiTransformerBase {
   constructor(options) {

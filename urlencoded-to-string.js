@@ -17,7 +17,6 @@ function isUrlencoded(mediaType) {
   return /^application\/x-www-form-urlencoded\s*(;.*)?$/i.test(mediaType);
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class UrlencodedToStringTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

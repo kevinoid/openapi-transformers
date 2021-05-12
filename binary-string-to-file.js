@@ -22,7 +22,6 @@ function transformSchemaType(schema) {
   return schema;
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class BinaryStringToFileTransformer
   extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this

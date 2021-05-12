@@ -72,7 +72,6 @@ function transformPaths(paths, serverPath, serverParams) {
     }, Object.create(Object.getPrototypeOf(paths)));
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default class ServerVarsToPathParamsTransformer
   extends OpenApiTransformerBase {
   constructor(options = {}) {
