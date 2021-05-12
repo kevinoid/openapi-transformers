@@ -18,27 +18,31 @@ const paramRefPrefixSymbol = Symbol('paramRefPrefix');
  */
 export default class RefPathParametersTransformer
   extends OpenApiTransformerBase {
+  transformParameter(param) {
+    if (!param || param.$ref) {
+      return param;
+    }
+
+    const gparam = this[componentParamsSymbol][param.name];
+    if (gparam) {
+      assert.deepStrictEqual(gparam, param);
+    } else {
+      this[componentParamsSymbol][param.name] = param;
+    }
+
+    return { $ref: this[paramRefPrefixSymbol] + param.name };
+  }
+
   transformPathItem(pathItem) {
-    if (!pathItem.parameters) {
+    if (!pathItem
+      || !Array.isArray(pathItem.parameters)
+      || pathItem.parameters.length === 0) {
       return pathItem;
     }
 
     return {
       ...pathItem,
-      parameters: pathItem.parameters.map((param) => {
-        if (param.$ref) {
-          return param;
-        }
-
-        const gparam = this[componentParamsSymbol][param.name];
-        if (gparam) {
-          assert.deepStrictEqual(gparam, param);
-        } else {
-          this[componentParamsSymbol][param.name] = param;
-        }
-
-        return { $ref: this[paramRefPrefixSymbol] + param.name };
-      }),
+      parameters: pathItem.parameters.map(this.transformParameter, this),
     };
   }
 
