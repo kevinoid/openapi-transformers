@@ -14,9 +14,9 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
 // eslint-disable-next-line import/no-unused-modules
 export default class AddTagToOperationIdsTransformer
   extends OpenApiTransformerBase {
-  constructor(options) {
+  constructor({ tagSuffix = '' } = {}) {
     super();
-    this.tagSuffix = String((options && options.tagSuffix) || '');
+    this.tagSuffix = String(tagSuffix);
   }
 
   transformOperation(op) {
