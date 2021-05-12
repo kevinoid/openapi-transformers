@@ -1,6 +1,7 @@
 /**
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module "openapi-transformers/binary-string-to-file.js"
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';

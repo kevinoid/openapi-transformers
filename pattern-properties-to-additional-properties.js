@@ -1,6 +1,7 @@
 /**
  * @copyright Copyright 2021 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module "openapi-transformers/pattern-properties-to-additional-properties.js"
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';

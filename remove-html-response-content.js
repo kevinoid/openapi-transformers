@@ -1,6 +1,7 @@
 /**
  * @copyright Copyright 2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module "openapi-transformers/remove-html-response-content.js"
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';

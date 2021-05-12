@@ -1,6 +1,7 @@
 /**
  * @copyright Copyright 2019-2021 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module "openapi-transformers/escape-enum-values.js"
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';

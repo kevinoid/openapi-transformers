@@ -1,6 +1,7 @@
 /**
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module "openapi-transformers/x-enum-to-ms.js"
  */
 
 import { debuglog } from 'util';

@@ -1,6 +1,7 @@
 /**
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module "openapi-transformers/replaced-by-to-description.js"
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';

@@ -1,6 +1,7 @@
 /**
  * @copyright Copyright 2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module "openapi-transformers/inline-non-object-schemas.js"
  */
 
 import { debuglog } from 'util';

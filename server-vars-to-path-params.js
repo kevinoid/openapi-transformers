@@ -1,6 +1,7 @@
 /**
  * @copyright Copyright 2019-2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module "openapi-transformers/server-vars-to-path-params.js"
  */
 
 import assert from 'assert';

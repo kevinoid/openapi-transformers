@@ -1,6 +1,7 @@
 /**
  * @copyright Copyright 2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
+ * @module "openapi-transformers/client-params-to-global.js"
  */
 
 // Any unique, deterministic stringify function would work.
