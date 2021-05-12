@@ -52,7 +52,7 @@ function autorestEnumMemberName(value) {
     .join('');
 }
 
-function addXMsEnumValueNamesToSchema(schema, schemaName, options) {
+function addXMsEnumValueNamesToSchema(schema) {
   if (!schema.enum || !schema['x-ms-enum']) {
     // Schema won't generate an enum
     return schema;
@@ -127,22 +127,15 @@ function addXMsEnumValueNamesToSchema(schema, schemaName, options) {
  */
 export default class AddXMsEnumValueNamesTransformer
   extends OpenApiTransformerBase {
-  constructor(options) {
-    super();
-    this.options = options;
-  }
-
   transformSchema(schema) {
     return addXMsEnumValueNamesToSchema(
       super.transformSchema(schema),
-      this.options,
     );
   }
 
   transformParameter(parameter) {
     return addXMsEnumValueNamesToSchema(
       super.transformParameter(parameter),
-      this.options,
     );
   }
 }
