@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import ReplacedByToDescriptionTransformer
   from '../replaced-by-to-description.js';
@@ -11,7 +12,7 @@ import ReplacedByToDescriptionTransformer
 describe('ReplacedByToDescriptionTransformer', () => {
   it('x-deprecated.replaced-by to description for openapi 3 schema', () => {
     assert.deepStrictEqual(
-      new ReplacedByToDescriptionTransformer().transformOpenApi({
+      new ReplacedByToDescriptionTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -28,7 +29,7 @@ describe('ReplacedByToDescriptionTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -53,7 +54,7 @@ describe('ReplacedByToDescriptionTransformer', () => {
 
   it('does not change existing x-deprecated.description', () => {
     assert.deepStrictEqual(
-      new ReplacedByToDescriptionTransformer().transformOpenApi({
+      new ReplacedByToDescriptionTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -71,7 +72,7 @@ describe('ReplacedByToDescriptionTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -96,7 +97,7 @@ describe('ReplacedByToDescriptionTransformer', () => {
 
   it('x-deprecated.replaced-by to description for openapi 3 property', () => {
     assert.deepStrictEqual(
-      new ReplacedByToDescriptionTransformer().transformOpenApi({
+      new ReplacedByToDescriptionTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -118,7 +119,7 @@ describe('ReplacedByToDescriptionTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {

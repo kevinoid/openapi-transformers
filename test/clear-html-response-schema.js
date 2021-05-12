@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import ClearHtmlResponseSchemaTransformer
   from '../clear-html-response-schema.js';
@@ -11,7 +12,7 @@ import ClearHtmlResponseSchemaTransformer
 describe('ClearHtmlResponseSchemaTransformer', () => {
   it('removes schema for text/html response in openapi 3', () => {
     assert.deepStrictEqual(
-      new ClearHtmlResponseSchemaTransformer().transformOpenApi({
+      new ClearHtmlResponseSchemaTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -53,7 +54,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -97,7 +98,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
 
   it('removes schema for text/html;charset response in openapi 3', () => {
     assert.deepStrictEqual(
-      new ClearHtmlResponseSchemaTransformer().transformOpenApi({
+      new ClearHtmlResponseSchemaTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -139,7 +140,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -183,7 +184,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
 
   it('removes schema for text/html response in swagger 2', () => {
     assert.deepStrictEqual(
-      new ClearHtmlResponseSchemaTransformer().transformOpenApi({
+      new ClearHtmlResponseSchemaTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -217,7 +218,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

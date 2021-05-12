@@ -4,13 +4,14 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import AddXMsEnumValueNamesTransformer from '../add-x-ms-enum-value-names.js';
 
 describe('AddXMsEnumValueNamesTransformer', () => {
   it('openapi 3 with x-ms-enum.name in components', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumValueNamesTransformer().transformOpenApi({
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -31,7 +32,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -64,7 +65,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
   // Without x-ms-enum, enum type is not generated, so name is irrelevant
   it('openapi 3 without x-ms-enum in components', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumValueNamesTransformer().transformOpenApi({
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -82,7 +83,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -107,7 +108,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
 
   it('openapi 3 with x-ms-enum.values without name in components', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumValueNamesTransformer().transformOpenApi({
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -132,7 +133,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -164,7 +165,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
 
   it('openapi 3 with x-ms-enum.values with some names in components', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumValueNamesTransformer().transformOpenApi({
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -189,7 +190,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -221,7 +222,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
 
   it('openapi 3 with x-ms-enum.name in parameter schema', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumValueNamesTransformer().transformOpenApi({
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -254,7 +255,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -298,7 +299,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
 
   it('openapi 3 with x-ms-enum.name in parameter content', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumValueNamesTransformer().transformOpenApi({
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -335,7 +336,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -383,7 +384,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
 
   it('openapi 3 requestBody with x-ms-enum.name', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumValueNamesTransformer().transformOpenApi({
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -416,7 +417,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -460,7 +461,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
 
   it('openapi 3 response with x-ms-enum.name', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumValueNamesTransformer().transformOpenApi({
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -491,7 +492,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -533,7 +534,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
 
   it('swagger 2 parameter with x-ms-enum.name', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumValueNamesTransformer().transformOpenApi({
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -564,7 +565,7 @@ describe('AddXMsEnumValueNamesTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

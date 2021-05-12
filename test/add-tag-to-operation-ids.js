@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import AddTagToOperationIdsTransformer from '../add-tag-to-operation-ids.js';
 
@@ -17,7 +18,7 @@ describe('AddTagToOperationIdsTransformer', () => {
 
   it('openapi 3 only tag to operationId prefix', () => {
     assert.deepStrictEqual(
-      new AddTagToOperationIdsTransformer().transformOpenApi({
+      new AddTagToOperationIdsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -36,7 +37,7 @@ describe('AddTagToOperationIdsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -62,7 +63,7 @@ describe('AddTagToOperationIdsTransformer', () => {
 
   it('openapi 3 first tag to operationId prefix', () => {
     assert.deepStrictEqual(
-      new AddTagToOperationIdsTransformer().transformOpenApi({
+      new AddTagToOperationIdsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -81,7 +82,7 @@ describe('AddTagToOperationIdsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -107,7 +108,7 @@ describe('AddTagToOperationIdsTransformer', () => {
 
   it('openapi 3 no tag to operationId prefix', () => {
     assert.deepStrictEqual(
-      new AddTagToOperationIdsTransformer().transformOpenApi({
+      new AddTagToOperationIdsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -125,7 +126,7 @@ describe('AddTagToOperationIdsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -150,7 +151,7 @@ describe('AddTagToOperationIdsTransformer', () => {
 
   it('openapi 3 empty tag to operationId prefix', () => {
     assert.deepStrictEqual(
-      new AddTagToOperationIdsTransformer().transformOpenApi({
+      new AddTagToOperationIdsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -169,7 +170,7 @@ describe('AddTagToOperationIdsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -195,7 +196,7 @@ describe('AddTagToOperationIdsTransformer', () => {
 
   it('openapi 3 no operationId', () => {
     assert.deepStrictEqual(
-      new AddTagToOperationIdsTransformer().transformOpenApi({
+      new AddTagToOperationIdsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -213,7 +214,7 @@ describe('AddTagToOperationIdsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -238,7 +239,7 @@ describe('AddTagToOperationIdsTransformer', () => {
 
   it('openapi 3 empty operationId', () => {
     assert.deepStrictEqual(
-      new AddTagToOperationIdsTransformer().transformOpenApi({
+      new AddTagToOperationIdsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -257,7 +258,7 @@ describe('AddTagToOperationIdsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -285,7 +286,7 @@ describe('AddTagToOperationIdsTransformer', () => {
     const transformer =
       new AddTagToOperationIdsTransformer({ tagSuffix: 'Api' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -304,7 +305,7 @@ describe('AddTagToOperationIdsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -330,7 +331,7 @@ describe('AddTagToOperationIdsTransformer', () => {
 
   it('swagger 2 only tag to operationId prefix', () => {
     assert.deepStrictEqual(
-      new AddTagToOperationIdsTransformer().transformOpenApi({
+      new AddTagToOperationIdsTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -349,7 +350,7 @@ describe('AddTagToOperationIdsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

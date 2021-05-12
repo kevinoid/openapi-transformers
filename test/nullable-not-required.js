@@ -4,13 +4,14 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import NullableNotRequiredTransformer from '../nullable-not-required.js';
 
 describe('NullableNotRequiredTransformer', () => {
   it('nullable required property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi({
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -31,7 +32,7 @@ describe('NullableNotRequiredTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -58,7 +59,7 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('x-nullable required property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi({
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -77,7 +78,7 @@ describe('NullableNotRequiredTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import PatternPropertiesToAdditionalPropertiesTransformer
   from '../pattern-properties-to-additional-properties.js';
@@ -13,7 +14,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
     const transformer =
       new PatternPropertiesToAdditionalPropertiesTransformer();
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.1.0',
         info: {
           title: 'Title',
@@ -28,7 +29,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.1.0',
         info: {
@@ -51,7 +52,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
     const transformer =
       new PatternPropertiesToAdditionalPropertiesTransformer();
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.1.0',
         info: {
           title: 'Title',
@@ -70,7 +71,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.1.0',
         info: {
@@ -96,7 +97,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
     const transformer =
       new PatternPropertiesToAdditionalPropertiesTransformer();
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.1.0',
         info: {
           title: 'Title',
@@ -121,7 +122,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.1.0',
         info: {
@@ -151,7 +152,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
     const transformer =
       new PatternPropertiesToAdditionalPropertiesTransformer();
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.1.0',
         info: {
           title: 'Title',
@@ -179,7 +180,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.1.0',
         info: {
@@ -210,7 +211,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
     const transformer =
       new PatternPropertiesToAdditionalPropertiesTransformer();
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.1.0',
         info: {
           title: 'Title',
@@ -235,7 +236,7 @@ describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.1.0',
         info: {

@@ -4,13 +4,14 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import QueriesToXMsPathsTransformer from '../queries-to-x-ms-paths.js';
 
 describe('QueriesToXMsPathsTransformer', () => {
   it('moves paths with query to x-ms-paths in openapi 3', () => {
     assert.deepStrictEqual(
-      new QueriesToXMsPathsTransformer().transformOpenApi({
+      new QueriesToXMsPathsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -36,7 +37,7 @@ describe('QueriesToXMsPathsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -71,7 +72,7 @@ describe('QueriesToXMsPathsTransformer', () => {
 
   it('does not create x-ms-paths if none have queries', () => {
     assert.deepStrictEqual(
-      new QueriesToXMsPathsTransformer().transformOpenApi({
+      new QueriesToXMsPathsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -88,7 +89,7 @@ describe('QueriesToXMsPathsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -114,7 +115,7 @@ describe('QueriesToXMsPathsTransformer', () => {
   // Must be present, even if empty.
   it('leaves empty paths after moving', () => {
     assert.deepStrictEqual(
-      new QueriesToXMsPathsTransformer().transformOpenApi({
+      new QueriesToXMsPathsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -131,7 +132,7 @@ describe('QueriesToXMsPathsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -156,7 +157,7 @@ describe('QueriesToXMsPathsTransformer', () => {
 
   it('moves paths with query to x-ms-paths in swagger 2', () => {
     assert.deepStrictEqual(
-      new QueriesToXMsPathsTransformer().transformOpenApi({
+      new QueriesToXMsPathsTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -182,7 +183,7 @@ describe('QueriesToXMsPathsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

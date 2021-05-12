@@ -4,13 +4,14 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import BinaryStringToFileTransformer from '../binary-string-to-file.js';
 
 describe('BinaryStringToFileTransformer', () => {
   it('openapi 3 with format: binary in components', () => {
     assert.deepStrictEqual(
-      new BinaryStringToFileTransformer().transformOpenApi({
+      new BinaryStringToFileTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -25,7 +26,7 @@ describe('BinaryStringToFileTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -46,7 +47,7 @@ describe('BinaryStringToFileTransformer', () => {
 
   it('openapi 3 with format: file in components', () => {
     assert.deepStrictEqual(
-      new BinaryStringToFileTransformer().transformOpenApi({
+      new BinaryStringToFileTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -61,7 +62,7 @@ describe('BinaryStringToFileTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -82,7 +83,7 @@ describe('BinaryStringToFileTransformer', () => {
 
   it('openapi 3 without format in components', () => {
     assert.deepStrictEqual(
-      new BinaryStringToFileTransformer().transformOpenApi({
+      new BinaryStringToFileTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -96,7 +97,7 @@ describe('BinaryStringToFileTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -117,7 +118,7 @@ describe('BinaryStringToFileTransformer', () => {
 
   it('swagger 2 format: binary in parameter schema', () => {
     assert.deepStrictEqual(
-      new BinaryStringToFileTransformer().transformOpenApi({
+      new BinaryStringToFileTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -144,7 +145,7 @@ describe('BinaryStringToFileTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {
@@ -177,7 +178,7 @@ describe('BinaryStringToFileTransformer', () => {
 
   it('swagger 2 format: file in parameter schema', () => {
     assert.deepStrictEqual(
-      new BinaryStringToFileTransformer().transformOpenApi({
+      new BinaryStringToFileTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -204,7 +205,7 @@ describe('BinaryStringToFileTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {
@@ -237,7 +238,7 @@ describe('BinaryStringToFileTransformer', () => {
 
   it('swagger 2 format: binary in parameter', () => {
     assert.deepStrictEqual(
-      new BinaryStringToFileTransformer().transformOpenApi({
+      new BinaryStringToFileTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -262,7 +263,7 @@ describe('BinaryStringToFileTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {
@@ -293,7 +294,7 @@ describe('BinaryStringToFileTransformer', () => {
 
   it('swagger 2 format: file in parameter', () => {
     assert.deepStrictEqual(
-      new BinaryStringToFileTransformer().transformOpenApi({
+      new BinaryStringToFileTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -318,7 +319,7 @@ describe('BinaryStringToFileTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

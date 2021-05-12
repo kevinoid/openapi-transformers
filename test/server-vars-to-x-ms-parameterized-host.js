@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import ServerVarsToParamHostTransformer
   from '../server-vars-to-x-ms-parameterized-host.js';
@@ -32,7 +33,7 @@ describe('ServerVarsToParamHostTransformer', () => {
 
   it('server variables in host part to x-ms-parameterized-host', () => {
     assert.deepStrictEqual(
-      new ServerVarsToParamHostTransformer().transformOpenApi({
+      new ServerVarsToParamHostTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -50,7 +51,7 @@ describe('ServerVarsToParamHostTransformer', () => {
           },
         ],
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -89,7 +90,7 @@ describe('ServerVarsToParamHostTransformer', () => {
 
   it('does not create x-ms-parameterized-host if no host vars', () => {
     assert.deepStrictEqual(
-      new ServerVarsToParamHostTransformer().transformOpenApi({
+      new ServerVarsToParamHostTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -107,7 +108,7 @@ describe('ServerVarsToParamHostTransformer', () => {
           },
         ],
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -132,7 +133,7 @@ describe('ServerVarsToParamHostTransformer', () => {
 
   it('server variables in scheme part to x-ms-parameterized-host', () => {
     assert.deepStrictEqual(
-      new ServerVarsToParamHostTransformer().transformOpenApi({
+      new ServerVarsToParamHostTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -154,7 +155,7 @@ describe('ServerVarsToParamHostTransformer', () => {
           },
         ],
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -205,7 +206,7 @@ describe('ServerVarsToParamHostTransformer', () => {
 
   it('server variables in path part not in x-ms-parameterized-host', () => {
     assert.deepStrictEqual(
-      new ServerVarsToParamHostTransformer().transformOpenApi({
+      new ServerVarsToParamHostTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -231,7 +232,7 @@ describe('ServerVarsToParamHostTransformer', () => {
           },
         ],
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {

@@ -4,13 +4,14 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import UrlencodedToStringTransformer from '../urlencoded-to-string.js';
 
 describe('UrlencodedToStringTransformer', () => {
   it('converts non-string properties of urlencoded to string', () => {
     assert.deepStrictEqual(
-      new UrlencodedToStringTransformer().transformOpenApi({
+      new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -62,7 +63,7 @@ describe('UrlencodedToStringTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -121,7 +122,7 @@ describe('UrlencodedToStringTransformer', () => {
 
   it('converts non-string properties of urlencoded to string', () => {
     assert.deepStrictEqual(
-      new UrlencodedToStringTransformer().transformOpenApi({
+      new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -170,7 +171,7 @@ describe('UrlencodedToStringTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {
@@ -226,7 +227,7 @@ describe('UrlencodedToStringTransformer', () => {
 
   it('does not convert properties of urlencoded+form-data', () => {
     assert.deepStrictEqual(
-      new UrlencodedToStringTransformer().transformOpenApi({
+      new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -278,7 +279,7 @@ describe('UrlencodedToStringTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

@@ -4,13 +4,14 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import ClientParamsToGlobalTransformer from '../client-params-to-global.js';
 
 describe('ClientParamsToGlobalTransformer', () => {
   it('openapi 3 client parameter', () => {
     assert.deepStrictEqual(
-      new ClientParamsToGlobalTransformer().transformOpenApi({
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -37,7 +38,7 @@ describe('ClientParamsToGlobalTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -76,7 +77,7 @@ describe('ClientParamsToGlobalTransformer', () => {
 
   it('openapi 3 combines same client parameter', () => {
     assert.deepStrictEqual(
-      new ClientParamsToGlobalTransformer().transformOpenApi({
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -122,7 +123,7 @@ describe('ClientParamsToGlobalTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -173,7 +174,7 @@ describe('ClientParamsToGlobalTransformer', () => {
 
   it('openapi 3 does not combine different client parameter', () => {
     assert.deepStrictEqual(
-      new ClientParamsToGlobalTransformer().transformOpenApi({
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -219,7 +220,7 @@ describe('ClientParamsToGlobalTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -278,7 +279,7 @@ describe('ClientParamsToGlobalTransformer', () => {
 
   it('openapi 3 client parameter encodes name in $ref', () => {
     assert.deepStrictEqual(
-      new ClientParamsToGlobalTransformer().transformOpenApi({
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -305,7 +306,7 @@ describe('ClientParamsToGlobalTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -344,7 +345,7 @@ describe('ClientParamsToGlobalTransformer', () => {
 
   it('swagger 2 client parameter', () => {
     assert.deepStrictEqual(
-      new ClientParamsToGlobalTransformer().transformOpenApi({
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -369,7 +370,7 @@ describe('ClientParamsToGlobalTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

@@ -4,13 +4,14 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import RemoveResponseHeadersTransformer from '../remove-response-headers.js';
 
 describe('RemoveResponseHeadersTransformer', () => {
   it('removes headers from components/responses', () => {
     assert.deepStrictEqual(
-      new RemoveResponseHeadersTransformer().transformOpenApi({
+      new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -40,7 +41,7 @@ describe('RemoveResponseHeadersTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -72,7 +73,7 @@ describe('RemoveResponseHeadersTransformer', () => {
   // These appear to have no effect on generated code
   it('does not remove components/headers', () => {
     assert.deepStrictEqual(
-      new RemoveResponseHeadersTransformer().transformOpenApi({
+      new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -107,7 +108,7 @@ describe('RemoveResponseHeadersTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -144,7 +145,7 @@ describe('RemoveResponseHeadersTransformer', () => {
 
   it('removes headers from openapi 3 paths/responses', () => {
     assert.deepStrictEqual(
-      new RemoveResponseHeadersTransformer().transformOpenApi({
+      new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -167,7 +168,7 @@ describe('RemoveResponseHeadersTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -191,7 +192,7 @@ describe('RemoveResponseHeadersTransformer', () => {
 
   it('removes headers from swagger 2 paths/responses', () => {
     assert.deepStrictEqual(
-      new RemoveResponseHeadersTransformer().transformOpenApi({
+      new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -214,7 +215,7 @@ describe('RemoveResponseHeadersTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import PathParametersToOperationTransformer
   from '../path-parameters-to-operations.js';
@@ -11,7 +12,7 @@ import PathParametersToOperationTransformer
 describe('PathParametersToOperationTransformer', () => {
   it('openapi 3 path to operation parameters', () => {
     assert.deepStrictEqual(
-      new PathParametersToOperationTransformer().transformOpenApi({
+      new PathParametersToOperationTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -44,7 +45,7 @@ describe('PathParametersToOperationTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -93,7 +94,7 @@ describe('PathParametersToOperationTransformer', () => {
 
   it('openapi 3 path prepend to operation parameters', () => {
     assert.deepStrictEqual(
-      new PathParametersToOperationTransformer().transformOpenApi({
+      new PathParametersToOperationTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -135,7 +136,7 @@ describe('PathParametersToOperationTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -191,7 +192,7 @@ describe('PathParametersToOperationTransformer', () => {
 
   it('swagger 2 path to operation parameters', () => {
     assert.deepStrictEqual(
-      new PathParametersToOperationTransformer().transformOpenApi({
+      new PathParametersToOperationTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -222,7 +223,7 @@ describe('PathParametersToOperationTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

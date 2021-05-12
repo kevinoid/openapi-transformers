@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import EscapeEnumValuesTransformer from '../escape-enum-values.js';
 
@@ -40,7 +41,7 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'csharp' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -69,7 +70,7 @@ describe('EscapeEnumValuesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -107,7 +108,7 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'go' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -136,7 +137,7 @@ describe('EscapeEnumValuesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -174,7 +175,7 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'java' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -203,7 +204,7 @@ describe('EscapeEnumValuesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -241,7 +242,7 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'nodejs' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -270,7 +271,7 @@ describe('EscapeEnumValuesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -308,7 +309,7 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'php' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -337,7 +338,7 @@ describe('EscapeEnumValuesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -375,7 +376,7 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'python' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -404,7 +405,7 @@ describe('EscapeEnumValuesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -442,7 +443,7 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'ruby' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -471,7 +472,7 @@ describe('EscapeEnumValuesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -509,7 +510,7 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'csharp' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -536,7 +537,7 @@ describe('EscapeEnumValuesTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

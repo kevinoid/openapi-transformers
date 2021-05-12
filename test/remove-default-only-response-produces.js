@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import RemoveDefaultOnlyResponseProducesTransformer
   from '../remove-default-only-response-produces.js';
@@ -11,8 +12,9 @@ import RemoveDefaultOnlyResponseProducesTransformer
 describe('RemoveDefaultOnlyResponseProducesTransformer', () => {
   // Incorrectly generates method with void return type
   it('removes non-JSON produces from default response', () => {
+    const transformer = new RemoveDefaultOnlyResponseProducesTransformer();
     assert.deepStrictEqual(
-      new RemoveDefaultOnlyResponseProducesTransformer().transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -35,7 +37,7 @@ describe('RemoveDefaultOnlyResponseProducesTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {
@@ -62,8 +64,9 @@ describe('RemoveDefaultOnlyResponseProducesTransformer', () => {
   });
 
   it('does not remove non-JSON produces from 200 response', () => {
+    const transformer = new RemoveDefaultOnlyResponseProducesTransformer();
     assert.deepStrictEqual(
-      new RemoveDefaultOnlyResponseProducesTransformer().transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -86,7 +89,7 @@ describe('RemoveDefaultOnlyResponseProducesTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

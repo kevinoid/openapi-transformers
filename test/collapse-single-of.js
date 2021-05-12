@@ -4,13 +4,14 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import CollapseSingleOfTransformer from '../collapse-single-of.js';
 
 describe('CollapseSingleOfTransformer', () => {
   it('single allOf', () => {
     assert.deepStrictEqual(
-      new CollapseSingleOfTransformer().transformOpenApi({
+      new CollapseSingleOfTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -26,7 +27,7 @@ describe('CollapseSingleOfTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -47,7 +48,7 @@ describe('CollapseSingleOfTransformer', () => {
 
   it('single anyOf', () => {
     assert.deepStrictEqual(
-      new CollapseSingleOfTransformer().transformOpenApi({
+      new CollapseSingleOfTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -63,7 +64,7 @@ describe('CollapseSingleOfTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -84,7 +85,7 @@ describe('CollapseSingleOfTransformer', () => {
 
   it('single oneOf', () => {
     assert.deepStrictEqual(
-      new CollapseSingleOfTransformer().transformOpenApi({
+      new CollapseSingleOfTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -100,7 +101,7 @@ describe('CollapseSingleOfTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -126,7 +127,7 @@ describe('CollapseSingleOfTransformer', () => {
   // which works as a non-standard extension in all versions of Autorest.
   it('single allOf $ref property with description', () => {
     assert.deepStrictEqual(
-      new CollapseSingleOfTransformer().transformOpenApi({
+      new CollapseSingleOfTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -151,7 +152,7 @@ describe('CollapseSingleOfTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {

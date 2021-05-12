@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import ServerVarsToPathParamsTransformer
   from '../server-vars-to-path-params.js';
@@ -25,7 +26,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
 
   it('server variables in path part to path parameters', () => {
     assert.deepStrictEqual(
-      new ServerVarsToPathParamsTransformer().transformOpenApi({
+      new ServerVarsToPathParamsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -53,7 +54,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -101,7 +102,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
     const transformer =
       new ServerVarsToPathParamsTransformer({ omitDefault: ['foo'] });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -129,7 +130,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -174,7 +175,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
 
   it('does not move server variables in host part', () => {
     assert.deepStrictEqual(
-      new ServerVarsToPathParamsTransformer().transformOpenApi({
+      new ServerVarsToPathParamsTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -206,7 +207,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {

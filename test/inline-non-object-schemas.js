@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import InlineNonObjectSchemaTransformer from '../inline-non-object-schemas.js';
 
@@ -24,7 +25,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
 
   it('inlines non-object schema with constraints by default', () => {
     assert.deepStrictEqual(
-      new InlineNonObjectSchemaTransformer().transformOpenApi({
+      new InlineNonObjectSchemaTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -47,7 +48,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -78,7 +79,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
 
   it('does not inline non-object schema without constraints by default', () => {
     assert.deepStrictEqual(
-      new InlineNonObjectSchemaTransformer().transformOpenApi({
+      new InlineNonObjectSchemaTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -100,7 +101,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -131,7 +132,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
     const transformer =
       new InlineNonObjectSchemaTransformer({ inlineAll: true });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -153,7 +154,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -190,7 +191,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
     }
     const transformer = new InlineNonObjectSchemaTransformer({ resolveRef });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -209,7 +210,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {

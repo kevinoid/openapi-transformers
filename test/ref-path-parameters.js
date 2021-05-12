@@ -4,13 +4,14 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import RefPathParametersTransformer from '../ref-path-parameters.js';
 
 describe('RefPathParametersTransformer', () => {
   it('openapi 3 path item parameters to components', () => {
     assert.deepStrictEqual(
-      new RefPathParametersTransformer().transformOpenApi({
+      new RefPathParametersTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -36,7 +37,7 @@ describe('RefPathParametersTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -74,7 +75,7 @@ describe('RefPathParametersTransformer', () => {
 
   it('swagger 2 path item parameters to components', () => {
     assert.deepStrictEqual(
-      new RefPathParametersTransformer().transformOpenApi({
+      new RefPathParametersTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -98,7 +99,7 @@ describe('RefPathParametersTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

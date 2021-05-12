@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import ReadOnlyNotRequiredTransformer from '../read-only-not-required.js';
 
@@ -32,7 +33,7 @@ describe('ReadOnlyNotRequiredTransformer', () => {
   it('make readOnly properties not-required', () => {
     const transformer = new ReadOnlyNotRequiredTransformer();
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -53,7 +54,7 @@ describe('ReadOnlyNotRequiredTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -81,7 +82,7 @@ describe('ReadOnlyNotRequiredTransformer', () => {
   it('doesn\'t remove validation of readOnly properties by default', () => {
     const transformer = new ReadOnlyNotRequiredTransformer();
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -103,7 +104,7 @@ describe('ReadOnlyNotRequiredTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -134,7 +135,7 @@ describe('ReadOnlyNotRequiredTransformer', () => {
       removeValidation: true,
     });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -156,7 +157,7 @@ describe('ReadOnlyNotRequiredTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -186,7 +187,7 @@ describe('ReadOnlyNotRequiredTransformer', () => {
       setNonNullable: true,
     });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -207,7 +208,7 @@ describe('ReadOnlyNotRequiredTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {

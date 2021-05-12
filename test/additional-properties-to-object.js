@@ -4,14 +4,16 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import AdditionalPropertiesToObjectTransformer
   from '../additional-properties-to-object.js';
 
 describe('AdditionalPropertiesToObjectTransformer', () => {
   it('openapi 3 additionalProperties: true to {} in components', () => {
+    const transformer = new AdditionalPropertiesToObjectTransformer();
     assert.deepStrictEqual(
-      new AdditionalPropertiesToObjectTransformer().transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -26,7 +28,7 @@ describe('AdditionalPropertiesToObjectTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -47,8 +49,9 @@ describe('AdditionalPropertiesToObjectTransformer', () => {
   });
 
   it('swagger 2 additionalProperties: true to {} in definitions', () => {
+    const transformer = new AdditionalPropertiesToObjectTransformer();
     assert.deepStrictEqual(
-      new AdditionalPropertiesToObjectTransformer().transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -61,7 +64,7 @@ describe('AdditionalPropertiesToObjectTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

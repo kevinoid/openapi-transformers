@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import RenameComponentsTransformer from '../rename-components.js';
 
@@ -34,7 +35,7 @@ describe('RenameComponentsTransformer', () => {
       schemas: (name) => (name === 'ResponseType' ? `New${name}` : name),
     });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -77,7 +78,7 @@ describe('RenameComponentsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -130,7 +131,7 @@ describe('RenameComponentsTransformer', () => {
       schemas: (name) => (name === 'Response~Type#2' ? `New${name}` : name),
     });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -173,7 +174,7 @@ describe('RenameComponentsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -226,7 +227,7 @@ describe('RenameComponentsTransformer', () => {
       schemas: (name) => (name === 'ResponseType' ? `New${name}` : name),
     });
     assert.deepStrictEqual(
-      transformer.transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         swagger: '2.0',
         info: {
           title: 'Title',
@@ -263,7 +264,7 @@ describe('RenameComponentsTransformer', () => {
             },
           },
         },
-      }),
+      })),
       {
         swagger: '2.0',
         info: {

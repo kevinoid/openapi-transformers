@@ -4,6 +4,7 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import FormatToTypeTransformer from '../format-to-type.js';
 
@@ -19,7 +20,7 @@ describe('FormatToTypeTransformer', () => {
   for (const [format, type] of Object.entries(formatToType)) {
     it(`openapi 3 format: ${format} to type ${type} in components`, () => {
       assert.deepStrictEqual(
-        new FormatToTypeTransformer().transformOpenApi({
+        new FormatToTypeTransformer().transformOpenApi(deepFreeze({
           openapi: '3.0.3',
           info: {
             title: 'Title',
@@ -39,7 +40,7 @@ describe('FormatToTypeTransformer', () => {
             },
           },
           paths: {},
-        }),
+        })),
         {
           openapi: '3.0.3',
           info: {

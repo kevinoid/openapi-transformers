@@ -4,14 +4,16 @@
  */
 
 import assert from 'assert';
+import deepFreeze from 'deep-freeze';
 
 import AdditionalPropertiesToUnconstrainedTransformer
   from '../additional-properties-to-unconstrained.js';
 
 describe('AdditionalPropertiesToUnconstrainedTransformer', () => {
   it('string additionalProperties to any on schema with properties', () => {
+    const transformer = new AdditionalPropertiesToUnconstrainedTransformer();
     assert.deepStrictEqual(
-      new AdditionalPropertiesToUnconstrainedTransformer().transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -35,7 +37,7 @@ describe('AdditionalPropertiesToUnconstrainedTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -61,8 +63,9 @@ describe('AdditionalPropertiesToUnconstrainedTransformer', () => {
   });
 
   it('does not change additionalProperties without properties', () => {
+    const transformer = new AdditionalPropertiesToUnconstrainedTransformer();
     assert.deepStrictEqual(
-      new AdditionalPropertiesToUnconstrainedTransformer().transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -80,7 +83,7 @@ describe('AdditionalPropertiesToUnconstrainedTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
@@ -103,8 +106,9 @@ describe('AdditionalPropertiesToUnconstrainedTransformer', () => {
   });
 
   it('does not change additionalProperties with empty properties', () => {
+    const transformer = new AdditionalPropertiesToUnconstrainedTransformer();
     assert.deepStrictEqual(
-      new AdditionalPropertiesToUnconstrainedTransformer().transformOpenApi({
+      transformer.transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -123,7 +127,7 @@ describe('AdditionalPropertiesToUnconstrainedTransformer', () => {
           },
         },
         paths: {},
-      }),
+      })),
       {
         openapi: '3.0.3',
         info: {
