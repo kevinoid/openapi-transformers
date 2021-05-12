@@ -1,7 +1,7 @@
 /**
  * @copyright Copyright 2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
- * @module "openapi-transformers/remove-html-response-content.js"
+ * @module "openapi-transformers/clear-html-response-schema.js"
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
@@ -22,7 +22,7 @@ function isHtml(mediaType) {
  *   "InvalidOperationException: The stream was already consumed. It cannot be
  *   read again.") and must reimplement charset detection to use on Stream.
  */
-export default class RemoveHtmlResponseContentTransformer
+export default class ClearHtmlResponseSchemaTransformer
   extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformResponse(response) {

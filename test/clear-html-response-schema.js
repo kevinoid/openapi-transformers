@@ -5,13 +5,13 @@
 
 import assert from 'assert';
 
-import RemoveHtmlResponseContentTransformer
-  from '../remove-html-response-content.js';
+import ClearHtmlResponseSchemaTransformer
+  from '../clear-html-response-schema.js';
 
-describe('RemoveHtmlResponseContentTransformer', () => {
+describe('ClearHtmlResponseSchemaTransformer', () => {
   it('removes schema for text/html response in openapi 3', () => {
     assert.deepStrictEqual(
-      new RemoveHtmlResponseContentTransformer().transformOpenApi({
+      new ClearHtmlResponseSchemaTransformer().transformOpenApi({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -97,7 +97,7 @@ describe('RemoveHtmlResponseContentTransformer', () => {
 
   it('removes schema for text/html;charset response in openapi 3', () => {
     assert.deepStrictEqual(
-      new RemoveHtmlResponseContentTransformer().transformOpenApi({
+      new ClearHtmlResponseSchemaTransformer().transformOpenApi({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -183,7 +183,7 @@ describe('RemoveHtmlResponseContentTransformer', () => {
 
   it('removes schema for text/html response in swagger 2', () => {
     assert.deepStrictEqual(
-      new RemoveHtmlResponseContentTransformer().transformOpenApi({
+      new ClearHtmlResponseSchemaTransformer().transformOpenApi({
         swagger: '2.0',
         info: {
           title: 'Title',
