@@ -5,12 +5,12 @@
 
 import assert from 'assert';
 
-import MoveXMsPathsTransformer from '../move-x-ms-paths.js';
+import QueriesToXMsPathsTransformer from '../queries-to-x-ms-paths.js';
 
-describe('MoveXMsPathsTransformer', () => {
+describe('QueriesToXMsPathsTransformer', () => {
   it('moves paths with query to x-ms-paths in openapi 3', () => {
     assert.deepStrictEqual(
-      new MoveXMsPathsTransformer().transformOpenApi({
+      new QueriesToXMsPathsTransformer().transformOpenApi({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -71,7 +71,7 @@ describe('MoveXMsPathsTransformer', () => {
 
   it('does not create x-ms-paths if none have queries', () => {
     assert.deepStrictEqual(
-      new MoveXMsPathsTransformer().transformOpenApi({
+      new QueriesToXMsPathsTransformer().transformOpenApi({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -114,7 +114,7 @@ describe('MoveXMsPathsTransformer', () => {
   // Must be present, even if empty.
   it('leaves empty paths after moving', () => {
     assert.deepStrictEqual(
-      new MoveXMsPathsTransformer().transformOpenApi({
+      new QueriesToXMsPathsTransformer().transformOpenApi({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -156,7 +156,7 @@ describe('MoveXMsPathsTransformer', () => {
 
   it('moves paths with query to x-ms-paths in swagger 2', () => {
     assert.deepStrictEqual(
-      new MoveXMsPathsTransformer().transformOpenApi({
+      new QueriesToXMsPathsTransformer().transformOpenApi({
         swagger: '2.0',
         info: {
           title: 'Title',

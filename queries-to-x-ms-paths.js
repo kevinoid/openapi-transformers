@@ -1,7 +1,7 @@
 /**
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
- * @module "openapi-transformers/move-x-ms-paths.js"
+ * @module "openapi-transformers/queries-to-x-ms-paths.js"
  */
 
 import assert from 'assert';
@@ -23,7 +23,7 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
  * but it has the benefit of working with lots of tooling without support for
  * x-ms-paths (e.g. for linting, docs generation, etc.)
  */
-export default class MoveXMsPathsTransformer
+export default class QueriesToXMsPathsTransformer
   extends OpenApiTransformerBase {
   // Override as performance optimization, since only transforming paths
   // eslint-disable-next-line class-methods-use-this
