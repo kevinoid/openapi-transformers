@@ -1,15 +1,4 @@
 /**
- * Script to remove response content for the text/html media type.
- *
- * Autorest does not provide a good way to consume text/html:
- * - If the schema has type: string (with or without format: binary), the
- *   generated method attempts to JSON-decode the HTML, which fails.
- * - If the schema has type: file, Autorest calls HttpContent.ReadAsStreamAsync
- *   and returns the Stream, which complicates conversion to string, since the
- *   caller can't call HttpContent.ReadAsStringAsync (which would cause
- *   "InvalidOperationException: The stream was already consumed. It cannot be
- *   read again.") and must reimplement charset detection to use on Stream.
- *
  * @copyright Copyright 2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -20,6 +9,18 @@ function isHtml(mediaType) {
   return /^\s*text\/html\s*(;.*)?$/i.test(mediaType);
 }
 
+/**
+ * Transformer to remove response content for the text/html media type.
+ *
+ * Autorest does not provide a good way to consume text/html:
+ * - If the schema has type: string (with or without format: binary), the
+ *   generated method attempts to JSON-decode the HTML, which fails.
+ * - If the schema has type: file, Autorest calls HttpContent.ReadAsStreamAsync
+ *   and returns the Stream, which complicates conversion to string, since the
+ *   caller can't call HttpContent.ReadAsStringAsync (which would cause
+ *   "InvalidOperationException: The stream was already consumed. It cannot be
+ *   read again.") and must reimplement charset detection to use on Stream.
+ */
 export default class RemoveHtmlResponseContentTransformer
   extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this

@@ -1,7 +1,4 @@
 /**
- * Script to replace `type: string, format: binary` (or `format: file`) with
- * `type: file` so that Autorest generates to a Stream instead of string.
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -22,6 +19,10 @@ function transformSchemaType(schema) {
   return schema;
 }
 
+/**
+ * Transformer to replace `type: string, format: binary` (or `format: file`)
+ * with `type: file` so that Autorest generates to a Stream instead of string.
+ */
 export default class BinaryStringToFileTransformer
   extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this

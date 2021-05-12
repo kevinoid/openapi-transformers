@@ -1,8 +1,4 @@
 /**
- * Script to move parameters defined on Path Item Objects to the beginning of
- * the parameters array of the Operation Objects so that they will be generated
- * in the desired order (path-first).
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -20,6 +16,11 @@ const PATH_METHODS = [
   'trace',
 ];
 
+/**
+ * Transformer to move parameters defined on Path Item Objects to the beginning
+ * of the parameters array of the Operation Objects so that they will be
+ * generated in the desired order (path-first).
+ */
 export default class PathParametersToOperationTransformer
   extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this

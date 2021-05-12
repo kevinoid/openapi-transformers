@@ -1,8 +1,4 @@
 /**
- * Script to change request parameter types to string for operations which
- * only consume application/x-www-form-urlencoded, to work around
- * https://github.com/Azure/autorest/issues/3449
- *
  * @copyright Copyright 2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -17,6 +13,11 @@ function isUrlencoded(mediaType) {
   return /^application\/x-www-form-urlencoded\s*(;.*)?$/i.test(mediaType);
 }
 
+/**
+ * Transformer to change request parameter types to string for operations which
+ * only consume application/x-www-form-urlencoded, to work around
+ * https://github.com/Azure/autorest/issues/3449
+ */
 export default class UrlencodedToStringTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

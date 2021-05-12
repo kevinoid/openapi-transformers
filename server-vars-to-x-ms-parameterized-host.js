@@ -1,14 +1,4 @@
 /**
- * Convert Server Variables in host portion to x-ms-parameterized-host for use
- * with OpenAPI 2.
- *
- * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-parameterized-host
- *
- * TODO: Roll this into OpenAPI 3 -> 2 conversion?
- *
- * Note: Currently expects OAS3 input (required for Server Objects) but
- * produces OAS2 parameters as specified for x-ms-parameterized-host.
- *
  * @copyright Copyright 2019-2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -44,6 +34,17 @@ function serverVariableToParameter(name, serverVar) {
   return serverParam;
 }
 
+/**
+ * Convert Server Variables in host portion to x-ms-parameterized-host for use
+ * with OpenAPI 2.
+ *
+ * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-parameterized-host
+ *
+ * TODO: Roll this into OpenAPI 3 -> 2 conversion?
+ *
+ * Note: Currently expects OAS3 input (required for Server Objects) but
+ * produces OAS2 parameters as specified for x-ms-parameterized-host.
+ */
 export default class ServerVarsToParamHostTransformer
   extends OpenApiTransformerBase {
   constructor(options = {}) {

@@ -1,9 +1,4 @@
 /**
- * Convert x-deprecated.replaced-by to x-deprecated.description, if not present.
- * https://github.com/Azure/autorest/tree/master/Samples/test/deprecated
- *
- * Since Autorest C# doesn't use replaced-by, but does use description.
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -27,6 +22,12 @@ function transformXDeprecated(schema) {
   return schema;
 }
 
+/**
+ * Convert x-deprecated.replaced-by to x-deprecated.description, if not present.
+ * https://github.com/Azure/autorest/tree/master/Samples/test/deprecated
+ *
+ * Since Autorest C# doesn't use replaced-by, but does use description.
+ */
 export default class ReplacedByToDescriptionTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

@@ -1,6 +1,4 @@
 /**
- * OpenAPI Transformer to rename components.
- *
  * @copyright Copyright 2021 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -118,6 +116,9 @@ function renameRefObj(jsonPtrRegexp, obj, renameFunc) {
   return undefined;
 }
 
+/**
+ * OpenAPI Transformer to rename components.
+ */
 export default class RenameComponentsTransformer
   extends OpenApiTransformerBase {
   constructor(options) {

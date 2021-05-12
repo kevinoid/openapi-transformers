@@ -1,9 +1,4 @@
 /**
- * Script to inline schemas with non-object type so that Autorest will
- * generate validation code.
- *
- * https://github.com/Azure/autorest.csharp/issues/795
- *
  * @copyright Copyright 2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -33,6 +28,12 @@ const validationKeywords = {
   uniqueItems: true,
 };
 
+/**
+ * Transformer to inline schemas with non-object type so that Autorest will
+ * generate validation code.
+ *
+ * https://github.com/Azure/autorest.csharp/issues/795
+ */
 export default class InlineNonObjectSchemaTransformer
   extends OpenApiTransformerBase {
   constructor(options) {

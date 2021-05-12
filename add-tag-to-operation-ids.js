@@ -1,10 +1,4 @@
 /**
- * Script to prefix operationId with the first tag name and an underscore,
- * which Autorest recognizes as an "operation group" represented by a separate
- * API class when generating the client.
- *
- * See https://github.com/Azure/autorest/issues/1497#issuecomment-252082163
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -15,6 +9,13 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const debug = debuglog('add-tag-to-operation-ids');
 
+/**
+ * Transformer to prefix operationId with the first tag name and an underscore,
+ * which Autorest recognizes as an "operation group" represented by a separate
+ * API class when generating the client.
+ *
+ * See https://github.com/Azure/autorest/issues/1497#issuecomment-252082163
+ */
 export default class AddTagToOperationIdsTransformer
   extends OpenApiTransformerBase {
   constructor({ tagSuffix = '' } = {}) {

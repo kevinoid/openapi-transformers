@@ -1,15 +1,4 @@
 /**
- * Script to replace schemas using allOf/anyOf/oneOf with a single child schema
- * by the child schema with parent attributes applied.
- *
- * Schemas which use the workaround suggested by Ian Goncharov
- * https://github.com/OAI/OpenAPI-Specification/issues/556#issuecomment-192007034
- * in order to define properties with a $ref type and additional attributes
- * (e.g. description, deprecated, xml) will not work with Autorest due to
- * Azure/autorest#2652 and Azure/autorest#3417.  Support for Autorest can be
- * achieved by moving the attributes onto the $ref object (which violates OAS
- * and JSON Reference, but is accepted by Autorest), as done by this script.
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -33,6 +22,18 @@ function hasCollision(schema, ofSchema, ofName) {
     });
 }
 
+/**
+ * Transformer to replace schemas using allOf/anyOf/oneOf with a single child
+ * schema by the child schema with parent attributes applied.
+ *
+ * Schemas which use the workaround suggested by Ian Goncharov
+ * https://github.com/OAI/OpenAPI-Specification/issues/556#issuecomment-192007034
+ * in order to define properties with a $ref type and additional attributes
+ * (e.g. description, deprecated, xml) will not work with Autorest due to
+ * Azure/autorest#2652 and Azure/autorest#3417.  Support for Autorest can be
+ * achieved by moving the attributes onto the $ref object (which violates OAS
+ * and JSON Reference, but is accepted by Autorest), as done by this script.
+ */
 export default class CollapseSingleOfTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

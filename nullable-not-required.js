@@ -1,9 +1,4 @@
 /**
- * Script to make properties which are nullable non-required to work around
- * partial support for x-nullable in Autorest.  Currently nullable data types
- * are used (e.g. Nullable<int>) but the Validate() method doesn't allow null.
- * See:  https://github.com/Azure/autorest/issues/3300
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -55,6 +50,12 @@ function isNullable(schema, propName) {
   return true;
 }
 
+/**
+ * Transformer to make properties which are nullable non-required to work around
+ * partial support for x-nullable in Autorest.  Currently nullable data types
+ * are used (e.g. Nullable<int>) but the Validate() method doesn't allow null.
+ * See:  https://github.com/Azure/autorest/issues/3300
+ */
 export default class NullableNotRequiredTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

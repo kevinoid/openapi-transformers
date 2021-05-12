@@ -1,13 +1,14 @@
 /**
- * Script to replace boolean additionalProperties with an object schema to
- * work around https://github.com/Azure/autorest/issues/3439.
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
+/**
+ * Transformer to replace boolean additionalProperties with an object schema to
+ * work around https://github.com/Azure/autorest/issues/3439.
+ */
 export default class AdditionalPropertiesToObjectTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

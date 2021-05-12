@@ -1,15 +1,16 @@
 /**
- * Script to convert add x-ms-enum.name from schema name, if not present
- * (so Autorest will generate enum types).
- *
- * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-enum
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
+/**
+ * Transformer to convert add x-ms-enum.name from schema name, if not present
+ * (so Autorest will generate enum types).
+ *
+ * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-enum
+ */
 export default class AddXMsEnumNameTransformer extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformSchema(schema, schemaName) {

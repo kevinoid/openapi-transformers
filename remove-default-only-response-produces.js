@@ -1,18 +1,19 @@
 /**
- * Script to remove produces from operations with only a default response.
- *
- * If an operation only produces non-JSON types and only has a default response
- * code, Autorest (core 2.0.4413 and 3.0.6246) will generate methods which do
- * not return a value.  If the operation does not produce any types, Autorest
- * will generate a method which returns the response value (e.g. Stream for
- * type: file).
- *
  * @copyright Copyright 2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
+/**
+ * Transformer to remove produces from operations with only a default response.
+ *
+ * If an operation only produces non-JSON types and only has a default response
+ * code, Autorest (core 2.0.4413 and 3.0.6246) will generate methods which do
+ * not return a value.  If the operation does not produce any types, Autorest
+ * will generate a method which returns the response value (e.g. Stream for
+ * type: file).
+ */
 export default class RemoveDefaultOnlyResponseProducesTransformer
   extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this

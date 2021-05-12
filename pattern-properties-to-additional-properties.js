@@ -1,9 +1,4 @@
 /**
- * Script to combine any patternProperties into additionalProperties (for
- * conversion from OpenAPI 3.1 to prior versions before patternProperties
- * was supported).
- * https://github.com/OAI/OpenAPI-Specification/issues/687
- *
  * @copyright Copyright 2021 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -11,6 +6,12 @@
 import OpenApiTransformerBase from 'openapi-transformer-base';
 import { isDeepStrictEqual } from 'util';
 
+/**
+ * Transformer to combine any patternProperties into additionalProperties (for
+ * conversion from OpenAPI 3.1 to prior versions before patternProperties
+ * was supported).
+ * https://github.com/OAI/OpenAPI-Specification/issues/687
+ */
 export default class PatternPropertiesToAdditionalPropertiesTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

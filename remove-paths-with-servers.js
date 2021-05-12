@@ -1,13 +1,14 @@
 /**
- * Remove Path Item Objects which have servers (and therefore can't be
- * represented in OpenAPI 2).
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
+/**
+ * Remove Path Item Objects which have servers (and therefore can't be
+ * represented in OpenAPI 2).
+ */
 export default class RemovePathsWithServers extends OpenApiTransformerBase {
   // eslint-disable-next-line class-methods-use-this
   transformPaths(paths) {

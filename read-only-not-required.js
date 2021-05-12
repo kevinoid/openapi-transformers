@@ -1,6 +1,13 @@
 /**
- * Script to ensure readOnly schema properties are not required, to work around
- * lack of support in generators.
+ * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
+ * @license MIT
+ */
+
+import OpenApiTransformerBase from 'openapi-transformer-base';
+
+/**
+ * Transformer to ensure readOnly schema properties are not required, to work
+ * around lack of support in generators.
  *
  * The behavior of required readOnly/writeOnly properties is defined in OAS3
  * (the requirement only applies on response/request), but not in OAS2 (where
@@ -12,13 +19,7 @@
  * - required properties are non-nullable (unless x-nullable: true).
  * - non-required properties are nullable (unless x-nullable: false).
  * - validation is applied to non-null values in requests, not responses.
- *
- * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
- * @license MIT
  */
-
-import OpenApiTransformerBase from 'openapi-transformer-base';
-
 export default class ReadOnlyNotRequiredTransformer
   extends OpenApiTransformerBase {
   constructor(options = {}) {

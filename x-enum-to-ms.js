@@ -1,10 +1,4 @@
 /**
- * Script to convert x-enum-descriptions and x-enum-varnames to x-ms-enum
- * for Autorest.
- *
- * https://github.com/OpenAPITools/openapi-generator/blob/master/docs/templating.md#enum
- * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-enum
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -53,6 +47,13 @@ function transformSchemaXEnumToXMsEnum(schema, schemaName) {
   return newSchema;
 }
 
+/**
+ * Transformer to convert x-enum-descriptions and x-enum-varnames to x-ms-enum
+ * for Autorest.
+ *
+ * https://github.com/OpenAPITools/openapi-generator/blob/master/docs/templating.md#enum
+ * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-enum
+ */
 export default class XEnumToXMsEnumTransformer extends OpenApiTransformerBase {
   transformSchema(schema, schemaName) {
     return transformSchemaXEnumToXMsEnum(

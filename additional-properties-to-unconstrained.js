@@ -1,8 +1,4 @@
 /**
- * Script to replace additionalProperties (and patternProperties) with an
- * unconstrained schema alongside other properties to work around
- * https://github.com/Azure/autorest/issues/2469
- *
  * @copyright Copyright 2019-2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -96,6 +92,11 @@ function hasConstrainedAdditionalProps(schema) {
         && Object.keys(schema.patternProperties).length > 0));
 }
 
+/**
+ * Transformer to replace additionalProperties (and patternProperties) with an
+ * unconstrained schema alongside other properties to work around
+ * https://github.com/Azure/autorest/issues/2469
+ */
 export default class AdditionalPropertiesToUnconstrainedTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {

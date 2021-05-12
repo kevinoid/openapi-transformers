@@ -1,5 +1,14 @@
 /**
- * Script to move paths with query parameters from paths to x-ms-paths for
+ * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
+ * @license MIT
+ */
+
+import assert from 'assert';
+
+import OpenApiTransformerBase from 'openapi-transformer-base';
+
+/**
+ * Transformer to move paths with query parameters from paths to x-ms-paths for
  * Autorest.
  *
  * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-paths
@@ -12,15 +21,7 @@
  * https://github.com/OAI/OpenAPI-Specification/issues/468#issuecomment-142393969
  * but it has the benefit of working with lots of tooling without support for
  * x-ms-paths (e.g. for linting, docs generation, etc.)
- *
- * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
- * @license MIT
  */
-
-import assert from 'assert';
-
-import OpenApiTransformerBase from 'openapi-transformer-base';
-
 export default class MoveXMsPathsTransformer
   extends OpenApiTransformerBase {
   // Override as performance optimization, since only transforming paths

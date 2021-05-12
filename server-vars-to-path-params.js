@@ -1,9 +1,4 @@
 /**
- * Convert Server Variables in path portion to Parameters on Path Item Objects
- * for use with OpenAPI 2.
- *
- * TODO: Roll this into OpenAPI 3 -> 2 conversion?
- *
  * @copyright Copyright 2019-2020 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -72,6 +67,12 @@ function transformPaths(paths, serverPath, serverParams) {
     }, Object.create(Object.getPrototypeOf(paths)));
 }
 
+/**
+ * Convert Server Variables in path portion to Parameters on Path Item Objects
+ * for use with OpenAPI 2.
+ *
+ * TODO: Roll this into OpenAPI 3 -> 2 conversion?
+ */
 export default class ServerVarsToPathParamsTransformer
   extends OpenApiTransformerBase {
   constructor(options = {}) {

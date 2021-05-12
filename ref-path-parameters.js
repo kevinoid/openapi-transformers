@@ -1,9 +1,4 @@
 /**
- * Move Parameters defined on Path Item Objects to global parameters which
- * are referenced in the Path Item so that Autorest will treat them as
- * properties of the generated client, rather than method.
- * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-parameter-location
- *
  * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
@@ -11,6 +6,12 @@
 import assert from 'assert';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
+/**
+ * Move Parameters defined on Path Item Objects to global parameters which
+ * are referenced in the Path Item so that Autorest will treat them as
+ * properties of the generated client, rather than method.
+ * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-parameter-location
+ */
 export default class RefPathParametersTransformer
   extends OpenApiTransformerBase {
   transformPathItem(pathItem) {
