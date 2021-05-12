@@ -6,12 +6,12 @@
 import assert from 'assert';
 import deepFreeze from 'deep-freeze';
 
-import RemovePathsWithServers from '../remove-paths-with-servers.js';
+import RemovePathsWithServersTransformer from '../remove-paths-with-servers.js';
 
-describe('RemovePathsWithServers', () => {
+describe('RemovePathsWithServersTransformer', () => {
   it('removes path items with servers', () => {
     assert.deepStrictEqual(
-      new RemovePathsWithServers().transformOpenApi(deepFreeze({
+      new RemovePathsWithServersTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
@@ -64,7 +64,7 @@ describe('RemovePathsWithServers', () => {
 
   it('removes path items with empty servers', () => {
     assert.deepStrictEqual(
-      new RemovePathsWithServers().transformOpenApi(deepFreeze({
+      new RemovePathsWithServersTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
         info: {
           title: 'Title',
