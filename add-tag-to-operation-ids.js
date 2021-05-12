@@ -20,13 +20,25 @@ export default class AddTagToOperationIdsTransformer
   }
 
   transformOperation(op) {
-    if (!op.tags || !op.operationId) {
+    if (op === null || typeof op !== 'object') {
+      return op;
+    }
+
+    const { tags } = op;
+    if (!Array.isArray(tags) || tags.length === 0) {
+      return op;
+    }
+
+    const { operationId } = op;
+    if (operationId === undefined
+      || operationId === null
+      || operationId === '') {
       return op;
     }
 
     return {
       ...op,
-      operationId: `${op.tags[0]}${this.tagSuffix}_${op.operationId}`,
+      operationId: `${tags[0]}${this.tagSuffix}_${operationId}`,
     };
   }
 
