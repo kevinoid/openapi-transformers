@@ -9,7 +9,11 @@
  * @license MIT
  */
 
+import { debuglog } from 'util';
+
 import OpenApiTransformerBase from 'openapi-transformer-base';
+
+const debug = debuglog('add-tag-to-operation-ids');
 
 // eslint-disable-next-line import/no-unused-modules
 export default class AddTagToOperationIdsTransformer
@@ -21,11 +25,13 @@ export default class AddTagToOperationIdsTransformer
 
   transformOperation(op) {
     if (op === null || typeof op !== 'object') {
+      debug('Not adding tag to non-object operation %O', op);
       return op;
     }
 
     const { tags } = op;
     if (!Array.isArray(tags) || tags.length === 0) {
+      debug('No tag to add for operation %O', op);
       return op;
     }
 
@@ -33,6 +39,7 @@ export default class AddTagToOperationIdsTransformer
     if (operationId === undefined
       || operationId === null
       || operationId === '') {
+      debug('No operationId to add for operation %O', op);
       return op;
     }
 
