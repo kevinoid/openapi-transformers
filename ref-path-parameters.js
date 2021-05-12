@@ -7,6 +7,9 @@
 import assert from 'assert';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
+const componentParamsSymbol = Symbol('componentParams');
+const paramRefPrefixSymbol = Symbol('paramRefPrefix');
+
 /**
  * Move Parameters defined on Path Item Objects to global parameters which
  * are referenced in the Path Item so that Autorest will treat them as
@@ -27,14 +30,14 @@ export default class RefPathParametersTransformer
           return param;
         }
 
-        const gparam = this.parameters[param.name];
+        const gparam = this[componentParamsSymbol][param.name];
         if (gparam) {
           assert.deepStrictEqual(gparam, param);
         } else {
-          this.parameters[param.name] = param;
+          this[componentParamsSymbol][param.name] = param;
         }
 
-        return { $ref: this.paramRefPrefix + param.name };
+        return { $ref: this[paramRefPrefixSymbol] + param.name };
       }),
     };
   }
@@ -44,13 +47,13 @@ export default class RefPathParametersTransformer
 
     if (spec.swagger) {
       newSpec.parameters = { ...newSpec.parameters };
-      this.parameters = newSpec.parameters;
-      this.paramRefPrefix = '#/parameters/';
+      this[componentParamsSymbol] = newSpec.parameters;
+      this[paramRefPrefixSymbol] = '#/parameters/';
     } else {
       newSpec.components = { ...newSpec.components };
       newSpec.components.parameters = { ...newSpec.components.parameters };
-      this.parameters = newSpec.components.parameters;
-      this.paramRefPrefix = '#/components/parameters/';
+      this[componentParamsSymbol] = newSpec.components.parameters;
+      this[paramRefPrefixSymbol] = '#/components/parameters/';
     }
 
     newSpec.paths = this.transformPaths(spec.paths);
