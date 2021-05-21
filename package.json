@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "A collection of classes to transform OpenAPI documents.",
   "keywords": [
-    "openapi-transformers",
-    "template"
+    "openapi",
+    "openapi-transformer",
+    "swagger"
   ],
   "license": "MIT",
   "homepage": "https://github.com/kevinoid/openapi-transformers",
