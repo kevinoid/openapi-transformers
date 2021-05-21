@@ -4,16 +4,11 @@
  * @module "openapi-transformers/client-params-to-global.js"
  */
 
-// Any unique, deterministic stringify function would work.
-// TODO: Benchmark against native JSON.stringify result of sort-keys deep
-// https://github.com/sindresorhus/hash-obj/blob/master/index.js#L17
-// https://github.com/epoberezkin/fast-json-stable-stringify#benchmark
-import stringify from 'fast-json-stable-stringify';
-
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const parametersSymbol = Symbol('parameters');
-const parametersMapSymbol = Symbol('parametersMap');
+import MatchingParameterManager from './lib/matching-parameter-manager.js';
+
+const parameterManagerSymbol = Symbol('parameterManager');
 const parametersPathSymbol = Symbol('parametersPath');
 
 /** Encodes a "reference token" (i.e. path segment) for use in a JSON Pointer
@@ -25,44 +20,6 @@ const parametersPathSymbol = Symbol('parametersPath');
  */
 function encodeJsonPointerComponent(pathSegment) {
   return pathSegment.replace(/~/g, '~0').replace(/\//g, '~1');
-}
-
-function parameterToKey(parameter) {
-  // Autorest treats global parameters as properties on the client by default.
-  // Remove x-ms-parameter-location:client to combine parameters which only
-  // differ by this property.
-  if (parameter['x-ms-parameter-location'] === 'client') {
-    const { 'x-ms-parameter-location': _, ...paramNoLoc } = parameter;
-    parameter = paramNoLoc;
-  }
-
-  return stringify(parameter);
-}
-
-function buildParametersMap(parameters) {
-  const parametersMap = new Map();
-  for (const paramName of Object.keys(parameters)) {
-    const parameter = parameters[paramName];
-    if (parameter) {
-      parametersMap.set(
-        parameterToKey(parameter),
-        encodeJsonPointerComponent(paramName),
-      );
-    }
-  }
-  return parametersMap;
-}
-
-function getUnusedPropName(obj, propName) {
-  if (!hasOwnProperty.call(obj, propName)) {
-    return propName;
-  }
-
-  for (let i = 2; ; i += 1) {
-    if (!hasOwnProperty.call(obj, propName + i)) {
-      return propName + i;
-    }
-  }
 }
 
 /**
@@ -82,19 +39,9 @@ export default class ClientParamsToGlobalTransformer
       return parameter;
     }
 
-    const parametersMap = this[parametersMapSymbol];
-    const parameterStr = parameterToKey(parameter);
-    let paramNameEncoded = parametersMap.get(parameterStr);
-    if (paramNameEncoded === undefined) {
-      const parameters = this[parametersSymbol];
-      const paramName = getUnusedPropName(parameters, String(parameter.name));
-      parameters[paramName] = parameter;
-      paramNameEncoded = encodeJsonPointerComponent(paramName);
-      parametersMap.set(parameterStr, paramNameEncoded);
-    }
-
+    const defName = this[parameterManagerSymbol].add(parameter, parameter.name);
     return {
-      $ref: this[parametersPathSymbol] + paramNameEncoded,
+      $ref: this[parametersPathSymbol] + encodeJsonPointerComponent(defName),
     };
   }
 
@@ -107,8 +54,8 @@ export default class ClientParamsToGlobalTransformer
     if (/^3(?:\.|$)/.test(openapi)
       || (typeof components === 'object' && components !== null)) {
       const newParameters = { ...components && components.parameters };
-      this[parametersSymbol] = newParameters;
-      this[parametersMapSymbol] = buildParametersMap(newParameters);
+      this[parameterManagerSymbol] =
+        new MatchingParameterManager(newParameters);
       this[parametersPathSymbol] = '#/components/parameters/';
 
       return {
@@ -125,8 +72,8 @@ export default class ClientParamsToGlobalTransformer
     if (/^2(?:\.|$)/.test(swagger)
       || (typeof parameters === 'object' && parameters !== null)) {
       const newParameters = { ...parameters };
-      this[parametersSymbol] = newParameters;
-      this[parametersMapSymbol] = buildParametersMap(newParameters);
+      this[parameterManagerSymbol] =
+        new MatchingParameterManager(newParameters);
       this[parametersPathSymbol] = '#/parameters/';
 
       return {
