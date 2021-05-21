@@ -6,7 +6,12 @@
 
 import assert from 'assert';
 
+// Note: Undocumented function which is part of the public API
+// https://github.com/flitbit/json-ptr/issues/29
+import { encodeUriFragmentIdentifier } from 'json-ptr';
 import OpenApiTransformerBase from 'openapi-transformer-base';
+
+import MatchingParameterManager from './lib/matching-parameter-manager.js';
 
 /** Gets the longest common suffix of two strings.
  *
@@ -164,11 +169,12 @@ export default class ServerVarsToPathParamsTransformer
     let parameters, paramRefPrefix;
     if (spec.openapi) {
       parameters = { ...spec.components && spec.components.parameters };
-      paramRefPrefix = '#/components/parameters/';
+      paramRefPrefix = ['components', 'parameters'];
     } else {
       parameters = { ...spec.parameters };
-      paramRefPrefix = '#/parameters/';
+      paramRefPrefix = ['parameters'];
     }
+    const paramManager = new MatchingParameterManager(parameters);
 
     const serverParamRefs = Object.keys(pathSuffixVars).map((name) => {
       const serverVar = pathSuffixVars[name];
@@ -192,13 +198,10 @@ export default class ServerVarsToPathParamsTransformer
         Object.assign(serverParam, serverVar);
       }
 
-      if (hasOwnProperty.call(parameters, name)) {
-        throw new Error(
-          `Server variable ${name} conflicts with parameter of same name.`,
-        );
-      }
-      parameters[name] = serverParam;
-      return { $ref: paramRefPrefix + name };
+      const defName = paramManager.add(serverParam, name);
+      return {
+        $ref: encodeUriFragmentIdentifier([...paramRefPrefix, defName]),
+      };
     });
 
     const newPathPrefix = pathSuffix.replace(/\/$/, '');
