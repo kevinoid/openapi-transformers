@@ -4,6 +4,12 @@
  * @module "openapi-transformers/rename-components.js"
  */
 
+// Note: Undocumented functions which are part of the public API:
+// https://github.com/flitbit/json-ptr/issues/29
+import {
+  decodeUriFragmentIdentifier,
+  encodeUriFragmentIdentifier,
+} from 'json-ptr';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const renameFuncsSymbol = Symbol('renameFuncs');
@@ -21,42 +27,6 @@ const componentFieldNames = [
   'callbacks',
   'pathItems',
 ];
-
-/** Decodes a JSON Pointer token.
- *
- * @private
- * @param {string} token Encoded JSON Pointer token.
- * @returns {string} Decoded JSON Pointer token.
- */
-function decodeToken(token) {
-  return token.replace(/~1/g, '/').replace(/~0/g, '~');
-}
-
-/** Encodes a JSON Pointer token.
- *
- * @private
- * @param {string} token Decoded JSON Pointer token.
- * @returns {string} Encoded JSON Pointer token.
- */
-function encodeToken(token) {
-  return token.replace(/~/g, '~0').replace(/\//g, '~1');
-}
-
-/** Encodes a URI fragment.
- *
- * Encodes only characters not permitted by fragment production of RFC 3986
- * https://tools.ietf.org/html/rfc3986#appendix-A
- *
- * @private
- * @param {string} fragment Decoded portion of a URI after #.
- * @returns {string} Encoded portion of a URI after #.
- */
-function encodeURIFragment(fragment) {
-  return encodeURI(fragment)
-    .replace(/#/g, '%23')
-    .replace(/@/g, '%40')
-    .replace(/:/g, '%3A');
-}
 
 function renameProps(obj, renameFunc) {
   if (!renameFunc
@@ -85,22 +55,15 @@ function renameRefObj(jsonPtrRegexp, obj, renameFunc) {
     const { $ref } = obj;
     if (typeof $ref === 'string' && $ref[0] === '#') {
       try {
-        // Note: json-ptr incorrectly decodes each slash-separated component
-        // treating #/a%2Fb as ["a/b"] rather than ["a"]["b"].
-        // It's also unclear if encode/decode funcs are part of public API
-        // https://github.com/flitbit/json-ptr/issues/29
-        const jsonPtr = decodeURIComponent($ref.slice(1));
-        if (jsonPtrRegexp.test(jsonPtr)) {
-          const tokens = jsonPtr.slice(1).split('/');
-          const name = decodeToken(tokens[tokens.length - 1]);
-          const newName = renameFunc(name);
-          if (newName !== name) {
-            tokens[tokens.length - 1] = encodeToken(newName);
-            return {
-              ...obj,
-              $ref: `#/${encodeURIFragment(tokens.join('/'))}`,
-            };
-          }
+        const tokens = decodeUriFragmentIdentifier($ref);
+        const name = tokens[tokens.length - 1];
+        const newName = renameFunc(name);
+        if (newName !== name) {
+          tokens[tokens.length - 1] = newName;
+          return {
+            ...obj,
+            $ref: encodeUriFragmentIdentifier(tokens),
+          };
         }
       } catch (errDecode) {
         // If $ref is not a valid URI, ignore it.
