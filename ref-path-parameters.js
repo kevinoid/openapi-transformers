@@ -4,11 +4,15 @@
  * @module "openapi-transformers/ref-path-parameters.js"
  */
 
-import assert from 'assert';
+// Note: Undocumented function which is part of the public API:
+// https://github.com/flitbit/json-ptr/issues/29
+import { encodeUriFragmentIdentifier } from 'json-ptr';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const componentParamsSymbol = Symbol('componentParams');
-const paramRefPrefixSymbol = Symbol('paramRefPrefix');
+import MatchingParameterManager from './lib/matching-parameter-manager.js';
+
+const parameterManagerSymbol = Symbol('parameterManager');
+const parametersPathSymbol = Symbol('parametersPath');
 
 /**
  * Move Parameters defined on Path Item Objects to global parameters which
@@ -23,14 +27,14 @@ export default class RefPathParametersTransformer
       return param;
     }
 
-    const gparam = this[componentParamsSymbol][param.name];
-    if (gparam) {
-      assert.deepStrictEqual(gparam, param);
-    } else {
-      this[componentParamsSymbol][param.name] = param;
-    }
-
-    return { $ref: this[paramRefPrefixSymbol] + param.name };
+    const defName =
+      this[parameterManagerSymbol].add(param, param.name);
+    return {
+      $ref: encodeUriFragmentIdentifier([
+        ...this[parametersPathSymbol],
+        defName,
+      ]),
+    };
   }
 
   transformPathItem(pathItem) {
@@ -51,13 +55,15 @@ export default class RefPathParametersTransformer
 
     if (spec.swagger) {
       newSpec.parameters = { ...newSpec.parameters };
-      this[componentParamsSymbol] = newSpec.parameters;
-      this[paramRefPrefixSymbol] = '#/parameters/';
+      this[parameterManagerSymbol] =
+        new MatchingParameterManager(newSpec.parameters);
+      this[parametersPathSymbol] = ['parameters'];
     } else {
       newSpec.components = { ...newSpec.components };
       newSpec.components.parameters = { ...newSpec.components.parameters };
-      this[componentParamsSymbol] = newSpec.components.parameters;
-      this[paramRefPrefixSymbol] = '#/components/parameters/';
+      this[parameterManagerSymbol] =
+        new MatchingParameterManager(newSpec.components.parameters);
+      this[parametersPathSymbol] = ['components', 'parameters'];
     }
 
     newSpec.paths = this.transformPaths(spec.paths);
