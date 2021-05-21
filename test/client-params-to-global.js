@@ -511,7 +511,7 @@ describe('ClientParamsToGlobalTransformer', () => {
     );
   });
 
-  it('openapi 3 client parameter encodes name in $ref', () => {
+  it('openapi 3 client parameter JSON Pointer-encodes name in $ref', () => {
     assert.deepStrictEqual(
       new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
         openapi: '3.0.3',
@@ -564,6 +564,72 @@ describe('ClientParamsToGlobalTransformer', () => {
             get: {
               parameters: [
                 { $ref: '#/components/parameters/my~0query~1thing' },
+              ],
+              responses: {
+                204: {
+                  description: 'Example response',
+                },
+              },
+            },
+          },
+        },
+      },
+    );
+  });
+
+  it('openapi 3 client parameter percent-encodes name in $ref', () => {
+    assert.deepStrictEqual(
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        paths: {
+          '/': {
+            get: {
+              parameters: [
+                {
+                  name: 'my?query#thing',
+                  in: 'query',
+                  schema: {
+                    type: 'string',
+                  },
+                  'x-ms-parameter-location': 'client',
+                },
+              ],
+              responses: {
+                204: {
+                  description: 'Example response',
+                },
+              },
+            },
+          },
+        },
+      })),
+      {
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          parameters: {
+            'my?query#thing': {
+              name: 'my?query#thing',
+              in: 'query',
+              schema: {
+                type: 'string',
+              },
+              'x-ms-parameter-location': 'client',
+            },
+          },
+        },
+        paths: {
+          '/': {
+            get: {
+              parameters: [
+                { $ref: '#/components/parameters/my%3Fquery%23thing' },
               ],
               responses: {
                 204: {

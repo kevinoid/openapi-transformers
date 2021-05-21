@@ -4,23 +4,15 @@
  * @module "openapi-transformers/client-params-to-global.js"
  */
 
+// Note: Undocumented function which is part of the public API:
+// https://github.com/flitbit/json-ptr/issues/29
+import { encodeUriFragmentIdentifier } from 'json-ptr';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 import MatchingParameterManager from './lib/matching-parameter-manager.js';
 
 const parameterManagerSymbol = Symbol('parameterManager');
 const parametersPathSymbol = Symbol('parametersPath');
-
-/** Encodes a "reference token" (i.e. path segment) for use in a JSON Pointer
- * according to RFC 6901.
- *
- * @private
- * @param {string} pathSegment Path segment (i.e. reference token) to encode.
- * @returns {string} referenceToken encoded according to RFC 6901.
- */
-function encodeJsonPointerComponent(pathSegment) {
-  return pathSegment.replace(/~/g, '~0').replace(/\//g, '~1');
-}
 
 /**
  * Transformer to move parameters with x-ms-parameter-location:client defined on
@@ -41,7 +33,10 @@ export default class ClientParamsToGlobalTransformer
 
     const defName = this[parameterManagerSymbol].add(parameter, parameter.name);
     return {
-      $ref: this[parametersPathSymbol] + encodeJsonPointerComponent(defName),
+      $ref: encodeUriFragmentIdentifier([
+        ...this[parametersPathSymbol],
+        defName,
+      ]),
     };
   }
 
@@ -56,7 +51,7 @@ export default class ClientParamsToGlobalTransformer
       const newParameters = { ...components && components.parameters };
       this[parameterManagerSymbol] =
         new MatchingParameterManager(newParameters);
-      this[parametersPathSymbol] = '#/components/parameters/';
+      this[parametersPathSymbol] = ['components', 'parameters'];
 
       return {
         ...openApi,
@@ -74,7 +69,7 @@ export default class ClientParamsToGlobalTransformer
       const newParameters = { ...parameters };
       this[parameterManagerSymbol] =
         new MatchingParameterManager(newParameters);
-      this[parametersPathSymbol] = '#/parameters/';
+      this[parametersPathSymbol] = ['parameters'];
 
       return {
         ...openApi,
