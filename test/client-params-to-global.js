@@ -172,6 +172,240 @@ describe('ClientParamsToGlobalTransformer', () => {
     );
   });
 
+  it('openapi 3 references existing parameter of same name', () => {
+    assert.deepStrictEqual(
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          parameters: {
+            myquery: {
+              name: 'myquery',
+              in: 'query',
+              schema: {
+                type: 'string',
+              },
+              'x-ms-parameter-location': 'client',
+            },
+          },
+        },
+        paths: {
+          '/a': {
+            get: {
+              parameters: [
+                {
+                  name: 'myquery',
+                  in: 'query',
+                  schema: {
+                    type: 'string',
+                  },
+                  'x-ms-parameter-location': 'client',
+                },
+              ],
+              responses: {
+                204: {
+                  description: 'Example response',
+                },
+              },
+            },
+          },
+        },
+      })),
+      {
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          parameters: {
+            myquery: {
+              name: 'myquery',
+              in: 'query',
+              schema: {
+                type: 'string',
+              },
+              'x-ms-parameter-location': 'client',
+            },
+          },
+        },
+        paths: {
+          '/a': {
+            get: {
+              parameters: [
+                { $ref: '#/components/parameters/myquery' },
+              ],
+              responses: {
+                204: {
+                  description: 'Example response',
+                },
+              },
+            },
+          },
+        },
+      },
+    );
+  });
+
+  it('openapi 3 references existing parameter of different name', () => {
+    assert.deepStrictEqual(
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          parameters: {
+            notmyquery: {
+              name: 'myquery',
+              in: 'query',
+              schema: {
+                type: 'string',
+              },
+              'x-ms-parameter-location': 'client',
+            },
+          },
+        },
+        paths: {
+          '/a': {
+            get: {
+              parameters: [
+                {
+                  name: 'myquery',
+                  in: 'query',
+                  schema: {
+                    type: 'string',
+                  },
+                  'x-ms-parameter-location': 'client',
+                },
+              ],
+              responses: {
+                204: {
+                  description: 'Example response',
+                },
+              },
+            },
+          },
+        },
+      })),
+      {
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          parameters: {
+            notmyquery: {
+              name: 'myquery',
+              in: 'query',
+              schema: {
+                type: 'string',
+              },
+              'x-ms-parameter-location': 'client',
+            },
+          },
+        },
+        paths: {
+          '/a': {
+            get: {
+              parameters: [
+                { $ref: '#/components/parameters/notmyquery' },
+              ],
+              responses: {
+                204: {
+                  description: 'Example response',
+                },
+              },
+            },
+          },
+        },
+      },
+    );
+  });
+
+  // Autorest treates unspecified x-ms-parameter-location as 'client' for
+  // parameters defined in components.
+  it('openapi 3 references existing parameter without x-ms-p-l', () => {
+    assert.deepStrictEqual(
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          parameters: {
+            notmyquery: {
+              name: 'myquery',
+              in: 'query',
+              schema: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        paths: {
+          '/a': {
+            get: {
+              parameters: [
+                {
+                  name: 'myquery',
+                  in: 'query',
+                  schema: {
+                    type: 'string',
+                  },
+                  'x-ms-parameter-location': 'client',
+                },
+              ],
+              responses: {
+                204: {
+                  description: 'Example response',
+                },
+              },
+            },
+          },
+        },
+      })),
+      {
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          parameters: {
+            notmyquery: {
+              name: 'myquery',
+              in: 'query',
+              schema: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        paths: {
+          '/a': {
+            get: {
+              parameters: [
+                { $ref: '#/components/parameters/notmyquery' },
+              ],
+              responses: {
+                204: {
+                  description: 'Example response',
+                },
+              },
+            },
+          },
+        },
+      },
+    );
+  });
+
   it('openapi 3 does not combine different client parameter', () => {
     assert.deepStrictEqual(
       new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
