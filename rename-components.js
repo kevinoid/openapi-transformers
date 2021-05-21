@@ -64,23 +64,21 @@ function renameRefObj(jsonPtrRegexp, obj, renameFunc) {
     return obj;
   }
 
+  let tokens;
   try {
-    const tokens = decodeUriFragmentIdentifier($ref);
-    const name = tokens[tokens.length - 1];
-    const newName = renameFunc(name);
-    if (newName !== name) {
-      tokens[tokens.length - 1] = newName;
-      return {
-        ...obj,
-        $ref: encodeUriFragmentIdentifier(tokens),
-      };
-    }
-  } catch (errDecode) {
-    // If $ref is not a valid URI, ignore it.
-    // If an unexpected error occurred, re-throw.
-    if (errDecode.name !== 'URIError') {
-      throw errDecode;
-    }
+    tokens = decodeUriFragmentIdentifier($ref);
+  } catch {
+    return obj;
+  }
+
+  const name = tokens[tokens.length - 1];
+  const newName = renameFunc(name);
+  if (newName !== name) {
+    tokens[tokens.length - 1] = newName;
+    return {
+      ...obj,
+      $ref: encodeUriFragmentIdentifier(tokens),
+    };
   }
 
   return obj;
