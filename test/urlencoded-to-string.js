@@ -120,7 +120,7 @@ describe('UrlencodedToStringTransformer', () => {
     );
   });
 
-  it('converts non-string properties of urlencoded to string', () => {
+  it('converts non-string formData parameters of urlencoded to string', () => {
     assert.deepStrictEqual(
       new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
         swagger: '2.0',
