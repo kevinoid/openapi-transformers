@@ -58,11 +58,22 @@ export default class UrlencodedToStringTransformer
   }
 
   transformParameter(parameter) {
-    if (!parameter || parameter.in !== 'formData') {
+    if (!parameter) {
       return parameter;
     }
 
-    return this.transformSchema(parameter);
+    if (parameter.in === 'formData') {
+      return this.transformSchema(parameter);
+    }
+
+    if (parameter.in === 'body' && parameter.schema) {
+      return {
+        ...parameter,
+        schema: this.transformSchema(parameter.schema),
+      };
+    }
+
+    return parameter;
   }
 
   transformRequestBody(requestBody) {
