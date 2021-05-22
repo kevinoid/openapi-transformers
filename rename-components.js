@@ -54,7 +54,7 @@ function isJsonRef(obj) {
   return obj && typeof obj.$ref === 'string';
 }
 
-function renameRefObj(jsonPtrRegexp, obj, renameFunc) {
+function renameRefObj(obj, getPathIndex, renameFunc) {
   if (!renameFunc) {
     return obj;
   }
@@ -71,10 +71,15 @@ function renameRefObj(jsonPtrRegexp, obj, renameFunc) {
     return obj;
   }
 
-  const name = tokens[tokens.length - 1];
+  const renameInd = getPathIndex(tokens);
+  if (renameInd < 0 || renameInd >= tokens.length) {
+    return obj;
+  }
+
+  const name = tokens[renameInd];
   const newName = renameFunc(name);
   if (newName !== name) {
-    tokens[tokens.length - 1] = newName;
+    tokens[renameInd] = newName;
     return {
       ...obj,
       $ref: encodeUriFragmentIdentifier(tokens),
@@ -123,8 +128,8 @@ export default class RenameComponentsTransformer
   transformExample3(example) {
     if (isJsonRef(example)) {
       return renameRefObj(
-        /^\/components\/examples\/[^/]*$/,
         example,
+        (pp) => (pp[0] === 'components' && pp[1] === 'examples' ? 2 : -1),
         this[renameFuncsSymbol].examples,
       );
     }
@@ -135,8 +140,9 @@ export default class RenameComponentsTransformer
   transformSchema(schema) {
     if (isJsonRef(schema)) {
       return renameRefObj(
-        /^\/(?:components\/schemas|definitions)\/[^/]*$/,
         schema,
+        (pp) => (pp[0] === 'components' && pp[1] === 'schemas' ? 2
+          : pp[0] === 'definitions' ? 1 : -1),
         this[renameFuncsSymbol].schemas,
       );
     }
@@ -147,8 +153,8 @@ export default class RenameComponentsTransformer
   transformHeader(header) {
     if (isJsonRef(header)) {
       return renameRefObj(
-        /^\/components\/headers\/[^/]*$/,
         header,
+        (pp) => (pp[0] === 'components' && pp[1] === 'headers' ? 2 : -1),
         this[renameFuncsSymbol].headers,
       );
     }
@@ -159,8 +165,8 @@ export default class RenameComponentsTransformer
   transformLink(link) {
     if (isJsonRef(link)) {
       return renameRefObj(
-        /^\/components\/links\/[^/]*$/,
         link,
+        (pp) => (pp[0] === 'components' && pp[1] === 'links' ? 2 : -1),
         this[renameFuncsSymbol].links,
       );
     }
@@ -171,8 +177,8 @@ export default class RenameComponentsTransformer
   transformResponse(response) {
     if (isJsonRef(response)) {
       return renameRefObj(
-        /^\/components\/responses\/[^/]*$/,
         response,
+        (pp) => (pp[0] === 'components' && pp[1] === 'responses' ? 2 : -1),
         this[renameFuncsSymbol].responses,
       );
     }
@@ -183,8 +189,8 @@ export default class RenameComponentsTransformer
   transformParameter(parameter) {
     if (isJsonRef(parameter)) {
       return renameRefObj(
-        /^\/components\/parameters\/[^/]*$/,
         parameter,
+        (pp) => (pp[0] === 'components' && pp[1] === 'parameters' ? 2 : -1),
         this[renameFuncsSymbol].parameters,
       );
     }
@@ -195,8 +201,8 @@ export default class RenameComponentsTransformer
   transformCallback(callback) {
     if (isJsonRef(callback)) {
       return renameRefObj(
-        /^\/components\/callbacks\/[^/]*$/,
         callback,
+        (pp) => (pp[0] === 'components' && pp[1] === 'callbacks' ? 2 : -1),
         this[renameFuncsSymbol].callbacks,
       );
     }
@@ -207,8 +213,8 @@ export default class RenameComponentsTransformer
   transformRequestBody(requestBody) {
     if (isJsonRef(requestBody)) {
       return renameRefObj(
-        /^\/components\/requestBodies\/[^/]*$/,
         requestBody,
+        (pp) => (pp[0] === 'components' && pp[1] === 'requestBodies' ? 2 : -1),
         this[renameFuncsSymbol].requestBodies,
       );
     }
@@ -226,8 +232,8 @@ export default class RenameComponentsTransformer
   transformPathItem(pathItem) {
     if (isJsonRef(pathItem)) {
       return renameRefObj(
-        /^\/components\/pathItems\/[^/]*$/,
         pathItem,
+        (pp) => (pp[0] === 'components' && pp[1] === 'pathItems' ? 2 : -1),
         this[renameFuncsSymbol].pathItems,
       );
     }
