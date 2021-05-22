@@ -225,6 +225,111 @@ describe('UrlencodedToStringTransformer', () => {
     );
   });
 
+  it('converts parameters when urlencoded is inherited', () => {
+    assert.deepStrictEqual(
+      new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
+        swagger: '2.0',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        produces: ['application/json'],
+        consumes: ['application/x-www-form-urlencoded'],
+        paths: {
+          '/': {
+            post: {
+              parameters: [
+                {
+                  name: 'name',
+                  in: 'formData',
+                  type: 'string',
+                },
+                {
+                  name: 'hp',
+                  in: 'formData',
+                  type: 'integer',
+                },
+                {
+                  name: 'speed',
+                  in: 'formData',
+                  type: 'number',
+                },
+                {
+                  name: 'inverted',
+                  in: 'formData',
+                  type: 'boolean',
+                },
+              ],
+              responses: {
+                default: {
+                  description: 'Example response',
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      newSpeed: {
+                        type: 'number',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      })),
+      {
+        swagger: '2.0',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        produces: ['application/json'],
+        consumes: ['application/x-www-form-urlencoded'],
+        paths: {
+          '/': {
+            post: {
+              parameters: [
+                {
+                  name: 'name',
+                  in: 'formData',
+                  type: 'string',
+                },
+                {
+                  name: 'hp',
+                  in: 'formData',
+                  type: 'string',
+                },
+                {
+                  name: 'speed',
+                  in: 'formData',
+                  type: 'string',
+                },
+                {
+                  name: 'inverted',
+                  in: 'formData',
+                  type: 'string',
+                },
+              ],
+              responses: {
+                default: {
+                  description: 'Example response',
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      newSpeed: {
+                        type: 'number',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    );
+  });
+
   it('does not convert properties of urlencoded+form-data', () => {
     assert.deepStrictEqual(
       new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({

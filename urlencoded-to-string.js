@@ -6,6 +6,8 @@
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
+const consumesSymbol = Symbol('consumes');
+
 function isFormData(mediaType) {
   return /^multipart\/form-data\s*(;.*)?$/i.test(mediaType);
 }
@@ -21,6 +23,11 @@ function isUrlencoded(mediaType) {
  */
 export default class UrlencodedToStringTransformer
   extends OpenApiTransformerBase {
+  constructor() {
+    super();
+    this[consumesSymbol] = undefined;
+  }
+
   transformSchema(schema) {
     if (typeof schema !== 'object' || schema === null) {
       return schema;
@@ -84,13 +91,14 @@ export default class UrlencodedToStringTransformer
       return super.transformOperation(operation);
     }
 
-    const { consumes, parameters, requestBody } = operation;
+    const { parameters, requestBody } = operation;
     if (requestBody === undefined && !Array.isArray(parameters)) {
       return operation;
     }
 
     const newOperation = { ...operation };
 
+    const consumes = operation.consumes || this[consumesSymbol];
     if (parameters !== undefined
       && Array.isArray(consumes)
       && consumes.some(isUrlencoded)
@@ -107,9 +115,14 @@ export default class UrlencodedToStringTransformer
   }
 
   transformOpenApi(openApi) {
-    return {
-      ...openApi,
-      paths: this.transformPaths(openApi.paths),
-    };
+    this[consumesSymbol] = openApi.consumes;
+    try {
+      return {
+        ...openApi,
+        paths: this.transformPaths(openApi.paths),
+      };
+    } finally {
+      this[consumesSymbol] = undefined;
+    }
   }
 }
