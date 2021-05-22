@@ -41,6 +41,22 @@ export default class UrlencodedToStringTransformer
         ...newSchema,
         type: 'string',
       };
+
+      // TODO: Optionally remove constraints which don't apply to string type?
+      // Older JSON Schema drafts (e.g. JSON Schema Draft 4 ref'd by OAS2)
+      // specify the instance is only valid if it satisfies the constraint.
+      // Newer JSON Schema drafts (e.g. Wright 00 ref'd by OAS3.1) specify
+      // the constraint is ignored for non-numbers.
+      // Autorest ignores these constraints on string properties.
+      // They may be useful as documentation for API developers.
+      // Is there a reason to remove them?
+      /*
+      delete newSchema.multipleOf;
+      delete newSchema.minimum;
+      delete newSchema.exclusiveMaximum;
+      delete newSchema.maximum;
+      delete newSchema.exclusiveMinimum;
+      */
     }
 
     // Ensure enums are modeled as string
@@ -53,6 +69,10 @@ export default class UrlencodedToStringTransformer
       // other params/schemas have same name
       delete newSchema['x-ms-enum'];
     }
+
+    // Note: There does not appear to be a need to remove validation properties
+    // (e.g. minimum, maximum, etc.) since Autorest ignores them for string
+    // properties.
 
     return newSchema;
   }
