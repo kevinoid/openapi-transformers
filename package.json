@@ -45,7 +45,7 @@
   "dependencies": {
     "fast-json-stable-stringify": "^2.1.0",
     "json-ptr": "^2.0.0",
-    "openapi-transformer-base": "^0.1.0"
+    "openapi-transformer-base": "^1.0.0"
   },
   "devDependencies": {
     "@kevinoid/eslint-config": "^17.1.0",
