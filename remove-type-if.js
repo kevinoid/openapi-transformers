@@ -1,7 +1,7 @@
 /**
  * @copyright Copyright 2021 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
- * @module "openapi-transformers/remove-type.js"
+ * @module "openapi-transformers/remove-type-if.js"
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';

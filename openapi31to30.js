@@ -1,7 +1,7 @@
 /**
  * @copyright Copyright 2021 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
- * @module "openapi-transformers/nullable-to-type-null.js"
+ * @module "openapi-transformers/openapi31to30.js"
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
