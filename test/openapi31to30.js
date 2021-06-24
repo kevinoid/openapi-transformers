@@ -190,6 +190,88 @@ describe('OpenApi31To30Transformer', () => {
     );
   });
 
+  it('converts schema with all non-null types', () => {
+    assert.deepStrictEqual(
+      new OpenApi31To30Transformer().transformOpenApi(deepFreeze({
+        openapi: '3.1.0',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          schemas: {
+            Example: {
+              type: [
+                'array',
+                'boolean',
+                'number',
+                'object',
+                'string',
+              ],
+            },
+          },
+        },
+        paths: {},
+      })),
+      {
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          schemas: {
+            Example: {},
+          },
+        },
+        paths: {},
+      },
+    );
+  });
+
+  it('converts schema with all types', () => {
+    assert.deepStrictEqual(
+      new OpenApi31To30Transformer().transformOpenApi(deepFreeze({
+        openapi: '3.1.0',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          schemas: {
+            Example: {
+              type: [
+                'array',
+                'boolean',
+                'integer',
+                'null',
+                'number',
+                'object',
+                'string',
+              ],
+            },
+          },
+        },
+        paths: {},
+      })),
+      {
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        components: {
+          schemas: {
+            Example: {
+              nullable: true,
+            },
+          },
+        },
+        paths: {},
+      },
+    );
+  });
+
   it('converts schema with patternProperties', () => {
     assert.deepStrictEqual(
       new OpenApi31To30Transformer().transformOpenApi(deepFreeze({
