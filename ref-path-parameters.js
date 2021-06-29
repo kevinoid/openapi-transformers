@@ -46,7 +46,7 @@ export default class RefPathParametersTransformer
 
     return {
       ...pathItem,
-      parameters: pathItem.parameters.map(this.transformParameter, this),
+      parameters: pathItem.parameters.map(this.transformParameter.bind(this)),
     };
   }
 

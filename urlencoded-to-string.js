@@ -134,7 +134,8 @@ export default class UrlencodedToStringTransformer
       && Array.isArray(consumes)
       && consumes.some(isUrlencoded)
       && !consumes.some(isFormData)) {
-      newOperation.parameters = parameters.map(this.transformParameter, this);
+      newOperation.parameters =
+        parameters.map(this.transformParameter.bind(this));
     }
 
     if (requestBody !== undefined) {
