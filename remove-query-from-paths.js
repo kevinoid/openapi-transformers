@@ -84,7 +84,6 @@ function parseQueryParams(query) {
     && (paramValueMatch = paramValueRE.exec(ampQuery)) !== null) {
     if (paramValueMatch[0] === '&') {
       // Nothing after &
-      // eslint-disable-next-line no-continue
       continue;
     }
 
@@ -364,8 +363,6 @@ export default class RemoveQueryFromPathsTransformer
     paths = { ...paths };
 
     for (const [pathQuery, pathname, query, frag] of pathMatches) {
-      /* eslint-disable no-continue */
-
       const srcPathItem = paths[pathQuery];
       if (srcPathItem === undefined) {
         continue;
