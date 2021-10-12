@@ -20,24 +20,36 @@ function unionSchema(schema1, schema2) {
   throw new Error('Not implemented');
 }
 
-function mergeAllOf(schema) {
+function mergeAllOf(schema, { skipAllOf }) {
+  if (skipAllOf === true) {
+    return schema;
+  }
+
   const {
     allOf,
     ...schemaNoAllOf
   } = schema;
-  if (!Array.isArray(allOf) || allOf.length === 0) {
+  if (!Array.isArray(allOf)
+    || allOf.length === 0
+    || (skipAllOf !== undefined && skipAllOf(allOf))) {
     return schema;
   }
 
   return allOf.reduce(intersectSchema, schemaNoAllOf);
 }
 
-function mergeAnyOf(schema) {
+function mergeAnyOf(schema, { skipAnyOf }) {
+  if (skipAnyOf === true) {
+    return schema;
+  }
+
   const {
     anyOf,
     ...schemaNoAnyOf
   } = schema;
-  if (!Array.isArray(anyOf) || anyOf.length === 0) {
+  if (!Array.isArray(anyOf)
+    || anyOf.length === 0
+    || (skipAnyOf !== undefined && skipAnyOf(anyOf))) {
     return schema;
   }
 
@@ -45,18 +57,35 @@ function mergeAnyOf(schema) {
   return intersectSchema(schemaNoAnyOf, unioned);
 }
 
-function mergeOneOf(schema) {
+function mergeOneOf(schema, { skipOneOf }) {
+  if (skipOneOf === true) {
+    return schema;
+  }
+
   const {
     oneOf,
     ...schemaNoOneOf
   } = schema;
-  if (!Array.isArray(oneOf) || oneOf.length === 0) {
+  if (!Array.isArray(oneOf)
+    || oneOf.length === 0
+    || (skipOneOf !== undefined && skipOneOf(oneOf))) {
     return schema;
   }
 
   const diffedSchema = oneOf.reduce(symDiffSchema);
   return intersectSchema(schemaNoOneOf, diffedSchema);
 }
+
+/** Options for MergeSubschemasTransformer.
+ *
+ * @typedef {!object} MergeSubschemasTransformerOptions
+ * @property {(boolean|function(!Array<!object>):boolean)=} skipAllOf Boolean
+ * or predicate which determines whether to skip merging an allOf constraint.
+ * @property {(boolean|function(!Array<!object>):boolean)=} skipAnyOf Boolean
+ * or predicate which determines whether to skip merging an anyOf constraint.
+ * @property {(boolean|function(!Array<!object>):boolean)=} skipOneOf Boolean
+ * or predicate which determines whether to skip merging a oneOf constraint.
+ */
 
 /**
  * Transformer to merge allOf/anyOf/oneOf schemas into the parent schema.
@@ -67,6 +96,20 @@ function mergeOneOf(schema) {
  * generators).
  */
 export default class MergeSubschemasTransformer extends OpenApiTransformerBase {
+  /** Constructs a MergeSubschemasTransformer with given options.
+   *
+   * @param {MergeSubschemasTransformerOptions=} options Options.
+   */
+  constructor(options = {}) {
+    if (options === null || typeof options !== 'object') {
+      throw new TypeError('options must be an object');
+    }
+
+    super();
+
+    this.options = options;
+  }
+
   transformSchema(schema) {
     let newSchema = super.transformSchema(schema);
     if (!newSchema || typeof newSchema !== 'object') {
@@ -75,7 +118,7 @@ export default class MergeSubschemasTransformer extends OpenApiTransformerBase {
     }
 
     try {
-      newSchema = mergeAllOf(newSchema);
+      newSchema = mergeAllOf(newSchema, this.options);
     } catch (errAllOf) {
       debug(
         'Unable to merge allOf schemas for %O: %s',
@@ -85,7 +128,7 @@ export default class MergeSubschemasTransformer extends OpenApiTransformerBase {
     }
 
     try {
-      newSchema = mergeAnyOf(newSchema);
+      newSchema = mergeAnyOf(newSchema, this.options);
     } catch (errAnyOf) {
       debug(
         'Unable to merge anyOf schemas for %O: %s',
@@ -95,7 +138,7 @@ export default class MergeSubschemasTransformer extends OpenApiTransformerBase {
     }
 
     try {
-      newSchema = mergeOneOf(newSchema);
+      newSchema = mergeOneOf(newSchema, this.options);
     } catch (errOneOf) {
       debug(
         'Unable to merge oneOf schemas for %O: %s',
