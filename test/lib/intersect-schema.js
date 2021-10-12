@@ -792,19 +792,6 @@ function testIntersectSchema(intersectSchema) {
         ],
       );
     });
-
-    it('is combination of description and Undescribed', () => {
-      deepStrictEqualAnyOf(
-        intersectSchema(
-          deepFreeze({ description: 'description1' }),
-          deepFreeze({}),
-        ),
-        [
-          { description: 'Intersection of description1 and Undescribed' },
-          { description: 'Intersection of Undescribed and description1' },
-        ],
-      );
-    });
   });
 
   describe('for enum', () => {
@@ -1386,19 +1373,6 @@ function testIntersectSchema(intersectSchema) {
         [
           { title: 'Intersection of (My title1) and My_title2' },
           { title: 'Intersection of My_title2 and (My title1)' },
-        ],
-      );
-    });
-
-    it('is combination of title and Untitled', () => {
-      deepStrictEqualAnyOf(
-        intersectSchema(
-          deepFreeze({ title: 'title1' }),
-          deepFreeze({}),
-        ),
-        [
-          { title: 'Intersection of title1 and Untitled' },
-          { title: 'Intersection of Untitled and title1' },
         ],
       );
     });
