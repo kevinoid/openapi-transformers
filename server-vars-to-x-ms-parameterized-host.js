@@ -69,11 +69,17 @@ function parseServerUrl(url) {
  */
 export default class ServerVarsToParamHostTransformer
   extends OpenApiTransformerBase {
-  constructor({ omitDefault, xMsParameterizedHost } = {}) {
+  constructor({ omitDefault, parameter, xMsParameterizedHost } = {}) {
     super();
 
     if (omitDefault !== undefined && !Array.isArray(omitDefault)) {
       throw new TypeError('options.omitDefault must be an Array');
+    }
+
+    if (parameter !== undefined
+      && (parameter === null
+        || typeof parameter !== 'object')) {
+      throw new TypeError('options.parameter must be a object');
     }
 
     if (xMsParameterizedHost !== undefined
@@ -84,6 +90,7 @@ export default class ServerVarsToParamHostTransformer
 
     this.options = {
       omitDefault: omitDefault || [],
+      parameter,
       xMsParameterizedHost,
     };
   }
@@ -102,6 +109,7 @@ export default class ServerVarsToParamHostTransformer
       ...serverVariable,
       in: 'path',
       required: true,
+      ...this.options.parameter,
     };
   }
 

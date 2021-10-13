@@ -24,6 +24,13 @@ describe('ServerVarsToParamHostTransformer', () => {
     );
   });
 
+  it('throws TypeError with non-object options.parameter', () => {
+    assert.throws(
+      () => new ServerVarsToParamHostTransformer({ parameter: 1 }),
+      TypeError,
+    );
+  });
+
   it('throws TypeError with non-object options.xMsParameterizedHost', () => {
     assert.throws(
       () => new ServerVarsToParamHostTransformer({ xMsParameterizedHost: 1 }),
@@ -277,6 +284,69 @@ describe('ServerVarsToParamHostTransformer', () => {
               type: 'string',
               enum: ['com', 'org'],
               default: 'org',
+            },
+          ],
+        },
+        paths: {},
+      },
+    );
+  });
+
+  it('adds options.parameter to each parameter', () => {
+    const transformer = new ServerVarsToParamHostTransformer({
+      parameter: {
+        'x-ms-parameter-location': 'client',
+      },
+    });
+    assert.deepStrictEqual(
+      transformer.transformOpenApi(deepFreeze({
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        servers: [
+          {
+            url: 'https://example.{domain}/foo',
+            variables: {
+              domain: {
+                enum: ['com', 'org'],
+                default: 'org',
+              },
+            },
+          },
+        ],
+        paths: {},
+      })),
+      {
+        openapi: '3.0.3',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        servers: [
+          {
+            url: 'https://example.{domain}/foo',
+            variables: {
+              domain: {
+                enum: ['com', 'org'],
+                default: 'org',
+              },
+            },
+          },
+        ],
+        'x-ms-parameterized-host': {
+          hostTemplate: 'example.{domain}',
+          useSchemePrefix: true,
+          parameters: [
+            {
+              in: 'path',
+              name: 'domain',
+              required: true,
+              type: 'string',
+              enum: ['com', 'org'],
+              default: 'org',
+              'x-ms-parameter-location': 'client',
             },
           ],
         },
