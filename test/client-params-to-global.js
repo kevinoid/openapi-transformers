@@ -702,4 +702,50 @@ describe('ClientParamsToGlobalTransformer', () => {
       },
     );
   });
+
+  it('swagger 2 client parameter in x-ms-parameterized-host', () => {
+    assert.deepStrictEqual(
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
+        swagger: '2.0',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        paths: {},
+        'x-ms-parameterized-host': {
+          hostTemplate: 'example.{tld}',
+          parameters: [
+            {
+              name: 'tld',
+              in: 'path',
+              type: 'string',
+              'x-ms-parameter-location': 'client',
+            },
+          ],
+        },
+      })),
+      {
+        swagger: '2.0',
+        info: {
+          title: 'Title',
+          version: '1.0',
+        },
+        parameters: {
+          tld: {
+            name: 'tld',
+            in: 'path',
+            type: 'string',
+            'x-ms-parameter-location': 'client',
+          },
+        },
+        paths: {},
+        'x-ms-parameterized-host': {
+          hostTemplate: 'example.{tld}',
+          parameters: [
+            { $ref: '#/parameters/tld' },
+          ],
+        },
+      },
+    );
+  });
 });

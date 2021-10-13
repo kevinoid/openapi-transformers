@@ -71,11 +71,25 @@ export default class ClientParamsToGlobalTransformer
         new MatchingParameterManager(newParameters);
       this[parametersPathSymbol] = ['parameters'];
 
-      return {
+      const newOpenApi = {
         ...openApi,
         parameters: newParameters,
         paths: this.transformPaths(openApi.paths),
       };
+
+      const xMsParameterizedHost = openApi['x-ms-parameterized-host'];
+      if (xMsParameterizedHost
+        && Array.isArray(xMsParameterizedHost.parameters)) {
+        newOpenApi['x-ms-parameterized-host'] = {
+          ...xMsParameterizedHost,
+          parameters: this.transformArray(
+            xMsParameterizedHost.parameters,
+            this.transformParameter,
+          ),
+        };
+      }
+
+      return newOpenApi;
     }
 
     return openApi;
