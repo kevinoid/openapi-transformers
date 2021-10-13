@@ -4,9 +4,8 @@
  * @module "openapi-transformers/server-vars-to-x-ms-parameterized-host.js"
  */
 
-import assert from 'assert';
-
 import OpenApiTransformerBase from 'openapi-transformer-base';
+import visit from 'openapi-transformer-base/visit.js';
 
 /** Gets the scheme and authority portions of a URL template.
  *
@@ -23,23 +22,45 @@ function getSchemeAuthority(url) {
   return match && match[0];
 }
 
-function serverVariableToParameter(name, serverVar) {
-  const serverParam = {
-    name,
-    type: 'string',
-    ...serverVar,
-    in: 'path',
-    required: true,
-  };
+function parseServerUrl(url) {
+  if (typeof url !== 'string') {
+    this.warn('Ignoring Server with non-string url', url);
+    return undefined;
+  }
 
-  return serverParam;
+  const schemeAuth = getSchemeAuthority(url);
+  if (!schemeAuth) {
+    this.warn('Unable to determine scheme and authority for url', url);
+    return undefined;
+  }
+
+  // Remove non-templated scheme, if present
+  const hostTemplate = schemeAuth.replace(/^[a-zA-Z_+.-]+:\/\//, '');
+  if (!hostTemplate) {
+    this.warn('Unable to determine host for url', url);
+    return undefined;
+  }
+
+  const hostTemplateExprs = hostTemplate.match(/\{[^{}]*\}/g);
+  if (!hostTemplateExprs) {
+    this.warn('No template expressions in scheme and authority for url', url);
+    return undefined;
+  }
+
+  return {
+    hostTemplate,
+    // If non-templated scheme was removed, use the declared schemes
+    useSchemePrefix: hostTemplate !== schemeAuth,
+    hostTemplateVarNames: hostTemplateExprs
+      .map((templateExpr) => templateExpr.slice(1, -1)),
+  };
 }
 
 /**
  * Convert Server Variables in host portion to x-ms-parameterized-host for use
  * with OpenAPI 2.
  *
- * https://github.com/Azure/autorest/tree/master/docs/extensions#x-ms-parameterized-host
+ * https://github.com/Azure/autorest/tree/main/docs/extensions#x-ms-parameterized-host
  *
  * TODO: Roll this into OpenAPI 3 -> 2 conversion?
  *
@@ -67,85 +88,152 @@ export default class ServerVarsToParamHostTransformer
     };
   }
 
-  transformOpenApi(spec) {
-    if (!spec || !spec.servers || spec.servers.length === 0) {
-      return spec;
-    }
-
-    let useSchemePrefix = false;
-    const hostTemplate = spec.servers.reduce((hostTemplate1, server) => {
-      const serverSchemeAuth = getSchemeAuthority(server.url);
-      // Remove non-templated scheme, if present
-      const serverHostTemplate =
-        serverSchemeAuth.replace(/^[a-zA-Z_+.-]+:\/\//, '');
-      if (hostTemplate1 !== undefined && serverHostTemplate !== hostTemplate1) {
-        throw new Error(
-          `Server hosts differ: ${serverHostTemplate} != ${hostTemplate1}`,
-        );
-      }
-      // If scheme was removed, use the declared schemes
-      useSchemePrefix = serverHostTemplate !== serverSchemeAuth;
-      return serverHostTemplate;
-    }, undefined);
-
-    if (!hostTemplate) {
-      // Host not found in servers.url
-      return spec;
-    }
-
-    const hostTemplateExprs = hostTemplate.match(/\{[^{}]*\}/g);
-    if (!hostTemplateExprs) {
-      // No template expressions in scheme+authority
-      return spec;
-    }
-
-    const hostTemplateVarNames = hostTemplateExprs
-      .map((templateExpr) => templateExpr.slice(1, -1));
-
-    // Get variables for scheme+authority
-    let hostTemplateVars;
-    for (const server of spec.servers) {
-      const variables = server.variables || {};
-      const serverHostTemplateVars = {};
-      for (const varName of hostTemplateVarNames) {
-        const variable = variables[varName];
-        if (!variable) {
-          throw new Error(`Variable {${varName}} in url, not in variables`);
-        }
-
-        if (this.options.omitDefault.includes(varName)
-          && hasOwnProperty.call(variable, 'default')) {
-          const newVariable = { ...variable };
-          delete newVariable.default;
-          serverHostTemplateVars[varName] = newVariable;
-        } else {
-          serverHostTemplateVars[varName] = variable;
-        }
-      }
-
-      if (hostTemplateVars === undefined) {
-        hostTemplateVars = serverHostTemplateVars;
-      } else {
-        assert.deepStrictEqual(
-          hostTemplateVars,
-          serverHostTemplateVars,
-          'shared host variables must be the same in all servers',
-        );
-      }
+  transformServerVariableToParameter(serverVariable) {
+    if (serverVariable === null
+      || typeof serverVariable !== 'object'
+      || Array.isArray(serverVariable)) {
+      this.warn('Ignoring non-object Server Variable', serverVariable);
+      return undefined;
     }
 
     return {
-      ...spec,
-      'x-ms-parameterized-host': {
-        hostTemplate,
-        useSchemePrefix,
-        parameters: hostTemplateVarNames
-          .map((varName) => serverVariableToParameter(
-            varName,
-            hostTemplateVars[varName],
-          )),
-        ...this.options.xMsParameterizedHost,
-      },
+      name: undefined,
+      type: 'string',
+      ...serverVariable,
+      in: 'path',
+      required: true,
+    };
+  }
+
+  transformServerVariablesToParameters(variables, varNames) {
+    if (variables === null
+      || typeof variables !== 'object'
+      || Array.isArray(variables)) {
+      this.warn('Ignoring non-object Map', variables);
+      return undefined;
+    }
+
+    const parameters = [];
+    for (const varName of varNames) {
+      const variable =
+        hasOwnProperty.call(variables, varName) ? variables[varName]
+          : undefined;
+      if (variable === undefined) {
+        this.warn('Unable to convert Server missing variable %j', varName);
+        return undefined;
+      }
+
+      const parameter = visit(
+        this,
+        this.transformServerVariableToParameter,
+        varName,
+        variable,
+      );
+      if (!parameter) {
+        return undefined;
+      }
+
+      parameter.name = varName;
+
+      if (this.options.omitDefault.includes(varName)
+        && hasOwnProperty.call(parameter, 'default')) {
+        delete parameter.default;
+      }
+
+      parameters.push(parameter);
+    }
+
+    return parameters;
+  }
+
+  transformServerToParameterizedHost(server) {
+    if (server === null
+      || typeof server !== 'object'
+      || Array.isArray(server)) {
+      this.warn('Ignoring non-object Server', server);
+      return undefined;
+    }
+
+    const { url, variables = {} } = server;
+
+    const urlParts = visit(this, parseServerUrl, 'url', url);
+    if (!urlParts) {
+      return undefined;
+    }
+
+    const {
+      hostTemplate,
+      useSchemePrefix,
+      hostTemplateVarNames,
+    } = urlParts;
+
+    const parameters = visit(
+      this,
+      this.transformServerVariablesToParameters,
+      'variables',
+      variables,
+      hostTemplateVarNames,
+    );
+    if (!parameters) {
+      return undefined;
+    }
+
+    return {
+      hostTemplate,
+      useSchemePrefix,
+      parameters,
+      ...this.options.xMsParameterizedHost,
+    };
+  }
+
+  transformServersToParameterizedHost(servers) {
+    if (!Array.isArray(servers)) {
+      this.warn('Ignoring non-Array servers', servers);
+      return undefined;
+    }
+
+    if (servers.length === 0) {
+      this.warn('Ignoring empty servers', servers);
+      return undefined;
+    }
+
+    if (servers.length > 1) {
+      this.warn('Ignoring all but first server', servers);
+    }
+
+    return visit(
+      this,
+      this.transformServerToParameterizedHost,
+      '0',
+      servers[0],
+    );
+  }
+
+  transformOpenApi(openApi) {
+    if (openApi === null
+      || typeof openApi !== 'object'
+      || Array.isArray(openApi)) {
+      this.warn('Ignoring non-object OpenAPI', openApi);
+      return openApi;
+    }
+
+    if (openApi.servers === undefined) {
+      return openApi;
+    }
+
+    const parameterizedHost = visit(
+      this,
+      this.transformServersToParameterizedHost,
+      'servers',
+      openApi.servers,
+    );
+    if (parameterizedHost === undefined) {
+      return openApi;
+    }
+
+    return {
+      ...openApi,
+      'x-ms-parameterized-host': parameterizedHost,
     };
   }
 }
