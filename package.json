@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "fast-json-stable-stringify": "^2.1.0",
-    "json-ptr": "^2.0.0",
+    "json-ptr": "^3.0.0",
     "openapi-transformer-base": "^1.1.0"
   },
   "devDependencies": {
