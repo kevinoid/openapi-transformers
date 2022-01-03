@@ -33,7 +33,7 @@ function makeEscapeString(lang) {
       // Note: Although \x can be shorter, must be careful to provide 4
       // digits when next character is hex digit.  Use \u for consistency.
       toCodeEscape =
-        (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`;
+        (c) => `\\u${c.codePointAt(0).toString(16).padStart(4, '0')}`;
       toAstralEscape = (code) => `\\U${code.toString(16).padStart(8, '0')}`;
       break;
 
@@ -41,7 +41,7 @@ function makeEscapeString(lang) {
       // https://golang.org/ref/spec#String_literals
       charRange += '\n"\\\\';
       toCodeEscape = (c) => {
-        const code = c.charCodeAt(0);
+        const code = c.codePointAt(0);
         return code <= 0xFF ? `\\x${code.toString(16).padStart(2, '0')}`
           : `\\u${code.toString(16).padStart(4, '0')}`;
       };
@@ -55,7 +55,7 @@ function makeEscapeString(lang) {
       delete charToEscape['\x07'];
       delete charToEscape['\v'];
       toCodeEscape =
-        (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`;
+        (c) => `\\u${c.codePointAt(0).toString(16).padStart(4, '0')}`;
       break;
 
     case 'nodejs':
@@ -66,7 +66,7 @@ function makeEscapeString(lang) {
       charRange += '\n"\'\\\\';
       delete charToEscape['\x07'];
       toCodeEscape = (c) => {
-        const code = c.charCodeAt(0);
+        const code = c.codePointAt(0);
         return code <= 0xFF ? `\\x${code.toString(16).padStart(2, '0')}`
           : `\\u${code.toString(16).padStart(4, '0')}`;
       };
@@ -82,7 +82,7 @@ function makeEscapeString(lang) {
       delete charToEscape['\b'];
       charToEscape['\x1B'] = '\\e';
       toCodeEscape = (c) => {
-        const code = c.charCodeAt(0);
+        const code = c.codePointAt(0);
         return code <= 0xFF ? `\\x${code.toString(16).padStart(2, '0')}`
           : `\\u{${code.toString(16)}}`;
       };
@@ -95,7 +95,7 @@ function makeEscapeString(lang) {
       // bloat from extra quoting is minor compared to risk.
       charRange += '\n"\'\\\\';
       toCodeEscape = (c) => {
-        const code = c.charCodeAt(0);
+        const code = c.codePointAt(0);
         return code <= 0xFF ? `\\x${code.toString(16).padStart(2, '0')}`
           : `\\u${code.toString(16).padStart(4, '0')}`;
       };
@@ -119,10 +119,7 @@ function makeEscapeString(lang) {
   }
 
   function replaceAstral(pair) {
-    const high = pair.charCodeAt(0);
-    const low = pair.charCodeAt(1);
-    const code = (high - 0xD800) * 0x400 + low - 0xDC00 + 0x10000;
-    return toAstralEscape(code);
+    return toAstralEscape(pair.codePointAt(0));
   }
   function replaceChar(c) {
     return charToEscape[c] || toCodeEscape(c);
