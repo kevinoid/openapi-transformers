@@ -31,8 +31,8 @@ export default class AddXMsEnumNameTransformer extends OpenApiTransformerBase {
   /** Transforms Map[string,Schema] with named schemas by passing the
    * name as the second argument to transformSchema.
    *
-   * @param {!object<string,object>|*} schemas Schmea map to transform.
-   * @returns {!object<string,object>|*} If obj is a Map, a plain object with
+   * @param {!Object<string,object>|*} schemas Schmea map to transform.
+   * @returns {!Object<string,object>|*} If obj is a Map, a plain object with
    * the same own enumerable string-keyed properties as obj with values
    * returned by transformSchema.  Otherwise, obj is returned unchanged.
    */
