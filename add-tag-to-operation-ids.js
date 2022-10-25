@@ -4,7 +4,7 @@
  * @module "openapi-transformers/add-tag-to-operation-ids.js"
  */
 
-import { debuglog } from 'util';
+import { debuglog } from 'node:util';
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 

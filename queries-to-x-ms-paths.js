@@ -4,7 +4,7 @@
  * @module "openapi-transformers/queries-to-x-ms-paths.js"
  */
 
-import assert from 'assert';
+import assert from 'node:assert';
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 

@@ -3,9 +3,9 @@
  * @license MIT
  */
 
-import assert from 'assert';
+import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
-import { isDeepStrictEqual } from 'util';
+import { isDeepStrictEqual } from 'node:util';
 
 import intersectSchema, { EmptyIntersectionError, IntersectNotSupportedError }
   from '../../lib/intersect-schema.js';

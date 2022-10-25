@@ -4,7 +4,7 @@
  * @module "openapi-transformers/inline-non-object-schemas.js"
  */
 
-import { debuglog } from 'util';
+import { debuglog } from 'node:util';
 import { JsonPointer } from 'json-ptr';
 
 import OpenApiTransformerBase from 'openapi-transformer-base';

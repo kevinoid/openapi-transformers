@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import assert from 'assert';
+import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import RemoveSecuritySchemeIfTransformer from '../remove-security-scheme-if.js';

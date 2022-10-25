@@ -4,7 +4,7 @@
  * @module "openapi-transformers/add-x-ms-enum-value-names.js"
  */
 
-import assert from 'assert';
+import assert from 'node:assert';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 import microsoftCase from './lib/microsoft-case.js';
 

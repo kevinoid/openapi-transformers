@@ -4,7 +4,7 @@
  * @module "openapi-transformers/merge-subschemas.js"
  */
 
-import { debuglog } from 'util';
+import { debuglog } from 'node:util';
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 

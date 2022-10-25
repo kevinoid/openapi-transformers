@@ -4,7 +4,7 @@
  * @module "openapi-transformers/x-enum-to-ms.js"
  */
 
-import { debuglog } from 'util';
+import { debuglog } from 'node:util';
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 

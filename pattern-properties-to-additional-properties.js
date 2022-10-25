@@ -5,7 +5,7 @@
  */
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
-import { isDeepStrictEqual } from 'util';
+import { isDeepStrictEqual } from 'node:util';
 
 /**
  * Transformer to combine any patternProperties into additionalProperties (for

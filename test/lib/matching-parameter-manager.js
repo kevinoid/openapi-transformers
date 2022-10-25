@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import assert from 'assert';
+import assert from 'node:assert';
 
 import MatchingParameterMatcher from '../../lib/matching-parameter-manager.js';
 

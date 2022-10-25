@@ -4,7 +4,7 @@
  * @module "openapi-transformers/type-null-to-enum.js"
  */
 
-import { isDeepStrictEqual } from 'util';
+import { isDeepStrictEqual } from 'node:util';
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 

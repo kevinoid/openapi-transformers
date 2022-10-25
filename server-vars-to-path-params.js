@@ -4,7 +4,7 @@
  * @module "openapi-transformers/server-vars-to-path-params.js"
  */
 
-import assert from 'assert';
+import assert from 'node:assert';
 
 // Note: Undocumented function which is part of the public API
 // https://github.com/flitbit/json-ptr/issues/29

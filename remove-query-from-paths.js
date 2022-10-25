@@ -4,10 +4,10 @@
  * @module "openapi-transformers/remove-query-from-paths.js"
  */
 
-import { METHODS } from 'http';
+import { METHODS } from 'node:http';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 import visit from 'openapi-transformer-base/visit.js';
-import { isDeepStrictEqual } from 'util';
+import { isDeepStrictEqual } from 'node:util';
 
 const oasVersionSymbol = Symbol('openApiVersion');
 const pathVarNameToParamsSymbol = Symbol('pathVarNameToParams');

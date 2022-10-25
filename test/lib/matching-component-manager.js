@@ -5,7 +5,7 @@
 
 /* eslint-disable max-classes-per-file */
 
-import assert from 'assert';
+import assert from 'node:assert';
 
 import MatchingComponentManager from '../../lib/matching-component-manager.js';
 
