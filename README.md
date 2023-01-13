@@ -3,7 +3,7 @@ Project Template
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/kevinoid/openapi-transformers/node.js.yml?branch=main&style=flat&label=build)](https://github.com/kevinoid/openapi-transformers/actions?query=branch%3Amain)
 [![Coverage](https://img.shields.io/codecov/c/github/kevinoid/openapi-transformers/main.svg?style=flat)](https://app.codecov.io/gh/kevinoid/openapi-transformers/branch/main)
-[![Dependency Status](https://img.shields.io/david/kevinoid/openapi-transformers.svg?style=flat)](https://david-dm.org/kevinoid/openapi-transformers)
+[![Dependency Status](https://img.shields.io/librariesio/release/npm/@kevinoid/openapi-transformers.svg?style=flat)](https://libraries.io/npm/@kevinoid%2Fopenapi-transformers)
 [![Supported Node Version](https://img.shields.io/node/v/@kevinoid/openapi-transformers.svg?style=flat)](https://www.npmjs.com/package/@kevinoid/openapi-transformers)
 [![Version on NPM](https://img.shields.io/npm/v/@kevinoid/openapi-transformers.svg?style=flat)](https://www.npmjs.com/package/@kevinoid/openapi-transformers)
 
