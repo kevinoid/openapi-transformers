@@ -131,8 +131,11 @@ function makeEscapeString(lang) {
     }
 
     const charEscaped = str.replace(charPattern, replaceChar);
-    const astralEscaped = !toAstralEscape ? charEscaped
-      : charEscaped.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, replaceAstral);
+    const astralEscaped =
+      !toAstralEscape ? charEscaped : charEscaped.replaceAll(
+        /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
+        replaceAstral,
+      );
     return astralEscaped;
   };
 }

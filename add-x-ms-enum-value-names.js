@@ -37,7 +37,7 @@ function firstToUpper(word) {
  * @private
  */
 function autorestEnumMemberName(value) {
-  const clean = value.replace(/[^\p{L}\p{N}_-]/gu, '');
+  const clean = value.replaceAll(/[^\p{L}\p{N}_-]/gu, '');
   const words = clean.split(/[_-]/);
 
   if (clean.charAt(0) === '_') {
