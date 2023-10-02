@@ -4,6 +4,7 @@
  */
 
 import assert from 'node:assert';
+
 import deepFreeze from 'deep-freeze';
 
 import ConstToEnumTransformer from '../const-to-enum.js';

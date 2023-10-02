@@ -4,8 +4,9 @@
  * @module "openapi-transformers/pattern-properties-to-additional-properties.js"
  */
 
-import OpenApiTransformerBase from 'openapi-transformer-base';
 import { isDeepStrictEqual } from 'node:util';
+
+import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /**
  * Transformer to combine any patternProperties into additionalProperties (for

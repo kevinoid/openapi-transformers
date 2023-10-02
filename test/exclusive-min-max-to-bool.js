@@ -4,6 +4,7 @@
  */
 
 import assert from 'node:assert';
+
 import deepFreeze from 'deep-freeze';
 
 import ExclusiveMinMaxToBoolTransformer from '../exclusive-min-max-to-bool.js';

@@ -37,9 +37,9 @@ function getPath(url) {
   // Note: Can't use new URL() due to [/?#] in variable names
   return url
     // Remove scheme+authority, if present
-    .replace(/^(?:\{[^{}]*\}|[a-zA-Z_+.-]+)+:\/\/(?:\{[^{}]*\}|[^/{}]+)+/, '')
+    .replace(/^(?:\{[^{}]*\}|[a-zA-Z_+.-])+:\/\/(?:\{[^{}]*\}|[^/{}])+/, '')
     // Remove query or fragment, if present
-    .replace(/^((?:\{[^{}]*\}|[^{}]+)*)[?#].*$/, '$1');
+    .replace(/^((?:\{[^{}]*\}|[^{}])*)[?#].*$/, '$1');
 }
 
 /** Gets the common path segment suffix of the path part of all server URLs,

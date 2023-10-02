@@ -4,6 +4,7 @@
  */
 
 import assert from 'node:assert';
+
 import deepFreeze from 'deep-freeze';
 
 import AddXMsEnumValueNamesTransformer from '../add-x-ms-enum-value-names.js';

@@ -5,8 +5,8 @@
  */
 
 import { debuglog } from 'node:util';
-import { JsonPointer } from 'json-ptr';
 
+import { JsonPointer } from 'json-ptr';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const debug = debuglog('inline-non-object-schemas');

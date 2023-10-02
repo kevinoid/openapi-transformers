@@ -5,9 +5,10 @@
  */
 
 import { METHODS } from 'node:http';
+import { isDeepStrictEqual } from 'node:util';
+
 import OpenApiTransformerBase from 'openapi-transformer-base';
 import visit from 'openapi-transformer-base/visit.js';
-import { isDeepStrictEqual } from 'node:util';
 
 const oasVersionSymbol = Symbol('openApiVersion');
 const pathVarNameToParamsSymbol = Symbol('pathVarNameToParams');

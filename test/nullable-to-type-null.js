@@ -4,6 +4,7 @@
  */
 
 import assert from 'node:assert';
+
 import deepFreeze from 'deep-freeze';
 
 import NullableToTypeNullTransformer from '../nullable-to-type-null.js';

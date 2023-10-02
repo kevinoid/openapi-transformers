@@ -4,6 +4,7 @@
  */
 
 import assert from 'node:assert';
+
 import deepFreeze from 'deep-freeze';
 
 import RemoveQueryFromPathsTransformer from '../remove-query-from-paths.js';

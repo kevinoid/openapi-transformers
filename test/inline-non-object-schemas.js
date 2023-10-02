@@ -4,6 +4,7 @@
  */
 
 import assert from 'node:assert';
+
 import deepFreeze from 'deep-freeze';
 
 import InlineNonObjectSchemaTransformer from '../inline-non-object-schemas.js';

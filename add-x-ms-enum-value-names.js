@@ -5,7 +5,9 @@
  */
 
 import assert from 'node:assert';
+
 import OpenApiTransformerBase from 'openapi-transformer-base';
+
 import microsoftCase from './lib/microsoft-case.js';
 
 assert(/\p{L}/u.test('X'), 'Unicode property escapes are supported.');

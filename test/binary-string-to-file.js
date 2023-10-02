@@ -4,6 +4,7 @@
  */
 
 import assert from 'node:assert';
+
 import deepFreeze from 'deep-freeze';
 
 import BinaryStringToFileTransformer from '../binary-string-to-file.js';
