@@ -9,11 +9,11 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
 const consumesSymbol = Symbol('consumes');
 
 function isFormData(mediaType) {
-  return /^multipart\/form-data\s*(;.*)?$/i.test(mediaType);
+  return /^multipart\/form-data\s*(?:;.*)?$/i.test(mediaType);
 }
 
 function isUrlencoded(mediaType) {
-  return /^application\/x-www-form-urlencoded\s*(;.*)?$/i.test(mediaType);
+  return /^application\/x-www-form-urlencoded\s*(?:;.*)?$/i.test(mediaType);
 }
 
 /**

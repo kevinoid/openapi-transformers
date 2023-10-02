@@ -7,7 +7,7 @@
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function isHtml(mediaType) {
-  return /^\s*text\/html\s*(;.*)?$/i.test(mediaType);
+  return /^\s*text\/html\s*(?:;.*)?$/i.test(mediaType);
 }
 
 /**

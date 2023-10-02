@@ -18,7 +18,7 @@ function getSchemeAuthority(url) {
   // Assume the scheme+authority parts end at first slash following //
   // (if present).  (Note: protocol-relative url may start with //)
   const match =
-    /^((?:\{[^{}]*\}|[^/{}])*\/\/)?(?:\{[^{}]*\}|[^/{}])+/.exec(url);
+    /^(?:(?:\{[^{}]*\}|[^/{}])*\/\/)?(?:\{[^{}]*\}|[^/{}])+/.exec(url);
   return match && match[0];
 }
 
