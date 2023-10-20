@@ -85,7 +85,7 @@ export default class BoolEnumToBoolTransformer
 
   transformMediaType(mediaType) {
     const prevContext = this[inStringContextSymbol];
-    const mediaTypeStr = this.transformPath[this.transformPath.length - 1];
+    const mediaTypeStr = this.transformPath.at(-1);
     try {
       this[inStringContextSymbol] =
         mediaTypeStr === 'application/x-www-form-urlencoded'
