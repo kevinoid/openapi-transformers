@@ -5,8 +5,11 @@
  */
 
 import assert from 'node:assert';
+import { debuglog } from 'node:util';
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
+
+const debug = debuglog('openapi-transformers:queries-to-x-ms-paths');
 
 /**
  * Transformer to move paths with query parameters from paths to x-ms-paths for
@@ -42,6 +45,7 @@ export default class QueriesToXMsPathsTransformer
     const paths = { ...spec.paths };
     const xMsPaths = { ...spec['x-ms-paths'] };
     for (const path of queryPaths) {
+      debug('moving %s from paths to x-ms-paths', path);
       assert(
         !hasOwnProperty.call(xMsPaths, path),
         `${path} already present in x-ms-paths`,
