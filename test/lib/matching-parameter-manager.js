@@ -49,7 +49,7 @@ describe('MatchingParameterMatcher', () => {
       const newName = new MatchingParameterMatcher(parameters).add(value, name);
       assert.strictEqual(newName, name);
       assert.strictEqual(parameters[name], origValue);
-      assert(!hasOwnProperty.call(parameters, `${name}2`));
+      assert(!Object.hasOwn(parameters, `${name}2`));
     });
 
     it('returns unrelated name with equal value', () => {
@@ -62,7 +62,7 @@ describe('MatchingParameterMatcher', () => {
         .add(value, name);
       assert.strictEqual(newName, origName);
       assert.strictEqual(parameters[newName], origValue);
-      assert(!hasOwnProperty.call(parameters, name));
+      assert(!Object.hasOwn(parameters, name));
     });
 
     it('returns unrelated name with x-ms-parameter-location:client', () => {
@@ -80,7 +80,7 @@ describe('MatchingParameterMatcher', () => {
         .add(value, name);
       assert.strictEqual(newName, origName);
       assert.strictEqual(parameters[newName], origValue);
-      assert(!hasOwnProperty.call(parameters, name));
+      assert(!Object.hasOwn(parameters, name));
     });
 
     it('returns unrelated name without x-ms-parameter-location:client', () => {
@@ -98,7 +98,7 @@ describe('MatchingParameterMatcher', () => {
         .add(value, name);
       assert.strictEqual(newName, origName);
       assert.strictEqual(parameters[newName], origValue);
-      assert(!hasOwnProperty.call(parameters, name));
+      assert(!Object.hasOwn(parameters, name));
     });
 
     it('does not return name with x-ms-parameter-location:method', () => {

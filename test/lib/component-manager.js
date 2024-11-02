@@ -68,7 +68,7 @@ describe('ComponentManager', () => {
       const newName = new ComponentManager(component).add(value, name);
       assert.strictEqual(newName, name);
       assert.strictEqual(component[name], origValue);
-      assert(!hasOwnProperty.call(component, `${name}2`));
+      assert(!Object.hasOwn(component, `${name}2`));
     });
 
     // Note: This is done by MatchingComponentManager
@@ -142,7 +142,7 @@ describe('ComponentManager', () => {
       const newName = manager.add(value, name);
       assert.strictEqual(newName, name);
       assert.strictEqual(component[name], 'orig');
-      assert(!hasOwnProperty.call(component, `${name}2`));
+      assert(!Object.hasOwn(component, `${name}2`));
     });
   });
 });

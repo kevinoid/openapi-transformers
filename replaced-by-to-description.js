@@ -9,8 +9,8 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
 function transformXDeprecated(schema) {
   const xDeprecated = schema['x-deprecated'];
   if (xDeprecated
-      && !hasOwnProperty.call(xDeprecated, 'description')
-      && hasOwnProperty.call(xDeprecated, 'replaced-by')) {
+      && !Object.hasOwn(xDeprecated, 'description')
+      && Object.hasOwn(xDeprecated, 'replaced-by')) {
     return {
       ...schema,
       'x-deprecated': {

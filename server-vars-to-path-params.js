@@ -122,7 +122,7 @@ export default class ServerVarsToPathParamsTransformer
         if (pathSuffixVarNames.includes(varName)) {
           // Variable in path suffix
           if (this.options.omitDefault.includes(varName)
-            && hasOwnProperty.call(variable, 'default')) {
+            && Object.hasOwn(variable, 'default')) {
             const newVariable = { ...variable };
             delete newVariable.default;
             suffixVars[varName] = newVariable;
@@ -189,7 +189,7 @@ export default class ServerVarsToPathParamsTransformer
           ...serverVar,
         };
 
-        if (hasOwnProperty.call(serverVar, 'description')) {
+        if (Object.hasOwn(serverVar, 'description')) {
           serverParam.description = serverVar.description;
           delete serverParam.schema.description;
         }

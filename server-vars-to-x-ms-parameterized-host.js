@@ -124,7 +124,7 @@ export default class ServerVarsToParamHostTransformer
     const parameters = [];
     for (const varName of varNames) {
       const variable =
-        hasOwnProperty.call(variables, varName) ? variables[varName]
+        Object.hasOwn(variables, varName) ? variables[varName]
           : undefined;
       if (variable === undefined) {
         this.warn('Unable to convert Server missing variable %j', varName);
@@ -144,7 +144,7 @@ export default class ServerVarsToParamHostTransformer
       parameter.name = varName;
 
       if (this.options.omitDefault.includes(varName)
-        && hasOwnProperty.call(parameter, 'default')) {
+        && Object.hasOwn(parameter, 'default')) {
         delete parameter.default;
       }
 

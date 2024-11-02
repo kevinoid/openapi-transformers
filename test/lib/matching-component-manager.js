@@ -51,7 +51,7 @@ describe('MatchingComponentManager', () => {
       const newName = new MatchingComponentManager(component).add(value, name);
       assert.strictEqual(newName, name);
       assert.strictEqual(component[name], origValue);
-      assert(!hasOwnProperty.call(component, `${name}2`));
+      assert(!Object.hasOwn(component, `${name}2`));
     });
 
     it('returns unrelated name with equal value', () => {
@@ -64,7 +64,7 @@ describe('MatchingComponentManager', () => {
         .add(value, name);
       assert.strictEqual(newName, origName);
       assert.strictEqual(component[newName], origValue);
-      assert(!hasOwnProperty.call(component, name));
+      assert(!Object.hasOwn(component, name));
     });
   });
 
@@ -86,7 +86,7 @@ describe('MatchingComponentManager', () => {
       const newName = new TestManager(component).add(value, name);
       assert.strictEqual(newName, origName);
       assert.strictEqual(component[newName], origValue);
-      assert(!hasOwnProperty.call(component, name));
+      assert(!Object.hasOwn(component, name));
     });
 
     it('does not match key with unequal type', () => {

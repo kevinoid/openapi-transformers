@@ -36,7 +36,7 @@ export default class PathParametersToOperationTransformer
       ...newPathItem
     } = pathItem;
     for (const method of PATH_METHODS) {
-      if (hasOwnProperty.call(pathItem, method)) {
+      if (Object.hasOwn(pathItem, method)) {
         const operation = pathItem[method];
         const opParams = operation.parameters;
         newPathItem[method] = {

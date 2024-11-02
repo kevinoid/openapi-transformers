@@ -87,7 +87,7 @@ export default class ReadOnlyNotRequiredTransformer
         }
 
         if (this.options.setNonNullable
-          && !hasOwnProperty.call(newProperty, 'x-nullable')) {
+          && !Object.hasOwn(newProperty, 'x-nullable')) {
           // Note: x-nullable: false is ignored for enum and class types
           // FIXME: Adding x-nullable to $ref works in AutoRest (if $ref is to
           // non-nullable type other than enum) but violates spec.

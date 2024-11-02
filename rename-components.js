@@ -39,7 +39,7 @@ function renameProps(obj, renameFunc) {
   const newObj = {};
   for (const [key, value] of Object.entries(obj)) {
     const newKey = renameFunc(key);
-    if (hasOwnProperty.call(newObj, newKey)) {
+    if (Object.hasOwn(newObj, newKey)) {
       throw new Error(
         `New name ${newKey} for ${key} conflicts with existing name`,
       );

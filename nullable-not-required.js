@@ -14,7 +14,7 @@ function isNullable(schema, propName) {
     oneOf,
     properties,
   } = schema;
-  if (properties && hasOwnProperty.call(properties, propName)) {
+  if (properties && Object.hasOwn(properties, propName)) {
     const propSchema = properties[propName];
     if (!propSchema.nullable && !propSchema['x-nullable']) {
       // schema in properties does not allow null

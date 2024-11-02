@@ -47,7 +47,7 @@ export default class QueriesToXMsPathsTransformer
     for (const path of queryPaths) {
       debug('moving %s from paths to x-ms-paths', path);
       assert(
-        !hasOwnProperty.call(xMsPaths, path),
+        !Object.hasOwn(xMsPaths, path),
         `${path} already present in x-ms-paths`,
       );
       xMsPaths[path] = paths[path];
