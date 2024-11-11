@@ -159,6 +159,50 @@ describe('NullableNotRequiredTransformer', () => {
     );
   });
 
+  it('null required property to not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'null',
+          },
+        },
+        required: ['name'],
+      }, '3.1.0'))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'null',
+          },
+        },
+      }, '3.1.0'),
+    );
+  });
+
+  it('string/null required property to not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: ['string', 'null'],
+          },
+        },
+        required: ['name'],
+      }, '3.1.0'))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: ['string', 'null'],
+          },
+        },
+      }, '3.1.0'),
+    );
+  });
+
   // null is allowed for property of unconstrained object
   it('unconstrained object to not required', () => {
     assert.deepStrictEqual(
