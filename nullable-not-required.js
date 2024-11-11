@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2019 Kevin Locke <kevin@kevinlocke.name>
+ * @copyright Copyright 2019-2024 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  * @module "openapi-transformers/nullable-not-required.js"
  */
