@@ -351,6 +351,146 @@ describe('NullableNotRequiredTransformer', () => {
     );
   });
 
+  it('nullable and nullable required anyOf property still required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            nullable: true,
+          },
+        },
+        anyOf: [
+          {
+            type: 'object',
+            properties: {
+              name: {
+                type: 'string',
+                nullable: true,
+              },
+            },
+          },
+        ],
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            nullable: true,
+          },
+        },
+        anyOf: [
+          {
+            type: 'object',
+            properties: {
+              name: {
+                type: 'string',
+                nullable: true,
+              },
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  // If a property can not be null due to properties constraint, it must
+  // remain required
+  it('non-nullable and nullable required anyOf property still required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+          },
+        },
+        anyOf: [
+          {
+            type: 'object',
+            properties: {
+              name: {
+                type: 'string',
+                nullable: true,
+              },
+            },
+          },
+        ],
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+          },
+        },
+        anyOf: [
+          {
+            type: 'object',
+            properties: {
+              name: {
+                type: 'string',
+                nullable: true,
+              },
+            },
+          },
+        ],
+        required: ['name'],
+      }),
+    );
+  });
+
+  // If a property can not be null due to allOf constraint, it must
+  // remain required
+  it('nullable and non-nullable required anyOf property still required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            nullable: true,
+          },
+        },
+        anyOf: [
+          {
+            type: 'object',
+            properties: {
+              name: {
+                type: 'string',
+              },
+            },
+          },
+        ],
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            nullable: true,
+          },
+        },
+        anyOf: [
+          {
+            type: 'object',
+            properties: {
+              name: {
+                type: 'string',
+              },
+            },
+          },
+        ],
+        required: ['name'],
+      }),
+    );
+  });
+
   it('nullable required anyOf property to not required', () => {
     assert.deepStrictEqual(
       new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
