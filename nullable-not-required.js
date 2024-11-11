@@ -6,7 +6,15 @@
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
-function isNullable(schema, propName) {
+/**
+ * Determines whether a given property of a given schema can have a null value.
+ *
+ * @param {!object} schema OpenAPI Schema object.
+ * @param {string} propName Name of property to check.
+ * @returns {boolean} <c>true</c> if <c>null</c> is a valid value for
+ * <c>propName</c> in <c>schema</c>.
+ */
+function isPropNullable(schema, propName) {
   const {
     additionalProperties,
     allOf,
@@ -31,19 +39,19 @@ function isNullable(schema, propName) {
   }
 
   if (allOf
-    && !allOf.every((allSchema) => isNullable(allSchema, propName))) {
+    && !allOf.every((allSchema) => isPropNullable(allSchema, propName))) {
     // at least one schema in allOf does not allow null
     return false;
   }
 
   if (anyOf
-    && !anyOf.some((anySchema) => isNullable(anySchema, propName))) {
+    && !anyOf.some((anySchema) => isPropNullable(anySchema, propName))) {
     // no schema in anyOf allows null
     return false;
   }
 
   if (oneOf
-    && !oneOf.some((oneSchema) => isNullable(oneSchema, propName))) {
+    && !oneOf.some((oneSchema) => isPropNullable(oneSchema, propName))) {
     // no schema in oneOf allows null
     return false;
   }
@@ -69,7 +77,7 @@ export default class NullableNotRequiredTransformer
     const transformed = {
       ...newSchema,
       required: newSchema.required
-        .filter((reqName) => !isNullable(newSchema, reqName)),
+        .filter((reqName) => !isPropNullable(newSchema, reqName)),
     };
 
     if (transformed.required.length === 0) {
