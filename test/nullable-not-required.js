@@ -10,19 +10,23 @@ import deepFreeze from 'deep-freeze';
 import NullableNotRequiredTransformer from '../nullable-not-required.js';
 import { schema2, schema3 } from '../test-lib/skeletons.js';
 
-describe('NullableNotRequiredTransformer', () => {
+function describeWithOptions(options) {
+  const requiredUnconstrained =
+    options?.requireUnconstrained ? { required: ['name'] } : undefined;
+
   it('nullable required property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: {
-            type: 'string',
-            nullable: true,
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              nullable: true,
+            },
           },
-        },
-        required: ['name'],
-      }))),
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         properties: {
@@ -37,16 +41,17 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('x-nullable required property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema2({
-        type: 'object',
-        properties: {
-          name: {
-            type: 'string',
-            'x-nullable': true,
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema2({
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              'x-nullable': true,
+            },
           },
-        },
-        required: ['name'],
-      }))),
+          required: ['name'],
+        }))),
       schema2({
         type: 'object',
         properties: {
@@ -61,14 +66,15 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('nullable additionalProperties to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        additionalProperties: {
-          type: 'string',
-          nullable: true,
-        },
-        required: ['name'],
-      }))),
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          additionalProperties: {
+            type: 'string',
+            nullable: true,
+          },
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         additionalProperties: {
@@ -81,13 +87,14 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('non-nullable additionalProperties still required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        additionalProperties: {
-          type: 'string',
-        },
-        required: ['name'],
-      }))),
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          additionalProperties: {
+            type: 'string',
+          },
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         additionalProperties: {
@@ -100,19 +107,20 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('nullable with non-nullable additionalProperties not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: {
-            type: 'string',
-            nullable: true,
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              nullable: true,
+            },
           },
-        },
-        additionalProperties: {
-          type: 'string',
-        },
-        required: ['name'],
-      }))),
+          additionalProperties: {
+            type: 'string',
+          },
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         properties: {
@@ -130,19 +138,20 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('non-nullable with nullable additionalProperties still required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: {
-            type: 'string',
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+            },
           },
-        },
-        additionalProperties: {
-          type: 'string',
-          nullable: true,
-        },
-        required: ['name'],
-      }))),
+          additionalProperties: {
+            type: 'string',
+            nullable: true,
+          },
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         properties: {
@@ -161,15 +170,16 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('null required property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: {
-            type: 'null',
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: {
+              type: 'null',
+            },
           },
-        },
-        required: ['name'],
-      }, '3.1.0'))),
+          required: ['name'],
+        }, '3.1.0'))),
       schema3({
         type: 'object',
         properties: {
@@ -183,15 +193,16 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('string/null required property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: {
-            type: ['string', 'null'],
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: {
+              type: ['string', 'null'],
+            },
           },
-        },
-        required: ['name'],
-      }, '3.1.0'))),
+          required: ['name'],
+        }, '3.1.0'))),
       schema3({
         type: 'object',
         properties: {
@@ -204,88 +215,97 @@ describe('NullableNotRequiredTransformer', () => {
   });
 
   // null is allowed for property of unconstrained object
-  it('unconstrained object to not required', () => {
+  it('unconstrained object optionally required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        required: ['name'],
-      }))),
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
+        ...requiredUnconstrained,
       }),
     );
   });
 
   // null is allowed for unconstrained properties
-  it('unconstrained properties to not required', () => {
+  it('unconstrained properties optionally required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {},
-        required: ['name'],
-      }))),
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {},
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         properties: {},
+        ...requiredUnconstrained,
       }),
     );
   });
 
   // test undefined is treated consistently with missing
-  it('undefined properties to not required', () => {
+  it('undefined properties optionally required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: undefined,
-        },
-        required: ['name'],
-      }))),
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: undefined,
+          },
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         properties: {
           name: undefined,
         },
+        ...requiredUnconstrained,
       }),
     );
   });
 
   // null is not a valid Schema
   // test that null matches undefined/missing for consistency
-  it('null properties to not required', () => {
+  it('null properties optionally required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: null,
-        },
-        required: ['name'],
-      }))),
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: null,
+          },
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         properties: {
           name: null,
         },
+        ...requiredUnconstrained,
       }),
     );
   });
 
   it('nullable required allOf property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        allOf: [
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                nullable: true,
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          allOf: [
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  nullable: true,
+                },
               },
             },
-          },
-        ],
-        required: ['name'],
-      }))),
+          ],
+          required: ['name'],
+        }))),
       schema3({
         allOf: [
           {
@@ -304,28 +324,29 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('some nullable required allOf property still required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        allOf: [
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                nullable: true,
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          allOf: [
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  nullable: true,
+                },
               },
             },
-          },
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                },
               },
             },
-          },
-        ],
-        required: ['name'],
-      }))),
+          ],
+          required: ['name'],
+        }))),
       schema3({
         allOf: [
           {
@@ -353,27 +374,28 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('nullable and nullable required anyOf property still required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: {
-            type: 'string',
-            nullable: true,
-          },
-        },
-        anyOf: [
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                nullable: true,
-              },
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              nullable: true,
             },
           },
-        ],
-        required: ['name'],
-      }))),
+          anyOf: [
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  nullable: true,
+                },
+              },
+            },
+          ],
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         properties: {
@@ -401,26 +423,27 @@ describe('NullableNotRequiredTransformer', () => {
   // remain required
   it('non-nullable and nullable required anyOf property still required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: {
-            type: 'string',
-          },
-        },
-        anyOf: [
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                nullable: true,
-              },
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
             },
           },
-        ],
-        required: ['name'],
-      }))),
+          anyOf: [
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  nullable: true,
+                },
+              },
+            },
+          ],
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         properties: {
@@ -448,26 +471,27 @@ describe('NullableNotRequiredTransformer', () => {
   // remain required
   it('nullable and non-nullable required anyOf property still required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        type: 'object',
-        properties: {
-          name: {
-            type: 'string',
-            nullable: true,
-          },
-        },
-        anyOf: [
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-              },
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              nullable: true,
             },
           },
-        ],
-        required: ['name'],
-      }))),
+          anyOf: [
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                },
+              },
+            },
+          ],
+          required: ['name'],
+        }))),
       schema3({
         type: 'object',
         properties: {
@@ -493,20 +517,21 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('nullable required anyOf property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        anyOf: [
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                nullable: true,
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          anyOf: [
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  nullable: true,
+                },
               },
             },
-          },
-        ],
-        required: ['name'],
-      }))),
+          ],
+          required: ['name'],
+        }))),
       schema3({
         anyOf: [
           {
@@ -525,28 +550,29 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('some nullable required anyOf property still required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        anyOf: [
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                nullable: true,
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          anyOf: [
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  nullable: true,
+                },
               },
             },
-          },
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                },
               },
             },
-          },
-        ],
-        required: ['name'],
-      }))),
+          ],
+          required: ['name'],
+        }))),
       schema3({
         anyOf: [
           {
@@ -573,20 +599,21 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('nullable required oneOf property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        oneOf: [
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                nullable: true,
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          oneOf: [
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  nullable: true,
+                },
               },
             },
-          },
-        ],
-        required: ['name'],
-      }))),
+          ],
+          required: ['name'],
+        }))),
       schema3({
         oneOf: [
           {
@@ -605,28 +632,29 @@ describe('NullableNotRequiredTransformer', () => {
 
   it('some nullable required oneOf property still required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
-        oneOf: [
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                nullable: true,
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze(schema3({
+          oneOf: [
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  nullable: true,
+                },
               },
             },
-          },
-          {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
+            {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                },
               },
             },
-          },
-        ],
-        required: ['name'],
-      }))),
+          ],
+          required: ['name'],
+        }))),
       schema3({
         oneOf: [
           {
@@ -649,5 +677,13 @@ describe('NullableNotRequiredTransformer', () => {
         ],
       }),
     );
+  });
+}
+
+describe('NullableNotRequiredTransformer', () => {
+  describeWithOptions();
+
+  describe('with requireUnconstrained', () => {
+    describeWithOptions({ requireUnconstrained: true });
   });
 });

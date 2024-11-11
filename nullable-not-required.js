@@ -41,8 +41,10 @@ function isNullable(schema, hasNullType) {
  * @param {!object} schema OpenAPI Schema object.
  * @param {string} propName Name of property to check.
  * @param {boolean} hasNullType Whether 'null' is a valid Schema type.
- * @returns {boolean} <c>true</c> if <c>null</c> is a valid value for
- * <c>propName</c> in <c>schema</c>.
+ * @returns {?boolean} <c>true</c> if <c>null</c> is known to be a valid value
+ * for <c>propName</c> in <c>schema</c>, <c>false</c> if <c>null</c> is known
+ * to be an invalid value for <c>propName</c> in <c>schema</c>.
+ * <c>undefined</c> if <c>propName</c> is not constrained by <c>schema</c>.
  */
 function isPropNullable(schema, propName, hasNullType) {
   const {
@@ -52,49 +54,104 @@ function isPropNullable(schema, propName, hasNullType) {
     oneOf,
     properties,
   } = schema;
+  let constrained = false;
   const propSchema = properties?.[propName];
   if (propSchema) {
+    constrained = true;
     if (!isNullable(propSchema, hasNullType)) {
       return false;
     }
-  } else {
-    if (additionalProperties === false) {
-      // would fail validation if property is present
-      return false;
-    }
-
-    if (additionalProperties
-      && !isNullable(additionalProperties, hasNullType)) {
+  } else if (additionalProperties) {
+    constrained = true;
+    if (!isNullable(additionalProperties, hasNullType)) {
       // schema in additionalProperties does not allow null
       return false;
     }
-  }
-
-  if (allOf
-    && !allOf.every(
-      (allSchema) => isPropNullable(allSchema, propName, hasNullType),
-    )) {
-    // at least one schema in allOf does not allow null
+  } else if (additionalProperties === false) {
+    // would fail validation if property is present
     return false;
   }
 
-  if (anyOf
-    && !anyOf.some(
-      (anySchema) => isPropNullable(anySchema, propName, hasNullType),
-    )) {
-    // no schema in anyOf allows null
-    return false;
+  if (Array.isArray(allOf)) {
+    for (const allSchema of allOf) {
+      switch (isPropNullable(allSchema, propName, hasNullType)) {
+        case false:
+          // If an allOf schema doesn't allow null, it's not allowed.
+          return false;
+
+        case true:
+          // An allOf schema allows null
+          constrained = true;
+          break;
+
+        default:
+          // An allOf schema doesn't constrain propName
+          break;
+      }
+    }
   }
 
-  if (oneOf
-    && !oneOf.some(
-      (oneSchema) => isPropNullable(oneSchema, propName, hasNullType),
-    )) {
-    // no schema in oneOf allows null
-    return false;
+  if (Array.isArray(anyOf)) {
+    let anyNullable = false;
+    let anyUnconstrained = false;
+    for (const anySchema of anyOf) {
+      switch (isPropNullable(anySchema, propName, hasNullType)) {
+        case false:
+          // An anyOf schema disallows null
+          break;
+
+        case true:
+          // An anyOf schema allows null
+          anyNullable = true;
+          break;
+
+        default:
+          // An anyOf schema doesn't constrain propName
+          anyUnconstrained = true;
+          break;
+      }
+    }
+
+    if (!anyNullable && !anyUnconstrained) {
+      return false;
+    }
+
+    if (!anyUnconstrained) {
+      constrained = true;
+    }
   }
 
-  return true;
+  if (Array.isArray(oneOf)) {
+    let anyNullable = false;
+    let anyUnconstrained = false;
+    for (const oneSchema of oneOf) {
+      switch (isPropNullable(oneSchema, propName, hasNullType)) {
+        case false:
+          // A oneOf schema disallows null
+          break;
+
+        case true:
+          // A oneOf schema allows null
+          anyNullable = true;
+          break;
+
+        default:
+          // A oneOf schema doesn't constrain propName
+          anyUnconstrained = true;
+          break;
+      }
+    }
+
+    if (!anyNullable && !anyUnconstrained) {
+      return false;
+    }
+
+    if (!anyUnconstrained) {
+      constrained = true;
+    }
+  }
+
+  return constrained ? true : undefined;
 }
 
 /**
@@ -106,6 +163,13 @@ function isPropNullable(schema, propName, hasNullType) {
 export default class NullableNotRequiredTransformer
   extends OpenApiTransformerBase {
   hasNullType = undefined;
+
+  requireUnconstrained = false;
+
+  constructor(options) {
+    super();
+    this.requireUnconstrained = Boolean(options?.requireUnconstrained);
+  }
 
   transformSchema(schema) {
     const newSchema = super.transformSchema(schema);
@@ -119,7 +183,8 @@ export default class NullableNotRequiredTransformer
       ...newSchema,
       required: newSchema.required
         .filter(
-          (reqName) => !isPropNullable(newSchema, reqName, this.hasNullType),
+          (reqName) => !(isPropNullable(newSchema, reqName, this.hasNullType)
+            ?? !this.requireUnconstrained),
         ),
     };
 
