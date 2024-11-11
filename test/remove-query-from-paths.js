@@ -8,16 +8,14 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import RemoveQueryFromPathsTransformer from '../remove-query-from-paths.js';
+import { openapi, swagger } from '../test-lib/skeletons.js';
 
 describe('RemoveQueryFromPathsTransformer', () => {
   it('removes empty query', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a?': {
             get: {
@@ -31,11 +29,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a': {
             get: {
@@ -54,11 +49,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('changes path parameter in path item to query', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a?b={b}': {
             parameters: [
@@ -82,11 +73,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             parameters: [
@@ -115,11 +102,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('changes path parameter in operation to query', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a?b={b}': {
             get: {
@@ -143,11 +126,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             get: {
@@ -176,11 +155,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('renames path parameter in path item to query', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a?b={c}': {
             parameters: [
@@ -204,11 +179,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             parameters: [
@@ -238,11 +209,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('does not duplicate or change existing query param', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a?b={c}': {
             parameters: [
@@ -274,11 +241,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             parameters: [
@@ -307,11 +270,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('adds constant parameter for constant query', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a?b=c': {
             get: {
@@ -325,11 +285,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a': {
             parameters: [
@@ -358,11 +315,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('adds constant parameter for constant query (3.0)', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a?b=c': {
             get: {
@@ -376,11 +329,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             parameters: [
@@ -409,11 +358,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('adds constant parameter for constant query (2.0)', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         paths: {
           '/a?b=c': {
             get: {
@@ -427,11 +372,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         paths: {
           '/a': {
             parameters: [
@@ -463,11 +404,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('adds constant parameter for empty constant value', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a?b': {
             get: {
@@ -481,11 +419,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a': {
             parameters: [
@@ -517,11 +452,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('adds constant parameter for empty constant name', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a?=c': {
             get: {
@@ -535,11 +467,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a': {
             parameters: [
@@ -569,11 +498,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('adds constant parameter for empty constant name and value', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a?=': {
             get: {
@@ -587,11 +513,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a': {
             parameters: [
@@ -620,11 +543,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('does not overwrite existing parameters with constant', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a?b=c': {
             parameters: [
@@ -648,11 +568,8 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
+        ...openapi,
         openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
         paths: {
           '/a': {
             parameters: [
@@ -681,11 +598,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('renames path parameter in path item to multiple queries', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a?b={c}&d={c}': {
             parameters: [
@@ -709,11 +622,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             parameters: [
@@ -750,11 +659,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('does not rename path parameter not in query', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/{a}?b={c}': {
             parameters: [
@@ -786,11 +691,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/{a}': {
             parameters: [
@@ -827,11 +728,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('duplicates parameter in path and query', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/{a}?b={a}': {
             parameters: [
@@ -855,11 +752,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/{a}': {
             parameters: [
@@ -896,11 +789,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('combines path items without overlap', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             delete: {
@@ -923,11 +812,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             delete: {
@@ -953,11 +838,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('combines path items with source params', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             delete: {
@@ -990,11 +871,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             delete: {
@@ -1030,11 +907,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
   it('combines path items with dest path params', () => {
     assert.deepStrictEqual(
       new RemoveQueryFromPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             parameters: [
@@ -1076,11 +949,7 @@ describe('RemoveQueryFromPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             delete: {

@@ -8,6 +8,7 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import FormatToTypeTransformer from '../format-to-type.js';
+import { schema3 } from '../test-lib/skeletons.js';
 
 describe('FormatToTypeTransformer', () => {
   const formatToType = {
@@ -21,49 +22,25 @@ describe('FormatToTypeTransformer', () => {
   for (const [format, type] of Object.entries(formatToType)) {
     it(`openapi 3 format: ${format} to type ${type} in components`, () => {
       assert.deepStrictEqual(
-        new FormatToTypeTransformer().transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                type: 'object',
-                properties: {
-                  prop: {
-                    type: 'string',
-                    format,
-                  },
-                },
-              },
+        new FormatToTypeTransformer().transformOpenApi(deepFreeze(schema3({
+          type: 'object',
+          properties: {
+            prop: {
+              type: 'string',
+              format,
             },
           },
-          paths: {},
-        })),
-        {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                type: 'object',
-                properties: {
-                  prop: {
-                    type,
-                    // format is removed if format === type
-                    ...format === type ? undefined : { format },
-                  },
-                },
-              },
+        }))),
+        schema3({
+          type: 'object',
+          properties: {
+            prop: {
+              type,
+              // format is removed if format === type
+              ...format === type ? undefined : { format },
             },
           },
-          paths: {},
-        },
+        }),
       );
     });
   }

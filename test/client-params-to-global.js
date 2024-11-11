@@ -8,44 +8,35 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import ClientParamsToGlobalTransformer from '../client-params-to-global.js';
+import {
+  get2,
+  get3,
+  openapi,
+  swagger,
+} from '../test-lib/skeletons.js';
 
 describe('ClientParamsToGlobalTransformer', () => {
   it('openapi 3 client parameter', () => {
     assert.deepStrictEqual(
-      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              parameters: [
-                {
-                  name: 'myquery',
-                  in: 'query',
-                  schema: {
-                    type: 'string',
-                  },
-                  'x-ms-parameter-location': 'client',
-                },
-              ],
-              responses: {
-                204: {
-                  description: 'Example response',
-                },
-              },
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze(get3({
+        parameters: [
+          {
+            name: 'myquery',
+            in: 'query',
+            schema: {
+              type: 'string',
             },
+            'x-ms-parameter-location': 'client',
+          },
+        ],
+        responses: {
+          204: {
+            description: 'Example response',
           },
         },
-      })),
+      }))),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             myquery: {
@@ -79,11 +70,7 @@ describe('ClientParamsToGlobalTransformer', () => {
   it('openapi 3 combines same client parameter', () => {
     assert.deepStrictEqual(
       new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             get: {
@@ -126,11 +113,7 @@ describe('ClientParamsToGlobalTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             myquery: {
@@ -176,11 +159,7 @@ describe('ClientParamsToGlobalTransformer', () => {
   it('openapi 3 references existing parameter of same name', () => {
     assert.deepStrictEqual(
       new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             myquery: {
@@ -216,11 +195,7 @@ describe('ClientParamsToGlobalTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             myquery: {
@@ -254,11 +229,7 @@ describe('ClientParamsToGlobalTransformer', () => {
   it('openapi 3 references existing parameter of different name', () => {
     assert.deepStrictEqual(
       new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             notmyquery: {
@@ -294,11 +265,7 @@ describe('ClientParamsToGlobalTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             notmyquery: {
@@ -334,11 +301,7 @@ describe('ClientParamsToGlobalTransformer', () => {
   it('openapi 3 references existing parameter without x-ms-p-l', () => {
     assert.deepStrictEqual(
       new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             notmyquery: {
@@ -373,11 +336,7 @@ describe('ClientParamsToGlobalTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             notmyquery: {
@@ -410,11 +369,7 @@ describe('ClientParamsToGlobalTransformer', () => {
   it('openapi 3 does not combine different client parameter', () => {
     assert.deepStrictEqual(
       new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             get: {
@@ -457,11 +412,7 @@ describe('ClientParamsToGlobalTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             myquery: {
@@ -514,40 +465,25 @@ describe('ClientParamsToGlobalTransformer', () => {
 
   it('openapi 3 client parameter JSON Pointer-encodes name in $ref', () => {
     assert.deepStrictEqual(
-      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              parameters: [
-                {
-                  name: 'my~query/thing',
-                  in: 'query',
-                  schema: {
-                    type: 'string',
-                  },
-                  'x-ms-parameter-location': 'client',
-                },
-              ],
-              responses: {
-                204: {
-                  description: 'Example response',
-                },
-              },
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze(get3({
+        parameters: [
+          {
+            name: 'my~query/thing',
+            in: 'query',
+            schema: {
+              type: 'string',
             },
+            'x-ms-parameter-location': 'client',
+          },
+        ],
+        responses: {
+          204: {
+            description: 'Example response',
           },
         },
-      })),
+      }))),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             'my~query/thing': {
@@ -580,40 +516,25 @@ describe('ClientParamsToGlobalTransformer', () => {
 
   it('openapi 3 client parameter percent-encodes name in $ref', () => {
     assert.deepStrictEqual(
-      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              parameters: [
-                {
-                  name: 'my?query#thing',
-                  in: 'query',
-                  schema: {
-                    type: 'string',
-                  },
-                  'x-ms-parameter-location': 'client',
-                },
-              ],
-              responses: {
-                204: {
-                  description: 'Example response',
-                },
-              },
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze(get3({
+        parameters: [
+          {
+            name: 'my?query#thing',
+            in: 'query',
+            schema: {
+              type: 'string',
             },
+            'x-ms-parameter-location': 'client',
+          },
+        ],
+        responses: {
+          204: {
+            description: 'Example response',
           },
         },
-      })),
+      }))),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             'my?query#thing': {
@@ -646,38 +567,23 @@ describe('ClientParamsToGlobalTransformer', () => {
 
   it('swagger 2 client parameter', () => {
     assert.deepStrictEqual(
-      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              parameters: [
-                {
-                  name: 'myquery',
-                  in: 'query',
-                  type: 'string',
-                  'x-ms-parameter-location': 'client',
-                },
-              ],
-              responses: {
-                204: {
-                  description: 'Example response',
-                },
-              },
-            },
+      new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze(get2({
+        parameters: [
+          {
+            name: 'myquery',
+            in: 'query',
+            type: 'string',
+            'x-ms-parameter-location': 'client',
+          },
+        ],
+        responses: {
+          204: {
+            description: 'Example response',
           },
         },
-      })),
+      }))),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         parameters: {
           myquery: {
             name: 'myquery',
@@ -707,11 +613,7 @@ describe('ClientParamsToGlobalTransformer', () => {
   it('swagger 2 client parameter in x-ms-parameterized-host', () => {
     assert.deepStrictEqual(
       new ClientParamsToGlobalTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         paths: {},
         'x-ms-parameterized-host': {
           hostTemplate: 'example.{tld}',
@@ -726,11 +628,7 @@ describe('ClientParamsToGlobalTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         parameters: {
           tld: {
             name: 'tld',

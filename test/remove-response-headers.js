@@ -8,16 +8,13 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import RemoveResponseHeadersTransformer from '../remove-response-headers.js';
+import { get2, get3, openapi } from '../test-lib/skeletons.js';
 
 describe('RemoveResponseHeadersTransformer', () => {
   it('removes headers from components/responses', () => {
     assert.deepStrictEqual(
       new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           responses: {
             myresponse: {
@@ -44,11 +41,7 @@ describe('RemoveResponseHeadersTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           responses: {
             myresponse: {
@@ -75,11 +68,7 @@ describe('RemoveResponseHeadersTransformer', () => {
   it('does not remove components/headers', () => {
     assert.deepStrictEqual(
       new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           headers: {
             myheader: {
@@ -111,11 +100,7 @@ describe('RemoveResponseHeadersTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           headers: {
             myheader: {
@@ -146,95 +131,51 @@ describe('RemoveResponseHeadersTransformer', () => {
 
   it('removes headers from openapi 3 paths/responses', () => {
     assert.deepStrictEqual(
-      new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              responses: {
-                204: {
-                  description: 'Example response',
-                  headers: {
-                    'X-Foo': {
-                      type: 'string',
-                      pattern: '^foo',
-                    },
-                  },
-                },
+      new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze(get3({
+        responses: {
+          204: {
+            description: 'Example response',
+            headers: {
+              'X-Foo': {
+                type: 'string',
+                pattern: '^foo',
               },
             },
           },
         },
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              responses: {
-                204: {
-                  description: 'Example response',
-                },
-              },
-            },
+      }))),
+      get3({
+        responses: {
+          204: {
+            description: 'Example response',
           },
         },
-      },
+      }),
     );
   });
 
   it('removes headers from swagger 2 paths/responses', () => {
     assert.deepStrictEqual(
-      new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              responses: {
-                204: {
-                  description: 'Example response',
-                  headers: {
-                    'X-Foo': {
-                      type: 'string',
-                      pattern: '^foo',
-                    },
-                  },
-                },
+      new RemoveResponseHeadersTransformer().transformOpenApi(deepFreeze(get2({
+        responses: {
+          204: {
+            description: 'Example response',
+            headers: {
+              'X-Foo': {
+                type: 'string',
+                pattern: '^foo',
               },
             },
           },
         },
-      })),
-      {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              responses: {
-                204: {
-                  description: 'Example response',
-                },
-              },
-            },
+      }))),
+      get2({
+        responses: {
+          204: {
+            description: 'Example response',
           },
         },
-      },
+      }),
     );
   });
 });

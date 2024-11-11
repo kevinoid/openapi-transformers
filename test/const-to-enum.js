@@ -8,149 +8,54 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import ConstToEnumTransformer from '../const-to-enum.js';
+import { schema3 } from '../test-lib/skeletons.js';
 
 describe('ConstToEnumTransformer', () => {
   it('const: 1 to enum: [1]', () => {
     assert.deepStrictEqual(
-      new ConstToEnumTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              const: 1,
-            },
-          },
-        },
-        paths: {},
-      })),
-      {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              enum: [1],
-            },
-          },
-        },
-        paths: {},
-      },
+      new ConstToEnumTransformer().transformOpenApi(deepFreeze(schema3({
+        const: 1,
+      }, '3.1.0'))),
+      schema3({
+        enum: [1],
+      }, '3.1.0'),
     );
   });
 
   it('const: null to enum: [null]', () => {
     assert.deepStrictEqual(
-      new ConstToEnumTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              const: null,
-            },
-          },
-        },
-        paths: {},
-      })),
-      {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              enum: [null],
-            },
-          },
-        },
-        paths: {},
-      },
+      new ConstToEnumTransformer().transformOpenApi(deepFreeze(schema3({
+        const: null,
+      }, '3.1.0'))),
+      schema3({
+        enum: [null],
+      }, '3.1.0'),
     );
   });
 
   // const and enum on the same type is redundant, but valid (AFAICT)
   it('removes const with matching enum', () => {
     assert.deepStrictEqual(
-      new ConstToEnumTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              const: 1,
-              enum: [1],
-            },
-          },
-        },
-        paths: {},
-      })),
-      {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              enum: [1],
-            },
-          },
-        },
-        paths: {},
-      },
+      new ConstToEnumTransformer().transformOpenApi(deepFreeze(schema3({
+        const: 1,
+        enum: [1],
+      }, '3.1.0'))),
+      schema3({
+        enum: [1],
+      }, '3.1.0'),
     );
   });
 
   // since const value is only one which satisfies both constraints
   it('narrows matching enum to only const value', () => {
     assert.deepStrictEqual(
-      new ConstToEnumTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              const: null,
-              enum: [1, null],
-            },
-          },
-        },
-        paths: {},
-      })),
-      {
-        openapi: '3.1.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              enum: [null],
-            },
-          },
-        },
-        paths: {},
-      },
+      new ConstToEnumTransformer().transformOpenApi(deepFreeze(schema3({
+        const: null,
+        enum: [1, null],
+      }, '3.1.0'))),
+      schema3({
+        enum: [null],
+      }, '3.1.0'),
     );
   });
 });

@@ -8,16 +8,13 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import QueriesToXMsPathsTransformer from '../queries-to-x-ms-paths.js';
+import { openapi, swagger } from '../test-lib/skeletons.js';
 
 describe('QueriesToXMsPathsTransformer', () => {
   it('moves paths with query to x-ms-paths in openapi 3', () => {
     assert.deepStrictEqual(
       new QueriesToXMsPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             get: {
@@ -40,11 +37,7 @@ describe('QueriesToXMsPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             get: {
@@ -74,11 +67,7 @@ describe('QueriesToXMsPathsTransformer', () => {
   it('does not create x-ms-paths if none have queries', () => {
     assert.deepStrictEqual(
       new QueriesToXMsPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             get: {
@@ -92,11 +81,7 @@ describe('QueriesToXMsPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             get: {
@@ -117,11 +102,7 @@ describe('QueriesToXMsPathsTransformer', () => {
   it('leaves empty paths after moving', () => {
     assert.deepStrictEqual(
       new QueriesToXMsPathsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a?foo=bar': {
             get: {
@@ -135,11 +116,7 @@ describe('QueriesToXMsPathsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {},
         'x-ms-paths': {
           '/a?foo=bar': {
@@ -159,11 +136,7 @@ describe('QueriesToXMsPathsTransformer', () => {
   it('moves paths with query to x-ms-paths in swagger 2', () => {
     assert.deepStrictEqual(
       new QueriesToXMsPathsTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         paths: {
           '/a': {
             get: {
@@ -186,11 +159,7 @@ describe('QueriesToXMsPathsTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         paths: {
           '/a': {
             get: {

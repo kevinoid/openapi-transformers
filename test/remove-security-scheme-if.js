@@ -8,6 +8,7 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import RemoveSecuritySchemeIfTransformer from '../remove-security-scheme-if.js';
+import { get2, openapi, swagger } from '../test-lib/skeletons.js';
 
 describe('RemoveSecuritySchemeIfTransformer', () => {
   it('throws TypeError without constructor argument', () => {
@@ -33,22 +34,14 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: { myScheme },
           },
           paths: {},
         })),
         {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {},
           paths: {},
         },
@@ -66,11 +59,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: {
               myScheme,
@@ -80,11 +69,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: {
               otherScheme,
@@ -105,11 +90,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: {
               myScheme,
@@ -121,11 +102,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {},
           paths: {},
         },
@@ -142,11 +119,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: {
               myScheme,
@@ -169,11 +142,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           },
         })),
         {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {},
           paths: {
             '/': {
@@ -202,11 +171,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: {
               myScheme,
@@ -220,11 +185,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: {
               otherScheme,
@@ -249,11 +210,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: {
               myScheme,
@@ -269,11 +226,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: {
               otherScheme,
@@ -300,11 +253,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             securitySchemes: {
               myScheme,
@@ -317,11 +266,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {},
           security: [
             {},
@@ -343,22 +288,14 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             myScheme,
           },
           paths: {},
         })),
         {
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           paths: {},
         },
       );
@@ -375,11 +312,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             myScheme,
             otherScheme,
@@ -387,11 +320,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             otherScheme,
           },
@@ -410,11 +339,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             myScheme,
           },
@@ -424,11 +349,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           paths: {},
         },
       );
@@ -444,11 +365,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             myScheme,
           },
@@ -468,25 +385,14 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
             },
           },
         })),
-        {
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          paths: {
-            '/': {
-              get: {
-                operationId: 'getRoot',
-                responses: {
-                  204: {
-                    description: 'Example response',
-                  },
-                },
-              },
+        get2({
+          operationId: 'getRoot',
+          responses: {
+            204: {
+              description: 'Example response',
             },
           },
-        },
+        }),
       );
 
       assert.strictEqual(predicateCallCount, 1);
@@ -501,11 +407,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             myScheme,
             otherScheme,
@@ -517,11 +419,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             otherScheme,
           },
@@ -544,11 +442,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             myScheme,
             otherScheme,
@@ -562,11 +456,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             otherScheme,
           },
@@ -588,11 +478,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           predicateCallCount += 1;
           return securityScheme === myScheme;
         }).transformOpenApi(deepFreeze({
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           securityDefinitions: {
             myScheme,
           },
@@ -603,11 +489,7 @@ describe('RemoveSecuritySchemeIfTransformer', () => {
           paths: {},
         })),
         {
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           security: [
             {},
           ],

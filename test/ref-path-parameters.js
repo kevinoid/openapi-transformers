@@ -8,16 +8,13 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import RefPathParametersTransformer from '../ref-path-parameters.js';
+import { openapi, swagger } from '../test-lib/skeletons.js';
 
 describe('RefPathParametersTransformer', () => {
   it('openapi 3 path item parameters to components', () => {
     assert.deepStrictEqual(
       new RefPathParametersTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/': {
             parameters: [
@@ -40,11 +37,7 @@ describe('RefPathParametersTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             myquery: {
@@ -77,11 +70,7 @@ describe('RefPathParametersTransformer', () => {
   it('swagger 2 path item parameters to components', () => {
     assert.deepStrictEqual(
       new RefPathParametersTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         paths: {
           '/': {
             parameters: [
@@ -102,11 +91,7 @@ describe('RefPathParametersTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         parameters: {
           myquery: {
             in: 'query',

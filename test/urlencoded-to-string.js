@@ -7,56 +7,46 @@ import assert from 'node:assert';
 
 import deepFreeze from 'deep-freeze';
 
+import { post3, swagger } from '../test-lib/skeletons.js';
 import UrlencodedToStringTransformer from '../urlencoded-to-string.js';
 
 describe('UrlencodedToStringTransformer', () => {
   it('converts non-string properties of urlencoded to string', () => {
     assert.deepStrictEqual(
-      new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            post: {
-              requestBody: {
-                content: {
-                  'application/x-www-form-urlencoded': {
-                    schema: {
-                      type: 'object',
-                      properties: {
-                        name: {
-                          type: 'string',
-                        },
-                        hp: {
-                          type: 'integer',
-                        },
-                        speed: {
-                          type: 'number',
-                        },
-                        inverted: {
-                          type: 'boolean',
-                        },
-                      },
-                    },
+      new UrlencodedToStringTransformer().transformOpenApi(deepFreeze(post3({
+        requestBody: {
+          content: {
+            'application/x-www-form-urlencoded': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string',
+                  },
+                  hp: {
+                    type: 'integer',
+                  },
+                  speed: {
+                    type: 'number',
+                  },
+                  inverted: {
+                    type: 'boolean',
                   },
                 },
               },
-              responses: {
-                default: {
-                  description: 'Example response',
-                  content: {
-                    'application/json': {
-                      schema: {
-                        type: 'object',
-                        properties: {
-                          newSpeed: {
-                            type: 'number',
-                          },
-                        },
-                      },
+            },
+          },
+        },
+        responses: {
+          default: {
+            description: 'Example response',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    newSpeed: {
+                      type: 'number',
                     },
                   },
                 },
@@ -64,52 +54,41 @@ describe('UrlencodedToStringTransformer', () => {
             },
           },
         },
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            post: {
-              requestBody: {
-                content: {
-                  'application/x-www-form-urlencoded': {
-                    schema: {
-                      type: 'object',
-                      properties: {
-                        name: {
-                          type: 'string',
-                        },
-                        hp: {
-                          type: 'string',
-                        },
-                        speed: {
-                          type: 'string',
-                        },
-                        inverted: {
-                          type: 'string',
-                        },
-                      },
-                    },
+      }))),
+      post3({
+        requestBody: {
+          content: {
+            'application/x-www-form-urlencoded': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string',
+                  },
+                  hp: {
+                    type: 'string',
+                  },
+                  speed: {
+                    type: 'string',
+                  },
+                  inverted: {
+                    type: 'string',
                   },
                 },
               },
-              responses: {
-                default: {
-                  description: 'Example response',
-                  content: {
-                    'application/json': {
-                      schema: {
-                        type: 'object',
-                        properties: {
-                          newSpeed: {
-                            type: 'number',
-                          },
-                        },
-                      },
+            },
+          },
+        },
+        responses: {
+          default: {
+            description: 'Example response',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    newSpeed: {
+                      type: 'number',
                     },
                   },
                 },
@@ -117,18 +96,14 @@ describe('UrlencodedToStringTransformer', () => {
             },
           },
         },
-      },
+      }),
     );
   });
 
   it('converts non-string formData parameters of urlencoded to string', () => {
     assert.deepStrictEqual(
       new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         produces: ['application/json'],
         paths: {
           '/': {
@@ -174,11 +149,7 @@ describe('UrlencodedToStringTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         produces: ['application/json'],
         paths: {
           '/': {
@@ -229,11 +200,7 @@ describe('UrlencodedToStringTransformer', () => {
   it('converts parameters when urlencoded is inherited', () => {
     assert.deepStrictEqual(
       new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         produces: ['application/json'],
         consumes: ['application/x-www-form-urlencoded'],
         paths: {
@@ -279,11 +246,7 @@ describe('UrlencodedToStringTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         produces: ['application/json'],
         consumes: ['application/x-www-form-urlencoded'],
         paths: {
@@ -340,11 +303,7 @@ describe('UrlencodedToStringTransformer', () => {
   it('converts non-string body properties of urlencoded to string', () => {
     assert.deepStrictEqual(
       new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         produces: ['application/json'],
         consumes: ['application/x-www-form-urlencoded'],
         paths: {
@@ -391,11 +350,7 @@ describe('UrlencodedToStringTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         produces: ['application/json'],
         consumes: ['application/x-www-form-urlencoded'],
         paths: {
@@ -447,11 +402,7 @@ describe('UrlencodedToStringTransformer', () => {
   it('does not convert properties of urlencoded+form-data', () => {
     assert.deepStrictEqual(
       new UrlencodedToStringTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         produces: ['application/json'],
         paths: {
           '/': {
@@ -500,11 +451,7 @@ describe('UrlencodedToStringTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         produces: ['application/json'],
         paths: {
           '/': {

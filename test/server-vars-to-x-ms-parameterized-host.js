@@ -9,6 +9,7 @@ import deepFreeze from 'deep-freeze';
 
 import ServerVarsToParamHostTransformer
   from '../server-vars-to-x-ms-parameterized-host.js';
+import { openapi } from '../test-lib/skeletons.js';
 
 describe('ServerVarsToParamHostTransformer', () => {
   it('throws TypeError with null options', () => {
@@ -42,11 +43,7 @@ describe('ServerVarsToParamHostTransformer', () => {
   it('server variables in host part to x-ms-parameterized-host', () => {
     assert.deepStrictEqual(
       new ServerVarsToParamHostTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.{domain}/foo',
@@ -61,11 +58,7 @@ describe('ServerVarsToParamHostTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.{domain}/foo',
@@ -99,11 +92,7 @@ describe('ServerVarsToParamHostTransformer', () => {
   it('does not create x-ms-parameterized-host if no host vars', () => {
     assert.deepStrictEqual(
       new ServerVarsToParamHostTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.com/{foo}',
@@ -118,11 +107,7 @@ describe('ServerVarsToParamHostTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.com/{foo}',
@@ -142,11 +127,7 @@ describe('ServerVarsToParamHostTransformer', () => {
   it('server variables in scheme part to x-ms-parameterized-host', () => {
     assert.deepStrictEqual(
       new ServerVarsToParamHostTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: '{scheme}://example.{domain}/foo',
@@ -165,11 +146,7 @@ describe('ServerVarsToParamHostTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: '{scheme}://example.{domain}/foo',
@@ -215,11 +192,7 @@ describe('ServerVarsToParamHostTransformer', () => {
   it('server variables in path part not in x-ms-parameterized-host', () => {
     assert.deepStrictEqual(
       new ServerVarsToParamHostTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: '{scheme}://example.{domain}/{foo}',
@@ -242,11 +215,7 @@ describe('ServerVarsToParamHostTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: '{scheme}://example.{domain}/{foo}',
@@ -301,11 +270,7 @@ describe('ServerVarsToParamHostTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.{domain}/foo',
@@ -320,11 +285,7 @@ describe('ServerVarsToParamHostTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.{domain}/foo',

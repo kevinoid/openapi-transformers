@@ -9,6 +9,7 @@ import deepFreeze from 'deep-freeze';
 
 import ServerVarsToPathParamsTransformer
   from '../server-vars-to-path-params.js';
+import { openapi } from '../test-lib/skeletons.js';
 
 describe('ServerVarsToPathParamsTransformer', () => {
   it('throws TypeError with null options', () => {
@@ -28,11 +29,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
   it('server variables in path part to path parameters', () => {
     assert.deepStrictEqual(
       new ServerVarsToPathParamsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.com/{foo}',
@@ -57,11 +54,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.com',
@@ -104,11 +97,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
       new ServerVarsToPathParamsTransformer({ omitDefault: ['foo'] });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.com/{foo}',
@@ -133,11 +122,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.com',
@@ -177,11 +162,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
   it('does not move server variables in host part', () => {
     assert.deepStrictEqual(
       new ServerVarsToPathParamsTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.{domain}/{foo}',
@@ -210,11 +191,7 @@ describe('ServerVarsToPathParamsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           {
             url: 'https://example.{domain}',

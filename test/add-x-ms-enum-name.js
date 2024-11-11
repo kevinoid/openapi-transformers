@@ -8,119 +8,77 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import AddXMsEnumNameTransformer from '../add-x-ms-enum-name.js';
+import {
+  post3,
+  responseSchema3,
+  schema2,
+  schema3,
+} from '../test-lib/skeletons.js';
 
 describe('AddXMsEnumNameTransformer', () => {
   it('openapi 3 without x-ms-enum in components', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
+      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: [
+          'value1',
+          'value2',
+        ],
+      }))),
+      schema3({
+        type: 'string',
+        enum: [
+          'value1',
+          'value2',
+        ],
+        'x-ms-enum': {
+          name: 'Test',
         },
-        components: {
-          schemas: {
-            StringEnum: {
-              type: 'string',
-              enum: [
-                'value1',
-                'value2',
-              ],
-            },
-          },
-        },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            StringEnum: {
-              type: 'string',
-              enum: [
-                'value1',
-                'value2',
-              ],
-              'x-ms-enum': {
-                name: 'StringEnum',
-              },
-            },
-          },
-        },
-        paths: {},
-      },
+      }),
     );
   });
 
   it('openapi 3 without x-ms-enum.name in components', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            StringEnum: {
-              type: 'string',
-              enum: [
-                'value1',
-                'value2',
-              ],
-              'x-ms-enum': {
-                values: [
-                  {
-                    name: 'Value1',
-                    value: 'value1',
-                  },
-                  {
-                    name: 'Value2',
-                    value: 'value2',
-                  },
-                ],
-              },
+      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: [
+          'value1',
+          'value2',
+        ],
+        'x-ms-enum': {
+          values: [
+            {
+              name: 'Value1',
+              value: 'value1',
             },
-          },
-        },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            StringEnum: {
-              type: 'string',
-              enum: [
-                'value1',
-                'value2',
-              ],
-              'x-ms-enum': {
-                name: 'StringEnum',
-                values: [
-                  {
-                    name: 'Value1',
-                    value: 'value1',
-                  },
-                  {
-                    name: 'Value2',
-                    value: 'value2',
-                  },
-                ],
-              },
+            {
+              name: 'Value2',
+              value: 'value2',
             },
-          },
+          ],
         },
-        paths: {},
-      },
+      }))),
+      schema3({
+        type: 'string',
+        enum: [
+          'value1',
+          'value2',
+        ],
+        'x-ms-enum': {
+          name: 'Test',
+          values: [
+            {
+              name: 'Value1',
+              value: 'value1',
+            },
+            {
+              name: 'Value2',
+              value: 'value2',
+            },
+          ],
+        },
+      }),
     );
   });
 
@@ -129,54 +87,30 @@ describe('AddXMsEnumNameTransformer', () => {
   // components (and deduplicate as appropriate).
   it('openapi 3 property without x-ms-enum in components', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                myenum: {
-                  type: 'string',
-                  enum: [
-                    'value1',
-                    'value2',
-                  ],
-                },
-              },
-            },
+      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          myenum: {
+            type: 'string',
+            enum: [
+              'value1',
+              'value2',
+            ],
           },
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                myenum: {
-                  type: 'string',
-                  enum: [
-                    'value1',
-                    'value2',
-                  ],
-                },
-              },
-            },
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          myenum: {
+            type: 'string',
+            enum: [
+              'value1',
+              'value2',
+            ],
           },
         },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -185,68 +119,46 @@ describe('AddXMsEnumNameTransformer', () => {
   // named components (and deduplicate as appropriate).
   it('openapi 3 requestBody without x-ms-enum', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            post: {
-              requestBody: {
-                content: {
-                  'application/json': {
-                    schema: {
-                      type: 'string',
-                      enum: [
-                        'value1',
-                        'value2',
-                      ],
-                    },
-                  },
-                },
-              },
-              responses: {
-                204: {
-                  description: 'Example response',
-                },
+      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze(post3({
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'string',
+                enum: [
+                  'value1',
+                  'value2',
+                ],
               },
             },
           },
         },
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
+        responses: {
+          204: {
+            description: 'Example response',
+          },
         },
-        paths: {
-          '/': {
-            post: {
-              requestBody: {
-                content: {
-                  'application/json': {
-                    schema: {
-                      type: 'string',
-                      enum: [
-                        'value1',
-                        'value2',
-                      ],
-                    },
-                  },
-                },
-              },
-              responses: {
-                204: {
-                  description: 'Example response',
-                },
+      }))),
+      post3({
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'string',
+                enum: [
+                  'value1',
+                  'value2',
+                ],
               },
             },
           },
         },
-      },
+        responses: {
+          204: {
+            description: 'Example response',
+          },
+        },
+      }),
     );
   });
 
@@ -255,106 +167,44 @@ describe('AddXMsEnumNameTransformer', () => {
   // named components (and deduplicate as appropriate).
   it('openapi 3 response without x-ms-enum', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              responses: {
-                default: {
-                  description: 'Example response',
-                  content: {
-                    'application/json': {
-                      schema: {
-                        type: 'string',
-                        enum: [
-                          'value1',
-                          'value2',
-                        ],
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            get: {
-              responses: {
-                default: {
-                  description: 'Example response',
-                  content: {
-                    'application/json': {
-                      schema: {
-                        type: 'string',
-                        enum: [
-                          'value1',
-                          'value2',
-                        ],
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze(
+        responseSchema3({
+          type: 'string',
+          enum: [
+            'value1',
+            'value2',
+          ],
+        }),
+      )),
+      responseSchema3({
+        type: 'string',
+        enum: [
+          'value1',
+          'value2',
+        ],
+      }),
     );
   });
 
   it('swagger 2 without x-ms-enum in definitions', () => {
     assert.deepStrictEqual(
-      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
+      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze(schema2({
+        type: 'string',
+        enum: [
+          'value1',
+          'value2',
+        ],
+      }))),
+      schema2({
+        type: 'string',
+        enum: [
+          'value1',
+          'value2',
+        ],
+        'x-ms-enum': {
+          name: 'Test',
         },
-        definitions: {
-          StringEnum: {
-            type: 'string',
-            enum: [
-              'value1',
-              'value2',
-            ],
-          },
-        },
-        paths: {},
-      })),
-      {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        definitions: {
-          StringEnum: {
-            type: 'string',
-            enum: [
-              'value1',
-              'value2',
-            ],
-            'x-ms-enum': {
-              name: 'StringEnum',
-            },
-          },
-        },
-        paths: {},
-      },
+      }),
     );
   });
 });

@@ -8,97 +8,54 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import NullableNotRequiredTransformer from '../nullable-not-required.js';
+import { schema2, schema3 } from '../test-lib/skeletons.js';
 
 describe('NullableNotRequiredTransformer', () => {
   it('nullable required property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  nullable: true,
-                },
-              },
-              required: ['name'],
-            },
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            nullable: true,
           },
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  nullable: true,
-                },
-              },
-            },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            nullable: true,
           },
         },
-        paths: {},
-      },
+      }),
     );
   });
 
   it('x-nullable required property to not required', () => {
     assert.deepStrictEqual(
-      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        definitions: {
-          Example: {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                'x-nullable': true,
-              },
-            },
-            required: ['name'],
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema2({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            'x-nullable': true,
           },
         },
-        paths: {},
-      })),
-      {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        definitions: {
-          Example: {
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string',
-                'x-nullable': true,
-              },
-            },
+        required: ['name'],
+      }))),
+      schema2({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            'x-nullable': true,
           },
         },
-        paths: {},
-      },
+      }),
     );
   });
 });

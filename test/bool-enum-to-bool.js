@@ -8,125 +8,50 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import BoolEnumToBoolTransformer from '../bool-enum-to-bool.js';
+import { openapi, schema3 } from '../test-lib/skeletons.js';
 
 describe('BoolEnumToBoolTransformer', () => {
   it('removes enum: [true, false] from type: boolean', () => {
     assert.deepStrictEqual(
-      new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'boolean',
-              enum: [true, false],
-            },
-          },
-        },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'boolean',
-            },
-          },
-        },
-        paths: {},
-      },
+      new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'boolean',
+        enum: [true, false],
+      }))),
+      schema3({
+        type: 'boolean',
+      }),
     );
   });
 
   it('removes enum: [false, true] from type: boolean', () => {
     assert.deepStrictEqual(
-      new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'boolean',
-              enum: [false, true],
-            },
-          },
-        },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'boolean',
-            },
-          },
-        },
-        paths: {},
-      },
+      new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'boolean',
+        enum: [false, true],
+      }))),
+      schema3({
+        type: 'boolean',
+      }),
     );
   });
 
   it('does not remove enum: ["true", "false"] outside string context', () => {
     assert.deepStrictEqual(
-      new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'string',
-              enum: ['true', 'false'],
-            },
-          },
-        },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'string',
-              enum: ['true', 'false'],
-            },
-          },
-        },
-        paths: {},
-      },
+      new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: ['true', 'false'],
+      }))),
+      schema3({
+        type: 'string',
+        enum: ['true', 'false'],
+      }),
     );
   });
 
   it('removes enum: ["true", "false"] in components header', () => {
     assert.deepStrictEqual(
       new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           headers: {
             Example: {
@@ -140,11 +65,7 @@ describe('BoolEnumToBoolTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           headers: {
             Example: {
@@ -162,11 +83,7 @@ describe('BoolEnumToBoolTransformer', () => {
   it('removes enum: ["true", "false"] in components path parameter', () => {
     assert.deepStrictEqual(
       new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {
@@ -182,11 +99,7 @@ describe('BoolEnumToBoolTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {
@@ -206,11 +119,7 @@ describe('BoolEnumToBoolTransformer', () => {
   it('removes enum: ["true", "false"] in components query parameter', () => {
     assert.deepStrictEqual(
       new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {
@@ -226,11 +135,7 @@ describe('BoolEnumToBoolTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {
@@ -250,11 +155,7 @@ describe('BoolEnumToBoolTransformer', () => {
   it('removes mixed enum in components query parameter', () => {
     assert.deepStrictEqual(
       new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {
@@ -270,11 +171,7 @@ describe('BoolEnumToBoolTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {
@@ -294,11 +191,7 @@ describe('BoolEnumToBoolTransformer', () => {
   it('removes enum: ["true", "false"] in components cookie parameter', () => {
     assert.deepStrictEqual(
       new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {
@@ -314,11 +207,7 @@ describe('BoolEnumToBoolTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {
@@ -338,11 +227,7 @@ describe('BoolEnumToBoolTransformer', () => {
   it('does not remove enum: ["true", "false"] in JSON cookie', () => {
     assert.deepStrictEqual(
       new BoolEnumToBoolTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {
@@ -362,11 +247,7 @@ describe('BoolEnumToBoolTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           parameters: {
             Example: {

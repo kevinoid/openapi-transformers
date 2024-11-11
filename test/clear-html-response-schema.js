@@ -9,16 +9,13 @@ import deepFreeze from 'deep-freeze';
 
 import ClearHtmlResponseSchemaTransformer
   from '../clear-html-response-schema.js';
+import { openapi, swagger } from '../test-lib/skeletons.js';
 
 describe('ClearHtmlResponseSchemaTransformer', () => {
   it('removes schema for text/html response in openapi 3', () => {
     assert.deepStrictEqual(
       new ClearHtmlResponseSchemaTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/': {
             get: {
@@ -57,11 +54,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/': {
             get: {
@@ -100,11 +93,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
   it('removes schema for text/html;charset response in openapi 3', () => {
     assert.deepStrictEqual(
       new ClearHtmlResponseSchemaTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/': {
             get: {
@@ -143,11 +132,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/': {
             get: {
@@ -186,11 +171,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
   it('removes schema for text/html response in swagger 2', () => {
     assert.deepStrictEqual(
       new ClearHtmlResponseSchemaTransformer().transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         paths: {
           '/': {
             get: {
@@ -221,11 +202,7 @@ describe('ClearHtmlResponseSchemaTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         paths: {
           '/': {
             get: {

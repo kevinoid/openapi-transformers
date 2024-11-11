@@ -8,16 +8,13 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import RemovePathsWithServersTransformer from '../remove-paths-with-servers.js';
+import { openapi } from '../test-lib/skeletons.js';
 
 describe('RemovePathsWithServersTransformer', () => {
   it('removes path items with servers', () => {
     assert.deepStrictEqual(
       new RemovePathsWithServersTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/a': {
             servers: [
@@ -43,11 +40,7 @@ describe('RemovePathsWithServersTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/b': {
             get: {
@@ -66,11 +59,7 @@ describe('RemovePathsWithServersTransformer', () => {
   it('removes path items with empty servers', () => {
     assert.deepStrictEqual(
       new RemovePathsWithServersTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           { url: 'https://example.com' },
         ],
@@ -97,11 +86,7 @@ describe('RemovePathsWithServersTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         servers: [
           { url: 'https://example.com' },
         ],

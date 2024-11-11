@@ -8,6 +8,7 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import InlineNonObjectSchemaTransformer from '../inline-non-object-schemas.js';
+import { openapi, schema3 } from '../test-lib/skeletons.js';
 
 describe('InlineNonObjectSchemaTransformer', () => {
   it('throws TypeError with null options', () => {
@@ -27,11 +28,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
   it('inlines non-object schema with constraints by default', () => {
     assert.deepStrictEqual(
       new InlineNonObjectSchemaTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             Weight: {
@@ -51,11 +48,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             Weight: {
@@ -81,11 +74,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
   it('does not inline non-object schema without constraints by default', () => {
     assert.deepStrictEqual(
       new InlineNonObjectSchemaTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             Weight: {
@@ -104,11 +93,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             Weight: {
@@ -134,11 +119,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
       new InlineNonObjectSchemaTransformer({ inlineAll: true });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             Weight: {
@@ -157,11 +138,7 @@ describe('InlineNonObjectSchemaTransformer', () => {
         paths: {},
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             Weight: {
@@ -192,47 +169,23 @@ describe('InlineNonObjectSchemaTransformer', () => {
     }
     const transformer = new InlineNonObjectSchemaTransformer({ resolveRef });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                weight: {
-                  $ref: '#/components/schemas/Weight',
-                },
-              },
-            },
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          weight: {
+            $ref: '#/components/schemas/Weight',
           },
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                weight: {
-                  type: 'number',
-                  minimum: 0,
-                },
-              },
-            },
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          weight: {
+            type: 'number',
+            minimum: 0,
           },
         },
-        paths: {},
-      },
+      }),
     );
   });
 });

@@ -8,6 +8,7 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import MergeSubschemasTransformer from '../merge-subschemas.js';
+import { schema3 } from '../test-lib/skeletons.js';
 
 describe('MergeSubschemasTransformer', () => {
   describe('allOf', () => {
@@ -15,75 +16,27 @@ describe('MergeSubschemasTransformer', () => {
     // If removal is desired, use a transformer for this specific purpose.
     it('does not modify empty Array', () => {
       assert.deepStrictEqual(
-        new MergeSubschemasTransformer().transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                allOf: [],
-              },
-            },
-          },
-          paths: {},
-        })),
-        {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                allOf: [],
-              },
-            },
-          },
-          paths: {},
-        },
+        new MergeSubschemasTransformer().transformOpenApi(deepFreeze(schema3({
+          allOf: [],
+        }))),
+        schema3({
+          allOf: [],
+        }),
       );
     });
 
     it('intersects single element with parent', () => {
       assert.deepStrictEqual(
-        new MergeSubschemasTransformer().transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                maximum: 5,
-                allOf: [
-                  { minimum: 3 },
-                ],
-              },
-            },
-          },
-          paths: {},
-        })),
-        {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                maximum: 5,
-                minimum: 3,
-              },
-            },
-          },
-          paths: {},
-        },
+        new MergeSubschemasTransformer().transformOpenApi(deepFreeze(schema3({
+          maximum: 5,
+          allOf: [
+            { minimum: 3 },
+          ],
+        }))),
+        schema3({
+          maximum: 5,
+          minimum: 3,
+        }),
       );
     });
   });
@@ -93,75 +46,27 @@ describe('MergeSubschemasTransformer', () => {
     // If removal is desired, use a transformer for this specific purpose.
     it('does not modify empty Array', () => {
       assert.deepStrictEqual(
-        new MergeSubschemasTransformer().transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                anyOf: [],
-              },
-            },
-          },
-          paths: {},
-        })),
-        {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                anyOf: [],
-              },
-            },
-          },
-          paths: {},
-        },
+        new MergeSubschemasTransformer().transformOpenApi(deepFreeze(schema3({
+          anyOf: [],
+        }))),
+        schema3({
+          anyOf: [],
+        }),
       );
     });
 
     it('intersects single element with parent', () => {
       assert.deepStrictEqual(
-        new MergeSubschemasTransformer().transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                maximum: 5,
-                anyOf: [
-                  { minimum: 3 },
-                ],
-              },
-            },
-          },
-          paths: {},
-        })),
-        {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                maximum: 5,
-                minimum: 3,
-              },
-            },
-          },
-          paths: {},
-        },
+        new MergeSubschemasTransformer().transformOpenApi(deepFreeze(schema3({
+          maximum: 5,
+          anyOf: [
+            { minimum: 3 },
+          ],
+        }))),
+        schema3({
+          maximum: 5,
+          minimum: 3,
+        }),
       );
     });
   });
@@ -171,75 +76,27 @@ describe('MergeSubschemasTransformer', () => {
     // If removal is desired, use a transformer for this specific purpose.
     it('does not modify empty Array', () => {
       assert.deepStrictEqual(
-        new MergeSubschemasTransformer().transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                oneOf: [],
-              },
-            },
-          },
-          paths: {},
-        })),
-        {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                oneOf: [],
-              },
-            },
-          },
-          paths: {},
-        },
+        new MergeSubschemasTransformer().transformOpenApi(deepFreeze(schema3({
+          oneOf: [],
+        }))),
+        schema3({
+          oneOf: [],
+        }),
       );
     });
 
     it('intersects single element with parent', () => {
       assert.deepStrictEqual(
-        new MergeSubschemasTransformer().transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                maximum: 5,
-                oneOf: [
-                  { minimum: 3 },
-                ],
-              },
-            },
-          },
-          paths: {},
-        })),
-        {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
-          components: {
-            schemas: {
-              Example: {
-                maximum: 5,
-                minimum: 3,
-              },
-            },
-          },
-          paths: {},
-        },
+        new MergeSubschemasTransformer().transformOpenApi(deepFreeze(schema3({
+          maximum: 5,
+          oneOf: [
+            { minimum: 3 },
+          ],
+        }))),
+        schema3({
+          maximum: 5,
+          minimum: 3,
+        }),
       );
     });
   });

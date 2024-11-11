@@ -8,6 +8,7 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import EscapeEnumValuesTransformer from '../escape-enum-values.js';
+import { schema3, swagger } from '../test-lib/skeletons.js';
 
 describe('EscapeEnumValuesTransformer', () => {
   it('throws TypeError without options', () => {
@@ -42,66 +43,42 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'csharp' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '"' },
+            { value: "'" },
+            { value: '\\' },
+            { value: '\r\n' },
+          ],
         },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '"' },
-                  { value: "'" },
-                  { value: '\\' },
-                  { value: '\r\n' },
-                ],
-              },
-            },
-          },
+      }))),
+      schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '\\"' },
+            { value: "'" },
+            { value: '\\\\' },
+            { value: '\\r\\n' },
+          ],
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '\\"' },
-                  { value: "'" },
-                  { value: '\\\\' },
-                  { value: '\\r\\n' },
-                ],
-              },
-            },
-          },
-        },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -109,66 +86,42 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'go' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '"' },
+            { value: "'" },
+            { value: '\\' },
+            { value: '\r\n' },
+          ],
         },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '"' },
-                  { value: "'" },
-                  { value: '\\' },
-                  { value: '\r\n' },
-                ],
-              },
-            },
-          },
+      }))),
+      schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '\\"' },
+            { value: "'" },
+            { value: '\\\\' },
+            { value: '\\r\\n' },
+          ],
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '\\"' },
-                  { value: "'" },
-                  { value: '\\\\' },
-                  { value: '\\r\\n' },
-                ],
-              },
-            },
-          },
-        },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -176,66 +129,42 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'java' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '"' },
+            { value: "'" },
+            { value: '\\' },
+            { value: '\r\n' },
+          ],
         },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '"' },
-                  { value: "'" },
-                  { value: '\\' },
-                  { value: '\r\n' },
-                ],
-              },
-            },
-          },
+      }))),
+      schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '\\"' },
+            { value: "'" },
+            { value: '\\\\' },
+            { value: '\\r\\n' },
+          ],
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '\\"' },
-                  { value: "'" },
-                  { value: '\\\\' },
-                  { value: '\\r\\n' },
-                ],
-              },
-            },
-          },
-        },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -243,66 +172,42 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'nodejs' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '"' },
+            { value: "'" },
+            { value: '\\' },
+            { value: '\r\n' },
+          ],
         },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '"' },
-                  { value: "'" },
-                  { value: '\\' },
-                  { value: '\r\n' },
-                ],
-              },
-            },
-          },
+      }))),
+      schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '\\"' },
+            { value: "\\'" },
+            { value: '\\\\' },
+            { value: '\\r\\n' },
+          ],
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '\\"' },
-                  { value: "\\'" },
-                  { value: '\\\\' },
-                  { value: '\\r\\n' },
-                ],
-              },
-            },
-          },
-        },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -310,66 +215,42 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'php' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '"' },
+            { value: "'" },
+            { value: '\\' },
+            { value: '\r\n' },
+          ],
         },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '"' },
-                  { value: "'" },
-                  { value: '\\' },
-                  { value: '\r\n' },
-                ],
-              },
-            },
-          },
+      }))),
+      schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '\\"' },
+            { value: "'" },
+            { value: '\\\\' },
+            { value: '\\r\\n' },
+          ],
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '\\"' },
-                  { value: "'" },
-                  { value: '\\\\' },
-                  { value: '\\r\\n' },
-                ],
-              },
-            },
-          },
-        },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -377,66 +258,42 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'python' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '"' },
+            { value: "'" },
+            { value: '\\' },
+            { value: '\r\n' },
+          ],
         },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '"' },
-                  { value: "'" },
-                  { value: '\\' },
-                  { value: '\r\n' },
-                ],
-              },
-            },
-          },
+      }))),
+      schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '\\"' },
+            { value: "\\'" },
+            { value: '\\\\' },
+            { value: '\\r\\n' },
+          ],
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '\\"' },
-                  { value: "\\'" },
-                  { value: '\\\\' },
-                  { value: '\\r\\n' },
-                ],
-              },
-            },
-          },
-        },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -444,66 +301,42 @@ describe('EscapeEnumValuesTransformer', () => {
     const transformer =
       new EscapeEnumValuesTransformer({ language: 'ruby' });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '"' },
+            { value: "'" },
+            { value: '\\' },
+            { value: '\r\n' },
+          ],
         },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '"' },
-                  { value: "'" },
-                  { value: '\\' },
-                  { value: '\r\n' },
-                ],
-              },
-            },
-          },
+      }))),
+      schema3({
+        type: 'string',
+        enum: [
+          '"',
+          "'",
+          '\\',
+          '\r\n',
+        ],
+        'x-ms-enum': {
+          name: 'MyEnum',
+          values: [
+            { value: '"' },
+            { value: "\\'" },
+            { value: '\\\\' },
+            { value: '\r\n' },
+          ],
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            MyEnum: {
-              type: 'string',
-              enum: [
-                '"',
-                "'",
-                '\\',
-                '\r\n',
-              ],
-              'x-ms-enum': {
-                name: 'MyEnum',
-                values: [
-                  { value: '"' },
-                  { value: "\\'" },
-                  { value: '\\\\' },
-                  { value: '\r\n' },
-                ],
-              },
-            },
-          },
-        },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -512,11 +345,7 @@ describe('EscapeEnumValuesTransformer', () => {
       new EscapeEnumValuesTransformer({ language: 'csharp' });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         parameters: {
           myparam: {
             type: 'string',
@@ -540,11 +369,7 @@ describe('EscapeEnumValuesTransformer', () => {
         paths: {},
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         parameters: {
           myparam: {
             type: 'string',

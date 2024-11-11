@@ -8,17 +8,14 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import RemoveRequestBodyTransformer from '../remove-request-body.js';
+import { openapi, swagger } from '../test-lib/skeletons.js';
 
 describe('RemoveRequestBodyTransformer', () => {
   for (const method of ['get', 'head', 'trace', 'GET', 'HEAD', 'TRACE']) {
     it(`removes requestBody from ${method} in path by default`, () => {
       assert.deepStrictEqual(
         new RemoveRequestBodyTransformer().transformOpenApi(deepFreeze({
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           paths: {
             '/test': {
               [method]: {
@@ -57,11 +54,7 @@ describe('RemoveRequestBodyTransformer', () => {
           },
         })),
         {
-          openapi: '3.0.3',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           paths: {
             '/test': {
               [method]: {
@@ -96,11 +89,7 @@ describe('RemoveRequestBodyTransformer', () => {
     it(`removes requestBody from ${method} in components by default`, () => {
       assert.deepStrictEqual(
         new RemoveRequestBodyTransformer().transformOpenApi(deepFreeze({
-          openapi: '3.1.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             pathItems: {
               Example: {
@@ -142,11 +131,7 @@ describe('RemoveRequestBodyTransformer', () => {
           paths: {},
         })),
         {
-          openapi: '3.1.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...openapi,
           components: {
             pathItems: {
               Example: {
@@ -184,11 +169,7 @@ describe('RemoveRequestBodyTransformer', () => {
     it(`removes body parameters from ${method} by default`, () => {
       assert.deepStrictEqual(
         new RemoveRequestBodyTransformer().transformOpenApi(deepFreeze({
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           paths: {
             '/test': {
               [method]: {
@@ -237,11 +218,7 @@ describe('RemoveRequestBodyTransformer', () => {
           },
         })),
         {
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           paths: {
             '/test': {
               [method]: {
@@ -288,11 +265,7 @@ describe('RemoveRequestBodyTransformer', () => {
     it(`removes formData parameters from ${method} by default`, () => {
       assert.deepStrictEqual(
         new RemoveRequestBodyTransformer().transformOpenApi(deepFreeze({
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           paths: {
             '/test': {
               [method]: {
@@ -337,11 +310,7 @@ describe('RemoveRequestBodyTransformer', () => {
           },
         })),
         {
-          swagger: '2.0',
-          info: {
-            title: 'Title',
-            version: '1.0',
-          },
+          ...swagger,
           paths: {
             '/test': {
               [method]: {
@@ -387,11 +356,7 @@ describe('RemoveRequestBodyTransformer', () => {
   it('does not remove requestBody from delete by default', () => {
     assert.deepStrictEqual(
       new RemoveRequestBodyTransformer().transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/test': {
             delete: {
@@ -414,11 +379,7 @@ describe('RemoveRequestBodyTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/test': {
             delete: {
@@ -453,11 +414,7 @@ describe('RemoveRequestBodyTransformer', () => {
   it('removes only methods passed to constructor', () => {
     assert.deepStrictEqual(
       new RemoveRequestBodyTransformer(['delete']).transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/test': {
             delete: {
@@ -496,11 +453,7 @@ describe('RemoveRequestBodyTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         paths: {
           '/test': {
             delete: {

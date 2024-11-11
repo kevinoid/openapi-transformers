@@ -8,6 +8,7 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import ReadOnlyNotRequiredTransformer from '../read-only-not-required.js';
+import { schema3 } from '../test-lib/skeletons.js';
 
 describe('ReadOnlyNotRequiredTransformer', () => {
   it('throws TypeError with null options', () => {
@@ -34,100 +35,52 @@ describe('ReadOnlyNotRequiredTransformer', () => {
   it('make readOnly properties not-required', () => {
     const transformer = new ReadOnlyNotRequiredTransformer();
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  readOnly: true,
-                },
-              },
-              required: ['name'],
-            },
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
           },
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  readOnly: true,
-                },
-              },
-            },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
           },
         },
-        paths: {},
-      },
+      }),
     );
   });
 
   it('doesn\'t remove validation of readOnly properties by default', () => {
     const transformer = new ReadOnlyNotRequiredTransformer();
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  readOnly: true,
-                  minLength: 1,
-                },
-              },
-              required: ['name'],
-            },
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
+            minLength: 1,
           },
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  readOnly: true,
-                  minLength: 1,
-                },
-              },
-            },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
+            minLength: 1,
           },
         },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -136,50 +89,26 @@ describe('ReadOnlyNotRequiredTransformer', () => {
       removeValidation: true,
     });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  readOnly: true,
-                  minLength: 1,
-                },
-              },
-              required: ['name'],
-            },
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
+            minLength: 1,
           },
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  readOnly: true,
-                },
-              },
-            },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
           },
         },
-        paths: {},
-      },
+      }),
     );
   });
 
@@ -188,50 +117,26 @@ describe('ReadOnlyNotRequiredTransformer', () => {
       setNonNullable: true,
     });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  readOnly: true,
-                },
-              },
-              required: ['name'],
-            },
+      transformer.transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
           },
         },
-        paths: {},
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        components: {
-          schemas: {
-            Example: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  readOnly: true,
-                  'x-nullable': false,
-                },
-              },
-            },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            readOnly: true,
+            'x-nullable': false,
           },
         },
-        paths: {},
-      },
+      }),
     );
   });
 });

@@ -8,6 +8,7 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import RenameComponentsTransformer from '../rename-components.js';
+import { openapi, post3, swagger } from '../test-lib/skeletons.js';
 
 describe('RenameComponentsTransformer', () => {
   it('throws TypeError with null options', () => {
@@ -37,11 +38,7 @@ describe('RenameComponentsTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -81,11 +78,7 @@ describe('RenameComponentsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -133,11 +126,7 @@ describe('RenameComponentsTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -181,11 +170,7 @@ describe('RenameComponentsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -237,11 +222,7 @@ describe('RenameComponentsTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -281,11 +262,7 @@ describe('RenameComponentsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -332,56 +309,34 @@ describe('RenameComponentsTransformer', () => {
       schemas: (name) => (name === 'ResponseType' ? `New${name}` : name),
     });
     assert.deepStrictEqual(
-      transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            post: {
-              responses: {
-                default: {
-                  description: 'Example response',
-                  content: {
-                    'application/json': {
-                      schema: {
-                        $ref: '##',
-                      },
-                    },
-                  },
+      transformer.transformOpenApi(deepFreeze(post3({
+        responses: {
+          default: {
+            description: 'Example response',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '##',
                 },
               },
             },
           },
         },
-      })),
-      {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
-        paths: {
-          '/': {
-            post: {
-              responses: {
-                default: {
-                  description: 'Example response',
-                  content: {
-                    'application/json': {
-                      schema: {
-                        $ref: '##',
-                      },
-                    },
-                  },
+      }))),
+      post3({
+        responses: {
+          default: {
+            description: 'Example response',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '##',
                 },
               },
             },
           },
         },
-      },
+      }),
     );
   });
 
@@ -391,11 +346,7 @@ describe('RenameComponentsTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -435,11 +386,7 @@ describe('RenameComponentsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -487,11 +434,7 @@ describe('RenameComponentsTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -531,11 +474,7 @@ describe('RenameComponentsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             RequestType: {
@@ -583,11 +522,7 @@ describe('RenameComponentsTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             ResponseType: {
@@ -630,11 +565,7 @@ describe('RenameComponentsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           schemas: {
             NewResponseType2: {
@@ -685,11 +616,7 @@ describe('RenameComponentsTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         'x-stuff': {
           RequestType: {
             type: 'object',
@@ -731,11 +658,7 @@ describe('RenameComponentsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         'x-stuff': {
           RequestType: {
             type: 'object',
@@ -785,11 +708,7 @@ describe('RenameComponentsTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         definitions: {
           RequestType: {
             type: 'object',
@@ -823,11 +742,7 @@ describe('RenameComponentsTransformer', () => {
         },
       })),
       {
-        swagger: '2.0',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...swagger,
         definitions: {
           RequestType: {
             type: 'object',
@@ -869,11 +784,7 @@ describe('RenameComponentsTransformer', () => {
     });
     assert.deepStrictEqual(
       transformer.transformOpenApi(deepFreeze({
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           responses: {
             myresponse: {
@@ -894,11 +805,7 @@ describe('RenameComponentsTransformer', () => {
         },
       })),
       {
-        openapi: '3.0.3',
-        info: {
-          title: 'Title',
-          version: '1.0',
-        },
+        ...openapi,
         components: {
           responses: {
             myresponse: {
