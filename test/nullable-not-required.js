@@ -59,6 +59,106 @@ describe('NullableNotRequiredTransformer', () => {
     );
   });
 
+  it('nullable additionalProperties to not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        additionalProperties: {
+          type: 'string',
+          nullable: true,
+        },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        additionalProperties: {
+          type: 'string',
+          nullable: true,
+        },
+      }),
+    );
+  });
+
+  it('non-nullable additionalProperties still required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        additionalProperties: {
+          type: 'string',
+        },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        additionalProperties: {
+          type: 'string',
+        },
+        required: ['name'],
+      }),
+    );
+  });
+
+  it('nullable with non-nullable additionalProperties not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            nullable: true,
+          },
+        },
+        additionalProperties: {
+          type: 'string',
+        },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            nullable: true,
+          },
+        },
+        additionalProperties: {
+          type: 'string',
+        },
+      }),
+    );
+  });
+
+  it('non-nullable with nullable additionalProperties still required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+          },
+        },
+        additionalProperties: {
+          type: 'string',
+          nullable: true,
+        },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+          },
+        },
+        additionalProperties: {
+          type: 'string',
+          nullable: true,
+        },
+        required: ['name'],
+      }),
+    );
+  });
+
   // null is allowed for property of unconstrained object
   it('unconstrained object to not required', () => {
     assert.deepStrictEqual(
