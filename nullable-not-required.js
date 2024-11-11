@@ -22,20 +22,24 @@ function isPropNullable(schema, propName) {
     oneOf,
     properties,
   } = schema;
-  if (properties && Object.hasOwn(properties, propName)) {
-    const propSchema = properties[propName];
+  const propSchema = properties?.[propName];
+  if (propSchema) {
+    // null is only allowed with nullable (or x-nullable)
     if (!propSchema.nullable && !propSchema['x-nullable']) {
-      // schema in properties does not allow null
       return false;
     }
-  } else if (additionalProperties === false) {
-    // would fail validation if property is present
-    return false;
-  } else if (typeof additionalProperties === 'object'
-      && !additionalProperties.nullable
-      && !additionalProperties['x-nullable']) {
-    // schema in additionalProperties does not allow null
-    return false;
+  } else {
+    if (additionalProperties === false) {
+      // would fail validation if property is present
+      return false;
+    }
+
+    if (typeof additionalProperties === 'object'
+        && !additionalProperties.nullable
+        && !additionalProperties['x-nullable']) {
+      // schema in additionalProperties does not allow null
+      return false;
+    }
   }
 
   if (allOf
@@ -69,7 +73,7 @@ export default class NullableNotRequiredTransformer
   extends OpenApiTransformerBase {
   transformSchema(schema) {
     const newSchema = super.transformSchema(schema);
-    if (!Array.isArray(newSchema.required)
+    if (!Array.isArray(newSchema?.required)
       || newSchema.required.length === 0) {
       return newSchema;
     }

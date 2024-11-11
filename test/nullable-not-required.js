@@ -59,6 +59,73 @@ describe('NullableNotRequiredTransformer', () => {
     );
   });
 
+  // null is allowed for property of unconstrained object
+  it('unconstrained object to not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+      }),
+    );
+  });
+
+  // null is allowed for unconstrained properties
+  it('unconstrained properties to not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {},
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {},
+      }),
+    );
+  });
+
+  // test undefined is treated consistently with missing
+  it('undefined properties to not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: undefined,
+        },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: undefined,
+        },
+      }),
+    );
+  });
+
+  // null is not a valid Schema
+  // test that null matches undefined/missing for consistency
+  it('null properties to not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
+        type: 'object',
+        properties: {
+          name: null,
+        },
+        required: ['name'],
+      }))),
+      schema3({
+        type: 'object',
+        properties: {
+          name: null,
+        },
+      }),
+    );
+  });
+
   it('nullable required allOf property to not required', () => {
     assert.deepStrictEqual(
       new NullableNotRequiredTransformer().transformOpenApi(deepFreeze(schema3({
