@@ -150,4 +150,25 @@ describe('RemoveRefSiblingsTransformer', () => {
       }),
     );
   });
+
+  it('preserves property order', () => {
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    function retain(propName) {
+      return propName !== 'required';
+    }
+    const transformer = new RemoveRefSiblingsTransformer({ retain });
+    const origSchema = {
+      title: 'Test',
+      description: 'Test',
+      $ref: '#/components/schemas/Test',
+      required: ['name'],
+    };
+    const openapi =
+      transformer.transformOpenApi(deepFreeze(schema3(origSchema)));
+    const newSchema = openapi.components.schemas.Test;
+    assert.deepStrictEqual(
+      Object.keys(origSchema).filter(retain),
+      Object.keys(newSchema),
+    );
+  });
 });
