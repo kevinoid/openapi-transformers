@@ -151,6 +151,36 @@ describe('RemoveRefSiblingsTransformer', () => {
     );
   });
 
+  it('does not pass "$ref" to options.remove', () => {
+    const transformer = new RemoveRefSiblingsTransformer({
+      remove: (propName) => {
+        assert.notStrictEqual(propName, '$ref');
+        return false;
+      },
+    });
+    transformer.transformOpenApi(deepFreeze(schema3({
+      title: 'Test',
+      description: 'Test',
+      $ref: '#/components/schemas/Test',
+      required: ['name'],
+    })));
+  });
+
+  it('does not pass "$ref" to options.retain', () => {
+    const transformer = new RemoveRefSiblingsTransformer({
+      retain: (propName) => {
+        assert.notStrictEqual(propName, '$ref');
+        return false;
+      },
+    });
+    transformer.transformOpenApi(deepFreeze(schema3({
+      title: 'Test',
+      description: 'Test',
+      $ref: '#/components/schemas/Test',
+      required: ['name'],
+    })));
+  });
+
   it('preserves property order', () => {
     // eslint-disable-next-line unicorn/consistent-function-scoping
     function retain(propName) {

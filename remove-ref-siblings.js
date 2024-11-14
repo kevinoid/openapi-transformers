@@ -67,7 +67,8 @@ export default class RemoveRefSiblingsTransformer
 
     const removedSchema = {};
     for (const [propName, propVal] of Object.entries(newSchema)) {
-      if (!this.removeSchemaRefProp(propName, newSchema)) {
+      if (propName === '$ref'
+        || !this.removeSchemaRefProp(propName, newSchema)) {
         removedSchema[propName] = propVal;
       }
     }
