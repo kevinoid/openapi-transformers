@@ -28,7 +28,8 @@ const defaultMethodSet = new Set([
 const httpMethodSetSymbol = Symbol('httpMethodSet');
 
 /**
- * Remove requestBody from operations on a given set of HTTP methods.
+ * Transformer to remove requestBody from operations on a given set of HTTP
+ * methods.
  *
  * This often occurs due to authoring errors where an operation which expects
  * a request body is copied to one that does not.

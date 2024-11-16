@@ -7,8 +7,8 @@
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /**
- * Add `'null'` to `type` of Schema Objects with `nullable: true` or
- * `x-nullable: true`.
+ * Transformer to add `'null'` to `type` of Schema Objects with
+ * `nullable: true` or `x-nullable: true`.
  *
  * This is useful for converting from OpenAPI 2.0/3.0 to OpenAPI 3.1 or
  * JSON Schema.

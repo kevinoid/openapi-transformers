@@ -15,7 +15,7 @@ import TypeNullToEnumTransformer from './type-null-to-enum.js';
 import TypeNullToNullableTransformer from './type-null-to-nullable.js';
 
 /**
- * Transforms an OpenAPI 3.1.* document to OpenAPI 3.0.3.
+ * Transformer to convert an OpenAPI 3.1.* document to OpenAPI 3.0.3.
  */
 export default class OpenApi31To30Transformer extends OpenApiTransformerBase {
   constructor() {

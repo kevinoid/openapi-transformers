@@ -7,8 +7,8 @@
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /**
- * Transform Schema Objects with `'null'` in `type` (as in OAS 3.1 and JSON
- * Schema) to `nullable: true`.
+ * Transformer to convert Schema Objects with `'null'` in `type` (as in OAS
+ * 3.1 and JSON Schema) to `nullable: true`.
  */
 export default class TypeNullToNullableTransformer
   extends OpenApiTransformerBase {

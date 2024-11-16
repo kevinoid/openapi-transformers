@@ -57,8 +57,8 @@ function parseServerUrl(url) {
 }
 
 /**
- * Convert Server Variables in host portion to x-ms-parameterized-host for use
- * with OpenAPI 2.
+ * Transformer to convert Server Variables in host portion to
+ * x-ms-parameterized-host for use with OpenAPI 2.
  *
  * https://github.com/Azure/autorest/tree/main/docs/extensions#x-ms-parameterized-host
  *

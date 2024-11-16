@@ -7,8 +7,9 @@
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /**
- * Transform Schema Objects with numeric values for `exclusiveMaximum` and/or
- * `exclusiveMinimum` (as in JSON Schema Draft 2020-12 referenced by OAS 3.1.0:
+ * Transformer to convert Schema Objects with numeric values for
+ * `exclusiveMaximum` and/or `exclusiveMinimum` (as in JSON Schema Draft
+ * 2020-12 referenced by OAS 3.1.0:
  * https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema-validation-00#section-6.2.3
  * ) to boolean values with corresponding `maximum` and/or `minimum` (as in
  * JSON Schema Write 00 referenced by OAS 3.0:

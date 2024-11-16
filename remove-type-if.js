@@ -36,7 +36,8 @@ export function allNonNullTypes(type) {
 }
 
 /**
- * Removes `type` from Schema Objects where `type` matches a given predicate.
+ * Transformer to remove `type` from Schema Objects where `type` matches a
+ * given predicate.
  */
 export default class RemoveTypeIfTransformer extends OpenApiTransformerBase {
   constructor(predicate) {

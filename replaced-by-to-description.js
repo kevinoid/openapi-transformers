@@ -24,7 +24,8 @@ function transformXDeprecated(schema) {
 }
 
 /**
- * Convert x-deprecated.replaced-by to x-deprecated.description, if not present.
+ * Transformer to convert x-deprecated.replaced-by to x-deprecated.description,
+ * if not present.
  * https://github.com/Azure/autorest/tree/master/Samples/test/deprecated
  *
  * Since Autorest C# doesn't use replaced-by, but does use description.

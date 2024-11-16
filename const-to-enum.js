@@ -7,8 +7,8 @@
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /**
- * Transform Schema Objects with `const` (as in OAS 3.1 and JSON Schema)
- * to `enum` for OAS 3.0 and 2.0.
+ * Transformer to convert Schema Objects with `const` (as in OAS 3.1 and JSON
+ * Schema) to `enum` for OAS 3.0 and 2.0.
  */
 export default class ConstToEnumTransformer extends OpenApiTransformerBase {
   transformSchema(schema) {

@@ -7,8 +7,8 @@
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /**
- * Remove Path Item Objects which have servers (and therefore can't be
- * represented in OpenAPI 2).
+ * Transformer to remove Path Item Objects which have servers (and therefore
+ * can't be represented in OpenAPI 2).
  */
 export default class RemovePathsWithServersTransformer
   extends OpenApiTransformerBase {

@@ -90,7 +90,7 @@ function renameRefObj(obj, getPathIndex, renameFunc) {
 }
 
 /**
- * OpenAPI Transformer to rename components.
+ * Transformer to rename components.
  */
 export default class RenameComponentsTransformer
   extends OpenApiTransformerBase {

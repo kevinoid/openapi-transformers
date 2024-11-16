@@ -74,8 +74,8 @@ function transformPaths(paths, serverPath, serverParams) {
 }
 
 /**
- * Convert Server Variables in path portion to Parameters on Path Item Objects
- * for use with OpenAPI 2.
+ * Transformer to convert Server Variables in path portion to Parameters on
+ * Path Item Objects for use with OpenAPI 2.
  *
  * TODO: Roll this into OpenAPI 3 -> 2 conversion?
  */

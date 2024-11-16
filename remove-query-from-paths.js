@@ -269,7 +269,8 @@ function transformParameters(parameters) {
   });
 }
 
-/** Remove query component of path in paths object.
+/**
+ * Transformer to remove query component of path in paths object.
  *
  * Including the query portion of a URL in path is not allowed in any current
  * version of OpenAPI

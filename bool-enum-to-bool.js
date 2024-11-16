@@ -9,8 +9,8 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
 const inStringContextSymbol = Symbol('inStringContext');
 
 /**
- * Replace `enum: [true, false]` with `type: boolean` for simplicity and
- * to assist generators.
+ * Transformer to replace `enum: [true, false]` with `type: boolean` for
+ * simplicity and to assist generators.
  */
 export default class BoolEnumToBoolTransformer
   extends OpenApiTransformerBase {

@@ -9,8 +9,8 @@ import { isDeepStrictEqual } from 'node:util';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 /**
- * Transform Schema Objects with `type: 'null'` (as in OAS 3.1 and JSON Schema)
- * to `enum: [null]` for OAS 3.0 and 2.0.
+ * Transformer to convert Schema Objects with `type: 'null'` (as in OAS 3.1 and
+ * JSON Schema) to `enum: [null]` for OAS 3.0 and 2.0.
  */
 export default class TypeNullToEnumTransformer
   extends OpenApiTransformerBase {
