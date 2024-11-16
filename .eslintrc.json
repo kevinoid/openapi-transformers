@@ -20,7 +20,8 @@
   "overrides": [
     {
       "files": [
-        "bin/*.js"
+        "bin/*.js",
+        "scripts/*.js"
       ],
       "rules": {
         // Executable scripts are not expected to have exports
