@@ -131,7 +131,8 @@
   },
   "c8": {
     "exclude": [
-      "test"
+      "test",
+      "test-lib"
     ]
   }
 }
