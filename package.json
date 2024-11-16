@@ -1,7 +1,7 @@
 {
   "name": "@kevinoid/openapi-transformers",
   "version": "0.0.1",
-  "description": "A collection of classes to transform OpenAPI documents.",
+  "description": "A collection of classes for transforming OpenAPI documents, particularly for compatibility with code generators like Autorest and OpenAPI Generator.",
   "keywords": [
     "openapi",
     "openapi-transformer",
