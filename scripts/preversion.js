@@ -44,8 +44,9 @@ for (const packageFile of packageFiles) {
       errors += 1;
     }
 
-    if (!readme.includes(dotPackageFile)) {
-      console.error('Error: %s not in README.md', dotPackageFile);
+    const packageFileLink = `](${packageFile})`;
+    if (!readme.includes(packageFileLink)) {
+      console.error('Error: %s not in README.md', packageFileLink);
       errors += 1;
     }
   }
