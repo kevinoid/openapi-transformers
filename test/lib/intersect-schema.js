@@ -217,6 +217,20 @@ function testIntersectSchema(intersectSchema) {
       );
     });
 
+    it('ignores undefined properties', () => {
+      assert.deepStrictEqual(
+        intersectSchema(
+          deepFreeze({ properties: { n: undefined } }),
+          deepFreeze({ properties: { n: { type: 'number' } } }),
+        ),
+        {
+          properties: {
+            n: { type: 'number' },
+          },
+        },
+      );
+    });
+
     it('combines non-overlapping patternProperties', () => {
       assert.deepStrictEqual(
         intersectSchema(
@@ -533,6 +547,78 @@ function testIntersectSchema(intersectSchema) {
         },
       );
     });
+
+    it('throws TypeError for non-object first properties', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ properties: true }),
+            deepFreeze({ properties: {} }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-object second properties', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ properties: {} }),
+            deepFreeze({ properties: true }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-object first patternProperties', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ patternProperties: true }),
+            deepFreeze({ patternProperties: {} }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-object second patternProperties', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ patternProperties: {} }),
+            deepFreeze({ patternProperties: true }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-object first additionalProperties', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ additionalProperties: 1 }),
+            deepFreeze({ additionalProperties: {} }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-object second additionalProperties', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ additionalProperties: {} }),
+            deepFreeze({ additionalProperties: 1 }),
+          );
+        },
+        TypeError,
+      );
+    });
   });
 
   describe('for allOf', () => {
@@ -572,6 +658,30 @@ function testIntersectSchema(intersectSchema) {
         },
       );
     });
+
+    it('throws TypeError for non-Array first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ allOf: true }),
+            deepFreeze({ allOf: [{ maximum: 10 }] }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-Array second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ allOf: [{ maximum: 10 }] }),
+            deepFreeze({ allOf: true }),
+          );
+        },
+        TypeError,
+      );
+    });
   });
 
   describe('for anyOf', () => {
@@ -607,6 +717,30 @@ function testIntersectSchema(intersectSchema) {
           deepFreeze({ anyOf: [{ multipleOf: 1 }, { const: 3.14 }] }),
         ),
         IntersectNotSupportedError,
+      );
+    });
+
+    it('throws TypeError for non-Array first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ anyOf: true }),
+            deepFreeze({ anyOf: [{ maximum: 10 }] }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-Array second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ anyOf: [{ maximum: 10 }] }),
+            deepFreeze({ anyOf: true }),
+          );
+        },
+        TypeError,
       );
     });
   });
@@ -725,6 +859,54 @@ function testIntersectSchema(intersectSchema) {
             a: ['b', 'd'],
           },
         },
+      );
+    });
+
+    it('throws TypeError for non-object first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ dependentRequired: true }),
+            deepFreeze({ dependentRequired: {} }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-object second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ dependentRequired: {} }),
+            deepFreeze({ dependentRequired: true }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-Array first property', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ dependentRequired: { a: true } }),
+            deepFreeze({ dependentRequired: { a: [] } }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-Array second property', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ dependentRequired: { a: [] } }),
+            deepFreeze({ dependentRequired: { a: true } }),
+          );
+        },
+        TypeError,
       );
     });
   });
@@ -849,6 +1031,30 @@ function testIntersectSchema(intersectSchema) {
         IntersectNotSupportedError,
       );
     });
+
+    it('throws TypeError for non-Array first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ enum: true }),
+            deepFreeze({ enum: [0, 1] }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-Array second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ enum: [0, 1] }),
+            deepFreeze({ enum: true }),
+          );
+        },
+        TypeError,
+      );
+    });
   });
 
   describe('for examples', () => {
@@ -874,6 +1080,30 @@ function testIntersectSchema(intersectSchema) {
         {
           examples: [10],
         },
+      );
+    });
+
+    it('throws TypeError for non-Array first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ examples: true }),
+            deepFreeze({ examples: [10] }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-Array second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ examples: [10] }),
+            deepFreeze({ examples: true }),
+          );
+        },
+        TypeError,
       );
     });
   });
@@ -907,6 +1137,30 @@ function testIntersectSchema(intersectSchema) {
           deepFreeze({ maximum: -2 }),
         ),
         { exclusiveMaximum: true, maximum: -3 },
+      );
+    });
+
+    it('throws TypeError for non-number first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ maximum: true }),
+            deepFreeze({ maximum: 1 }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-number second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ maximum: 1 }),
+            deepFreeze({ maximum: true }),
+          );
+        },
+        TypeError,
       );
     });
   }
@@ -949,6 +1203,30 @@ function testIntersectSchema(intersectSchema) {
           deepFreeze({ maximum: 2 }),
         ),
         { maximum: 2 },
+      );
+    });
+
+    it('throws TypeError for non-number first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ exclusiveMaximum: 'test' }),
+            deepFreeze({ exclusiveMaximum: 1 }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-number second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ exclusiveMaximum: 1 }),
+            deepFreeze({ exclusiveMaximum: 'test' }),
+          );
+        },
+        TypeError,
       );
     });
 
@@ -999,6 +1277,30 @@ function testIntersectSchema(intersectSchema) {
         { exclusiveMinimum: true, minimum: -2 },
       );
     });
+
+    it('throws TypeError for non-number first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ minimum: true }),
+            deepFreeze({ minimum: 1 }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-number second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ minimum: 1 }),
+            deepFreeze({ minimum: true }),
+          );
+        },
+        TypeError,
+      );
+    });
   }
 
   describe('for exclusiveMinimum', () => {
@@ -1039,6 +1341,30 @@ function testIntersectSchema(intersectSchema) {
           deepFreeze({ minimum: 3 }),
         ),
         { minimum: 3 },
+      );
+    });
+
+    it('throws TypeError for non-number first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ exclusiveMinimum: 'test' }),
+            deepFreeze({ exclusiveMinimum: 1 }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-number second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ exclusiveMinimum: 1 }),
+            deepFreeze({ exclusiveMinimum: 'test' }),
+          );
+        },
+        TypeError,
       );
     });
 
@@ -1204,6 +1530,30 @@ function testIntersectSchema(intersectSchema) {
         { multipleOf: 6 },
       );
     });
+
+    it('throws TypeError for non-number first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ multipleOf: true }),
+            deepFreeze({ multipleOf: 1 }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-number second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ multipleOf: 1 }),
+            deepFreeze({ multipleOf: true }),
+          );
+        },
+        TypeError,
+      );
+    });
   });
 
   describe('for required', () => {
@@ -1252,6 +1602,30 @@ function testIntersectSchema(intersectSchema) {
         ],
       );
     });
+
+    it('throws TypeError for non-Array first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ required: true }),
+            deepFreeze({ required: ['a', 'b'] }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-Array second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ required: ['a', 'b'] }),
+            deepFreeze({ required: true }),
+          );
+        },
+        TypeError,
+      );
+    });
   });
 
   describe('for oneOf', () => {
@@ -1290,6 +1664,30 @@ function testIntersectSchema(intersectSchema) {
           deepFreeze({ oneOf: [{ multipleOf: 1 }, { const: 3.14 }] }),
         ),
         IntersectNotSupportedError,
+      );
+    });
+
+    it('throws TypeError for non-Array first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ oneOf: true }),
+            deepFreeze({ oneOf: [{ maximum: 10 }] }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-Array second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ oneOf: [{ maximum: 10 }] }),
+            deepFreeze({ oneOf: true }),
+          );
+        },
+        TypeError,
       );
     });
   });
@@ -1337,6 +1735,30 @@ function testIntersectSchema(intersectSchema) {
         ],
       );
     });
+
+    it('throws TypeError for non-string first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ pattern: true }),
+            deepFreeze({ pattern: 'hi' }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-string second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ pattern: 'hi' }),
+            deepFreeze({ pattern: true }),
+          );
+        },
+        TypeError,
+      );
+    });
   });
 
   describe('for readOnly', () => {
@@ -1347,6 +1769,30 @@ function testIntersectSchema(intersectSchema) {
           deepFreeze({ readOnly: false }),
         ),
         { readOnly: true },
+      );
+    });
+
+    it('throws TypeError for non-boolean first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ readOnly: 'hi' }),
+            deepFreeze({ readOnly: true }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-boolean second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ readOnly: true }),
+            deepFreeze({ readOnly: 'hi' }),
+          );
+        },
+        TypeError,
       );
     });
   });
@@ -1380,6 +1826,36 @@ function testIntersectSchema(intersectSchema) {
   });
 
   describe('for type', () => {
+    it('type1 intersect type2 is type1 when same', () => {
+      assert.deepStrictEqual(
+        intersectSchema(
+          deepFreeze({ type: 'number' }),
+          deepFreeze({ type: 'number' }),
+        ),
+        { type: 'number' },
+      );
+    });
+
+    it('type1 intersect unconstrained is type1', () => {
+      assert.deepStrictEqual(
+        intersectSchema(
+          deepFreeze({ type: 'number' }),
+          deepFreeze({}),
+        ),
+        { type: 'number' },
+      );
+    });
+
+    it('type2 intersect unconstrained is type2', () => {
+      assert.deepStrictEqual(
+        intersectSchema(
+          deepFreeze({}),
+          deepFreeze({ type: 'number' }),
+        ),
+        { type: 'number' },
+      );
+    });
+
     it('type1 !== type2 throws EmptyIntersectionError', () => {
       assert.throws(
         () => intersectSchema(
@@ -1454,6 +1930,30 @@ function testIntersectSchema(intersectSchema) {
         { uniqueItems: true },
       );
     });
+
+    it('throws TypeError for non-boolean first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ uniqueItems: 'hi' }),
+            deepFreeze({ uniqueItems: true }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-boolean second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ uniqueItems: true }),
+            deepFreeze({ uniqueItems: 'hi' }),
+          );
+        },
+        TypeError,
+      );
+    });
   });
 
   describe('for writeOnly', () => {
@@ -1464,6 +1964,30 @@ function testIntersectSchema(intersectSchema) {
           deepFreeze({ writeOnly: false }),
         ),
         { writeOnly: true },
+      );
+    });
+
+    it('throws TypeError for non-boolean first', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ writeOnly: 'hi' }),
+            deepFreeze({ writeOnly: true }),
+          );
+        },
+        TypeError,
+      );
+    });
+
+    it('throws TypeError for non-boolean second', () => {
+      assert.throws(
+        () => {
+          intersectSchema(
+            deepFreeze({ writeOnly: true }),
+            deepFreeze({ writeOnly: 'hi' }),
+          );
+        },
+        TypeError,
       );
     });
   });
