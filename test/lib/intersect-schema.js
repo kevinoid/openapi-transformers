@@ -426,11 +426,35 @@ function testIntersectSchema(intersectSchema) {
       );
     });
 
+    it('intersects additionalProperties: true with others', () => {
+      assert.deepStrictEqual(
+        intersectSchema(
+          deepFreeze({ additionalProperties: true }),
+          deepFreeze({ additionalProperties: { minimum: 5 } }),
+        ),
+        {
+          additionalProperties: { minimum: 5 },
+        },
+      );
+    });
+
     it('intersects additionalProperties: false', () => {
       assert.deepStrictEqual(
         intersectSchema(
           deepFreeze({ additionalProperties: false }),
           deepFreeze({ additionalProperties: false }),
+        ),
+        {
+          additionalProperties: false,
+        },
+      );
+    });
+
+    it('intersects additionalProperties: false with others', () => {
+      assert.deepStrictEqual(
+        intersectSchema(
+          deepFreeze({ additionalProperties: false }),
+          deepFreeze({ additionalProperties: { minimum: 5 } }),
         ),
         {
           additionalProperties: false,
