@@ -88,6 +88,7 @@
   "dependencies": {
     "fast-json-stable-stringify": "^2.1.0",
     "json-ptr": "^3.0.1",
+    "json-schema-intersect": "^0.1.0",
     "openapi-transformer-base": "^1.1.0"
   },
   "devDependencies": {

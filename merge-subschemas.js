@@ -6,9 +6,8 @@
 
 import { debuglog } from 'node:util';
 
+import intersectSchema from 'json-schema-intersect';
 import OpenApiTransformerBase from 'openapi-transformer-base';
-
-import intersectSchema from './lib/intersect-schema.js';
 
 const debug = debuglog('merge-subschemas');
 
