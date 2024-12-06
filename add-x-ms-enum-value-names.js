@@ -6,9 +6,8 @@
 
 import assert from 'node:assert';
 
+import dotnetCase from '@kevinoid/dotnet-identifier-case';
 import OpenApiTransformerBase from 'openapi-transformer-base';
-
-import microsoftCase from './lib/microsoft-case.js';
 
 assert(/\p{L}/u.test('X'), 'Unicode property escapes are supported.');
 
@@ -73,7 +72,7 @@ function addXMsEnumValueNamesToSchema(schema) {
       : schema.enum;
   const stringValues = values.map(String);
   const autorestNames = stringValues.map(autorestEnumMemberName);
-  const microsoftNames = stringValues.map(microsoftCase);
+  const microsoftNames = stringValues.map(dotnetCase);
 
   let anyNameChanged = false;
   let newXMsEnumValues;

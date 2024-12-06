@@ -86,6 +86,7 @@
     "version-deps": "npm install conventional-changelog-cli david depcheck git-branch-is hub-ci-status"
   },
   "dependencies": {
+    "@kevinoid/dotnet-identifier-case": "^1.0.0",
     "fast-json-stable-stringify": "^2.1.0",
     "json-ptr": "^3.0.1",
     "json-schema-intersect": "^0.1.0",
