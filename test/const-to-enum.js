@@ -33,7 +33,7 @@ describe('ConstToEnumTransformer', () => {
     );
   });
 
-  // const and enum on the same type is redundant, but valid (AFAICT)
+  // Special case of above.  Enum already matches const.
   it('removes const with matching enum', () => {
     assert.deepStrictEqual(
       new ConstToEnumTransformer().transformOpenApi(deepFreeze(schema3({
@@ -50,12 +50,48 @@ describe('ConstToEnumTransformer', () => {
   it('narrows matching enum to only const value', () => {
     assert.deepStrictEqual(
       new ConstToEnumTransformer().transformOpenApi(deepFreeze(schema3({
+        const: 2,
+        enum: [1, 2, 3],
+      }, '3.1.0'))),
+      schema3({
+        enum: [2],
+      }, '3.1.0'),
+    );
+  });
+
+  // since const value is only one which satisfies both constraints
+  it('narrows matching enum to only null const value', () => {
+    assert.deepStrictEqual(
+      new ConstToEnumTransformer().transformOpenApi(deepFreeze(schema3({
         const: null,
         enum: [1, null],
       }, '3.1.0'))),
       schema3({
         enum: [null],
       }, '3.1.0'),
+    );
+  });
+
+  // no value can validate both const and enum
+  // represent with empty enum for consistency with above
+  it('returns empty enum for non-matching enum', () => {
+    assert.deepStrictEqual(
+      new ConstToEnumTransformer().transformOpenApi(deepFreeze(schema3({
+        const: 2,
+        enum: [1, 3],
+      }, '3.1.0'))),
+      schema3({
+        enum: [],
+      }, '3.1.0'),
+    );
+  });
+
+  it('returns null schema unchanged', () => {
+    assert.deepStrictEqual(
+      new ConstToEnumTransformer().transformOpenApi(deepFreeze(
+        schema3(null, '3.1.0'),
+      )),
+      schema3(null, '3.1.0'),
     );
   });
 });
