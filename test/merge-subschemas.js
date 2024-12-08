@@ -39,6 +39,27 @@ describe('MergeSubschemasTransformer', () => {
         }),
       );
     });
+
+    it('merges recursively', () => {
+      assert.deepStrictEqual(
+        new MergeSubschemasTransformer().transformOpenApi(deepFreeze(schema3({
+          maximum: 5,
+          allOf: [
+            {
+              minimum: 3,
+              allOf: [
+                { multipleOf: 2 },
+              ],
+            },
+          ],
+        }))),
+        schema3({
+          maximum: 5,
+          minimum: 3,
+          multipleOf: 2,
+        }),
+      );
+    });
   });
 
   describe('anyOf', () => {
@@ -69,6 +90,27 @@ describe('MergeSubschemasTransformer', () => {
         }),
       );
     });
+
+    it('merges recursively', () => {
+      assert.deepStrictEqual(
+        new MergeSubschemasTransformer().transformOpenApi(deepFreeze(schema3({
+          maximum: 5,
+          anyOf: [
+            {
+              minimum: 3,
+              anyOf: [
+                { multipleOf: 2 },
+              ],
+            },
+          ],
+        }))),
+        schema3({
+          maximum: 5,
+          minimum: 3,
+          multipleOf: 2,
+        }),
+      );
+    });
   });
 
   describe('oneOf', () => {
@@ -96,6 +138,27 @@ describe('MergeSubschemasTransformer', () => {
         schema3({
           maximum: 5,
           minimum: 3,
+        }),
+      );
+    });
+
+    it('merges recursively', () => {
+      assert.deepStrictEqual(
+        new MergeSubschemasTransformer().transformOpenApi(deepFreeze(schema3({
+          maximum: 5,
+          oneOf: [
+            {
+              minimum: 3,
+              oneOf: [
+                { multipleOf: 2 },
+              ],
+            },
+          ],
+        }))),
+        schema3({
+          maximum: 5,
+          minimum: 3,
+          multipleOf: 2,
         }),
       );
     });
