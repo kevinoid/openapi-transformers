@@ -8,9 +8,10 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import NullableNotRequiredTransformer from '../nullable-not-required.js';
-import { schema2, schema3 } from '../test-lib/skeletons.js';
+import { openapi, schema2, schema3 } from '../test-lib/skeletons.js';
 
 function describeWithOptions(options) {
+  const requiredRef = options?.refNullable ? undefined : { required: ['name'] };
   const requiredUnconstrained =
     options?.requireUnconstrained ? { required: ['name'] } : undefined;
 
@@ -211,6 +212,102 @@ function describeWithOptions(options) {
           },
         },
       }, '3.1.0'),
+    );
+  });
+
+  it('$ref property optionally required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze({
+          ...openapi,
+          components: {
+            schemas: {
+              MyString: {
+                type: 'string',
+              },
+              Test: {
+                type: 'object',
+                properties: {
+                  name: {
+                    $ref: '#/components/schemas/MyString',
+                  },
+                },
+                required: ['name'],
+              },
+            },
+          },
+        })),
+      {
+        ...openapi,
+        components: {
+          schemas: {
+            MyString: {
+              type: 'string',
+            },
+            Test: {
+              type: 'object',
+              properties: {
+                name: {
+                  $ref: '#/components/schemas/MyString',
+                },
+              },
+              ...requiredRef,
+            },
+          },
+        },
+      },
+    );
+  });
+
+  it('$ref allOf property optionally required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze({
+          ...openapi,
+          components: {
+            schemas: {
+              MyString: {
+                type: 'string',
+              },
+              Test: {
+                allOf: [
+                  {
+                    type: 'object',
+                    properties: {
+                      name: {
+                        $ref: '#/components/schemas/MyString',
+                      },
+                    },
+                  },
+                ],
+                required: ['name'],
+              },
+            },
+          },
+        })),
+      {
+        ...openapi,
+        components: {
+          schemas: {
+            MyString: {
+              type: 'string',
+            },
+            Test: {
+              allOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    name: {
+                      $ref: '#/components/schemas/MyString',
+                    },
+                  },
+                },
+              ],
+              ...requiredRef,
+            },
+          },
+        },
+      },
     );
   });
 
@@ -682,6 +779,10 @@ function describeWithOptions(options) {
 
 describe('NullableNotRequiredTransformer', () => {
   describeWithOptions();
+
+  describe('with refNullable', () => {
+    describeWithOptions({ refNullable: true });
+  });
 
   describe('with requireUnconstrained', () => {
     describeWithOptions({ requireUnconstrained: true });
