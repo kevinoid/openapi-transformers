@@ -18,6 +18,14 @@ const debug = debuglog('openapi-transformers:merge-all-of');
  * (e.g. some strongly-typed code generators).
  */
 export default class MergeAllOfTransformer extends OpenApiTransformerBase {
+  onlySingle = false;
+
+  constructor({ onlySingle } = {}) {
+    super();
+
+    this.onlySingle = Boolean(onlySingle);
+  }
+
   transformSchema(schema) {
     const newSchema = super.transformSchema(schema);
     if (!newSchema || typeof newSchema !== 'object') {
@@ -40,6 +48,11 @@ export default class MergeAllOfTransformer extends OpenApiTransformerBase {
       // successfully against all 0 schemas.
       debug('Removing empty allOf');
       return schemaNoAllOf;
+    }
+
+    if (this.onlySingle && allOf.length > 1) {
+      debug('Skipping allOf with multiple schemas');
+      return newSchema;
     }
 
     return allOf.reduce(intersectSchema, schemaNoAllOf);

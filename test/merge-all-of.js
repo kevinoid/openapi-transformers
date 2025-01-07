@@ -75,4 +75,42 @@ describe('MergeAllOfTransformer', () => {
       }),
     );
   });
+
+  describe('with onlySingle', () => {
+    it('intersects single element with parent', () => {
+      assert.deepStrictEqual(
+        new MergeAllOfTransformer({ onlySingle: true })
+          .transformOpenApi(deepFreeze(schema3({
+            maximum: 5,
+            allOf: [
+              { minimum: 3 },
+            ],
+          }))),
+        schema3({
+          maximum: 5,
+          minimum: 3,
+        }),
+      );
+    });
+
+    it('does not modify multi-element allOf', () => {
+      assert.deepStrictEqual(
+        new MergeAllOfTransformer({ onlySingle: true })
+          .transformOpenApi(deepFreeze(schema3({
+            maximum: 5,
+            allOf: [
+              { minimum: 3 },
+              { multipleOf: 2 },
+            ],
+          }))),
+        schema3({
+          maximum: 5,
+          allOf: [
+            { minimum: 3 },
+            { multipleOf: 2 },
+          ],
+        }),
+      );
+    });
+  });
 });
