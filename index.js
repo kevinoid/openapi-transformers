@@ -34,8 +34,12 @@ export { default as FormatToTypeTransformer }
   from './format-to-type.js';
 export { default as InlineNonObjectSchemaTransformer }
   from './inline-non-object-schemas.js';
-export { default as MergeSubschemasTransformer }
-  from './merge-subschemas.js';
+export { default as MergeAllOfTransformer }
+  from './merge-all-of.js';
+export { default as MergeAnyOfTransformer }
+  from './merge-any-of.js';
+export { default as MergeOneOfTransformer }
+  from './merge-one-of.js';
 export { default as NullableNotRequiredTransformer }
   from './nullable-not-required.js';
 export { default as NullableToTypeNullTransformer }

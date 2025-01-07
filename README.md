@@ -58,7 +58,9 @@ openapi-transformer -t @kevinoid/openapi-transformers/remove-response-headers.js
 | [ExclusiveMinMaxToBoolTransformer](exclusive-min-max-to-bool.js)                                     | Convert Schema Objects with numeric values for `exclusiveMaximum` and/or `exclusiveMinimum` to boolean values with corresponding `maximum` and/or `minimum`. |
 | [FormatToTypeTransformer](format-to-type.js)                                                         | Convert known formats in an OAS3 doc to types. |
 | [InlineNonObjectSchemaTransformer](inline-non-object-schemas.js)                                     | Inline schemas with non-object type. |
-| [MergeSubschemasTransformer](merge-subschemas.js)                                                    | Merge `allOf`/`anyOf`/`oneOf` schemas into the parent schema. |
+| [MergeAllOfTransformer](merge-all-of.js)                                                             | Merge `allOf` schemas into the parent schema. |
+| [MergeAnyOfTransformer](merge-any-of.js)                                                             | Merge `anyOf` schemas into the parent schema. |
+| [MergeOneOfTransformer](merge-one-of.js)                                                             | Merge `oneOf` schemas into the parent schema. |
 | [NullableNotRequiredTransformer](nullable-not-required.js)                                           | Make properties which are `nullable` non-`required`. |
 | [NullableToTypeNullTransformer](nullable-to-type-null.js)                                            | Add `'null'` to `type` of Schema Objects with `nullable: true` or `x-nullable: true`. |
 | [OpenApi31To30Transformer](openapi31to30.js)                                                         | Convert an OpenAPI 3.1.* document to OpenAPI 3.0.3. |
