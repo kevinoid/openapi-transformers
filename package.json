@@ -30,6 +30,7 @@
     "./add-x-ms-enum-name.js": "./add-x-ms-enum-name.js",
     "./add-x-ms-enum-value-names.js": "./add-x-ms-enum-value-names.js",
     "./any-of-null-to-nullable.js": "./any-of-null-to-nullable.js",
+    "./assert-properties.js": "./assert-properties.js",
     "./binary-string-to-file.js": "./binary-string-to-file.js",
     "./bool-enum-to-bool.js": "./bool-enum-to-bool.js",
     "./clear-html-response-schema.js": "./clear-html-response-schema.js",

@@ -18,6 +18,8 @@ export { default as AddXMsEnumValueNamesTransformer }
   from './add-x-ms-enum-value-names.js';
 export { default as AnyOfNullToNullableTransformer }
   from './any-of-null-to-nullable.js';
+export { default as AssertPropertiesTransformer }
+  from './assert-properties.js';
 export { default as BinaryStringToFileTransformer }
   from './binary-string-to-file.js';
 export { default as BoolEnumToBoolTransformer }

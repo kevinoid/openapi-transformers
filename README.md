@@ -55,6 +55,7 @@ openapi-transformer -t @kevinoid/openapi-transformers/remove-response-headers.js
 | [ClearHtmlResponseSchemaTransformer](clear-html-response-schema.js)                                  | Remove response content for the `text/html` media type. |
 | [ClientParamsToGlobalTransformer](client-params-to-global.js)                                        | Move parameters with `x-ms-parameter-location: client` defined on Path Item Objects and Operation Objects to the Components or Definitions Object. |
 | [ConstToEnumTransformer](const-to-enum.js)                                                           | Convert Schema Objects with `const` to `enum`. |
+| [AssertPropertiesTransformer](assert-properties.js)                                                  | Throw an `Error` when given properties are present. |
 | [EscapeEnumValuesTransformer](escape-enum-values.js)                                                 | Escape string enum values appropriately for C# string literals. |
 | [ExclusiveMinMaxToBoolTransformer](exclusive-min-max-to-bool.js)                                     | Convert Schema Objects with numeric values for `exclusiveMaximum` and/or `exclusiveMinimum` to boolean values with corresponding `maximum` and/or `minimum`. |
 | [FormatToTypeTransformer](format-to-type.js)                                                         | Convert known formats in an OAS3 doc to types. |
