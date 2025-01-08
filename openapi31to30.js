@@ -6,6 +6,7 @@
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
+import AnyOfNullToNullableTransformer from './any-of-null-to-nullable.js';
 import ConstToEnumTransformer from './const-to-enum.js';
 import ExclusiveMinMaxToBoolTransformer from './exclusive-min-max-to-bool.js';
 import PatternPropertiesToAdditionalPropertiesTransformer
@@ -23,6 +24,7 @@ export default class OpenApi31To30Transformer extends OpenApiTransformerBase {
     this.transformers = [
       new ExclusiveMinMaxToBoolTransformer(),
       new ConstToEnumTransformer(),
+      new AnyOfNullToNullableTransformer(),
       new TypeNullToEnumTransformer(),
       new TypeNullToNullableTransformer(),
       new RemoveTypeIfTransformer(allNonNullTypes),
