@@ -8,7 +8,12 @@ import assert from 'node:assert';
 import deepFreeze from 'deep-freeze';
 
 import NullableNotRequiredTransformer from '../nullable-not-required.js';
-import { openapi, schema2, schema3 } from '../test-lib/skeletons.js';
+import {
+  openapi,
+  schema2,
+  schema3,
+  swagger,
+} from '../test-lib/skeletons.js';
 
 function describeWithOptions(options) {
   const requiredRef = options?.refNullable ? undefined : { required: ['name'] };
@@ -292,6 +297,92 @@ function describeWithOptions(options) {
                 $ref: '#/components/schemas/MyString',
               },
               ...requiredRef,
+            },
+          },
+        },
+      },
+    );
+  });
+
+  it('nullable $ref property not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze({
+          ...openapi,
+          components: {
+            schemas: {
+              MyString: {
+                type: 'string',
+              },
+              Test: {
+                type: 'object',
+                properties: {
+                  name: {
+                    $ref: '#/components/schemas/MyString',
+                    nullable: true,
+                  },
+                },
+                required: ['name'],
+              },
+            },
+          },
+        })),
+      {
+        ...openapi,
+        components: {
+          schemas: {
+            MyString: {
+              type: 'string',
+            },
+            Test: {
+              type: 'object',
+              properties: {
+                name: {
+                  $ref: '#/components/schemas/MyString',
+                  nullable: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    );
+  });
+
+  it('x-nullable $ref property not required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze({
+          ...swagger,
+          definitions: {
+            MyString: {
+              type: 'string',
+            },
+            Test: {
+              type: 'object',
+              properties: {
+                name: {
+                  $ref: '#/definitions/MyString',
+                  'x-nullable': true,
+                },
+              },
+              required: ['name'],
+            },
+          },
+        })),
+      {
+        ...swagger,
+        definitions: {
+          MyString: {
+            type: 'string',
+          },
+          Test: {
+            type: 'object',
+            properties: {
+              name: {
+                $ref: '#/definitions/MyString',
+                'x-nullable': true,
+              },
             },
           },
         },

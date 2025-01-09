@@ -16,12 +16,26 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
  * <c>schema</c>.
  */
 function isNullable(schema, hasNullType, refNullable) {
-  if (schema.$ref) {
+  const {
+    $ref,
+    nullable,
+    'x-nullable': xNullable,
+    type,
+  } = schema;
+
+  if ($ref) {
+    if (typeof nullable === 'boolean') {
+      return nullable;
+    }
+
+    if (typeof xNullable === 'boolean') {
+      return xNullable;
+    }
+
     return refNullable;
   }
 
   if (hasNullType) {
-    const { type } = schema;
     if (typeof type === 'string') {
       if (type !== 'null') {
         // null forbidden by non-null type
@@ -32,7 +46,7 @@ function isNullable(schema, hasNullType, refNullable) {
       // null forbidden by null not in types
       return false;
     }
-  } else if (!schema.nullable && !schema['x-nullable']) {
+  } else if (!nullable && !xNullable) {
     // Without null type, null is only allowed with nullable (or x-nullable)
     return false;
   }
