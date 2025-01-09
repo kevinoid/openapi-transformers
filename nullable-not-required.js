@@ -11,10 +11,15 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
  *
  * @param {!object} schema OpenAPI Schema object.
  * @param {boolean} hasNullType Whether 'null' is a valid Schema type.
+ * @param {boolean} refNullable Treat $ref as nullable.
  * @returns {boolean} <c>true</c> if <c>null</c> is a valid value for
  * <c>schema</c>.
  */
-function isNullable(schema, hasNullType) {
+function isNullable(schema, hasNullType, refNullable) {
+  if (schema.$ref) {
+    return refNullable;
+  }
+
   if (hasNullType) {
     const { type } = schema;
     if (typeof type === 'string') {
@@ -59,15 +64,12 @@ function isPropNullable(schema, propName, hasNullType, refNullable) {
   const propSchema = properties?.[propName];
   if (propSchema) {
     constrained = true;
-    if (propSchema.$ref) {
-      return refNullable;
-    }
-    if (!isNullable(propSchema, hasNullType)) {
+    if (!isNullable(propSchema, hasNullType, refNullable)) {
       return false;
     }
   } else if (additionalProperties) {
     constrained = true;
-    if (!isNullable(additionalProperties, hasNullType)) {
+    if (!isNullable(additionalProperties, hasNullType, refNullable)) {
       // schema in additionalProperties does not allow null
       return false;
     }

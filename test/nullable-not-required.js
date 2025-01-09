@@ -259,6 +259,46 @@ function describeWithOptions(options) {
     );
   });
 
+  it('$ref additionalProperty optionally required', () => {
+    assert.deepStrictEqual(
+      new NullableNotRequiredTransformer(options)
+        .transformOpenApi(deepFreeze({
+          ...openapi,
+          components: {
+            schemas: {
+              MyString: {
+                type: 'string',
+              },
+              Test: {
+                type: 'object',
+                additionalProperties: {
+                  $ref: '#/components/schemas/MyString',
+                },
+                required: ['name'],
+              },
+            },
+          },
+        })),
+      {
+        ...openapi,
+        components: {
+          schemas: {
+            MyString: {
+              type: 'string',
+            },
+            Test: {
+              type: 'object',
+              additionalProperties: {
+                $ref: '#/components/schemas/MyString',
+              },
+              ...requiredRef,
+            },
+          },
+        },
+      },
+    );
+  });
+
   it('$ref allOf property optionally required', () => {
     assert.deepStrictEqual(
       new NullableNotRequiredTransformer(options)
