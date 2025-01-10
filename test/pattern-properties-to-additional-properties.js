@@ -12,6 +12,9 @@ import PatternPropertiesToAdditionalPropertiesTransformer
 import { schema3 } from '../test-lib/skeletons.js';
 
 describe('PatternPropertiesToAdditionalPropertiesTransformer', () => {
+  // Note: Converting to additionalProperties with an empty schema would be ok
+  // https://json-schema.org/draft/2020-12/json-schema-core describes both as
+  // "Omitting this keyword has the same assertion behavior as an empty object."
   it('removes empty patternProperties', () => {
     const transformer =
       new PatternPropertiesToAdditionalPropertiesTransformer();
