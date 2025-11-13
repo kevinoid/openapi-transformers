@@ -1,7 +1,7 @@
 OpenAPI Transformers
 ====================
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/kevinoid/openapi-transformers/node.js.yml?branch=main&style=flat&label=build)](https://github.com/kevinoid/openapi-transformers/actions?query=branch%3Amain)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/kevinoid/openapi-transformers/node.js.yml?branch=main&style=flat&label=build)](https://github.com/kevinoid/openapi-transformers/actions/workflows/node.js.yml?query=branch%3Amain)
 [![Coverage](https://img.shields.io/codecov/c/github/kevinoid/openapi-transformers/main.svg?style=flat)](https://app.codecov.io/gh/kevinoid/openapi-transformers/branch/main)
 [![Dependency Status](https://img.shields.io/librariesio/release/npm/@kevinoid/openapi-transformers.svg?style=flat)](https://libraries.io/npm/@kevinoid%2Fopenapi-transformers)
 [![Supported Node Version](https://img.shields.io/node/v/@kevinoid/openapi-transformers.svg?style=flat)](https://www.npmjs.com/package/@kevinoid/openapi-transformers)
