@@ -12,7 +12,7 @@ const debug = debuglog('x-enum-to-ms');
 
 function transformSchemaXEnumToXMsEnum(schema, schemaName) {
   if ((!schema['x-enum-descriptions'] && !schema['x-enum-varnames'])
-      || (schema['x-ms-enum'] && schema['x-ms-enum'].values)) {
+    || (schema['x-ms-enum'] && schema['x-ms-enum'].values)) {
     // Schema doesn't have enum varnames/descriptions to convert,
     // or already has x-ms-enum.values
     return schema;

@@ -88,9 +88,9 @@ function hasProperties(schema) {
 function hasConstrainedAdditionalProps(schema) {
   return schema
     && ((schema.additionalProperties
-        && Object.keys(schema.additionalProperties).length > 0)
-      || (schema.patternProperties
-        && Object.keys(schema.patternProperties).length > 0));
+      && Object.keys(schema.additionalProperties).length > 0)
+    || (schema.patternProperties
+      && Object.keys(schema.patternProperties).length > 0));
 }
 
 /**

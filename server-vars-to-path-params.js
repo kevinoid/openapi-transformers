@@ -151,8 +151,7 @@ export default class ServerVarsToPathParamsTransformer
         );
       }
 
-      const newServer = { ...server };
-      newServer.url = newUrl;
+      const newServer = { ...server, url: newUrl };
 
       if (haveNewVars) {
         newServer.variables = newVars;

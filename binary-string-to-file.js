@@ -8,7 +8,7 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
 
 function transformSchemaType(schema) {
   if (schema.type === 'string'
-      && (schema.format === 'binary' || schema.format === 'file')) {
+    && (schema.format === 'binary' || schema.format === 'file')) {
     const newSchema = {
       ...schema,
       type: 'file',

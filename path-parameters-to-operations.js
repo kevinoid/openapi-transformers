@@ -27,7 +27,7 @@ export default class PathParametersToOperationTransformer
   // eslint-disable-next-line class-methods-use-this
   transformPathItem(pathItem) {
     if (!Array.isArray(pathItem.parameters)
-        || pathItem.parameters.length === 0) {
+      || pathItem.parameters.length === 0) {
       return pathItem;
     }
 

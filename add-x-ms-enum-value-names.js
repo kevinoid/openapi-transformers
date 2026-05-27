@@ -9,7 +9,7 @@ import assert from 'node:assert';
 import dotnetCase from '@kevinoid/dotnet-identifier-case';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
-assert(/\p{L}/u.test('X'), 'Unicode property escapes are supported.');
+assert.ok(/\p{L}/u.test('X'), 'Unicode property escapes are supported.');
 
 function firstToLower(word) {
   if (!word) {

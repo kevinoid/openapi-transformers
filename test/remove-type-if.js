@@ -34,7 +34,7 @@ describe('RemoveTypeIfTransformer', () => {
     function predicate(type) {
       callCount += 1;
       assert.strictEqual(this, transformer);
-      assert(type === type1 || type === type2);
+      assert.ok(type === type1 || type === type2);
       return type === type1;
     }
     assert.deepStrictEqual(
@@ -77,7 +77,7 @@ describe('RemoveTypeIfTransformer', () => {
     function predicate(type) {
       callCount += 1;
       assert.strictEqual(this, transformer);
-      assert(type === type1 || type === type2);
+      assert.ok(type === type1 || type === type2);
       return type === type1 ? 1 : 0;
     }
     assert.deepStrictEqual(
