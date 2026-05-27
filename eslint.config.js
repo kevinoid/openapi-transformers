@@ -34,6 +34,7 @@ export default [
   {
     name: 'bin config',
     files: [
+      '.githooks/**/*.js',
       'bin/*.js',
       'scripts/*.js',
     ],
