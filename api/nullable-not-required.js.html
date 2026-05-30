@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: nullable-not-required.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: nullable-not-required.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @copyright Copyright 2019-2024 Kevin Locke &lt;kevin@kevinlocke.name>
+ * @license MIT
+ * @module "openapi-transformers/nullable-not-required.js"
+ */
+
+import OpenApiTransformerBase from 'openapi-transformer-base';
+
+/**
+ * Determines whether a given Schema can have a null value.
+ *
+ * @param {!object} schema OpenAPI Schema object.
+ * @param {boolean} hasNullType Whether 'null' is a valid Schema type.
+ * @param {boolean} refNullable Treat $ref as nullable.
+ * @returns {boolean} &lt;c>true&lt;/c> if &lt;c>null&lt;/c> is a valid value for
+ * &lt;c>schema&lt;/c>.
+ */
+function isNullable(schema, hasNullType, refNullable) {
+  const {
+    $ref,
+    nullable,
+    'x-nullable': xNullable,
+    type,
+  } = schema;
+
+  if ($ref) {
+    if (typeof nullable === 'boolean') {
+      return nullable;
+    }
+
+    if (typeof xNullable === 'boolean') {
+      return xNullable;
+    }
+
+    return refNullable;
+  }
+
+  if (hasNullType) {
+    if (typeof type === 'string') {
+      if (type !== 'null') {
+        // null forbidden by non-null type
+        return false;
+      }
+    } else if (Array.isArray(type)
+      &amp;&amp; !type.includes('null')) {
+      // null forbidden by null not in types
+      return false;
+    }
+  } else if (!nullable &amp;&amp; !xNullable) {
+    // Without null type, null is only allowed with nullable (or x-nullable)
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Determines whether a given property of a given schema can have a null value.
+ *
+ * @param {!object} schema OpenAPI Schema object.
+ * @param {string} propName Name of property to check.
+ * @param {boolean} hasNullType Whether 'null' is a valid Schema type.
+ * @param {boolean} refNullable Treat $ref as nullable.
+ * @returns {?boolean} &lt;c>true&lt;/c> if &lt;c>null&lt;/c> is known to be a valid value
+ * for &lt;c>propName&lt;/c> in &lt;c>schema&lt;/c>, &lt;c>false&lt;/c> if &lt;c>null&lt;/c> is known
+ * to be an invalid value for &lt;c>propName&lt;/c> in &lt;c>schema&lt;/c>.
+ * &lt;c>undefined&lt;/c> if &lt;c>propName&lt;/c> is not constrained by &lt;c>schema&lt;/c>.
+ */
+function isPropNullable(schema, propName, hasNullType, refNullable) {
+  const {
+    additionalProperties,
+    allOf,
+    anyOf,
+    oneOf,
+    properties,
+  } = schema;
+  let constrained = false;
+  const propSchema = properties?.[propName];
+  if (propSchema) {
+    constrained = true;
+    if (!isNullable(propSchema, hasNullType, refNullable)) {
+      return false;
+    }
+  } else if (additionalProperties) {
+    constrained = true;
+    if (!isNullable(additionalProperties, hasNullType, refNullable)) {
+      // schema in additionalProperties does not allow null
+      return false;
+    }
+  } else if (additionalProperties === false) {
+    // would fail validation if property is present
+    return false;
+  }
+
+  if (Array.isArray(allOf)) {
+    for (const allSchema of allOf) {
+      switch (isPropNullable(allSchema, propName, hasNullType, refNullable)) {
+        case false:
+          // If an allOf schema doesn't allow null, it's not allowed.
+          return false;
+
+        case true:
+          // An allOf schema allows null
+          constrained = true;
+          break;
+
+        default:
+          // An allOf schema doesn't constrain propName
+          break;
+      }
+    }
+  }
+
+  if (Array.isArray(anyOf)) {
+    let anyNullable = false;
+    let anyUnconstrained = false;
+    for (const anySchema of anyOf) {
+      switch (isPropNullable(anySchema, propName, hasNullType, refNullable)) {
+        case false:
+          // An anyOf schema disallows null
+          break;
+
+        case true:
+          // An anyOf schema allows null
+          anyNullable = true;
+          break;
+
+        default:
+          // An anyOf schema doesn't constrain propName
+          anyUnconstrained = true;
+          break;
+      }
+    }
+
+    if (!anyNullable &amp;&amp; !anyUnconstrained) {
+      return false;
+    }
+
+    if (!anyUnconstrained) {
+      constrained = true;
+    }
+  }
+
+  if (Array.isArray(oneOf)) {
+    let anyNullable = false;
+    let anyUnconstrained = false;
+    for (const oneSchema of oneOf) {
+      switch (isPropNullable(oneSchema, propName, hasNullType, refNullable)) {
+        case false:
+          // A oneOf schema disallows null
+          break;
+
+        case true:
+          // A oneOf schema allows null
+          anyNullable = true;
+          break;
+
+        default:
+          // A oneOf schema doesn't constrain propName
+          anyUnconstrained = true;
+          break;
+      }
+    }
+
+    if (!anyNullable &amp;&amp; !anyUnconstrained) {
+      return false;
+    }
+
+    if (!anyUnconstrained) {
+      constrained = true;
+    }
+  }
+
+  return constrained ? true : undefined;
+}
+
+/**
+ * Transformer to make properties which are nullable non-required to work around
+ * partial support for x-nullable in Autorest.  Currently nullable data types
+ * are used (e.g. Nullable&lt;int>) but the Validate() method doesn't allow null.
+ * See:  https://github.com/Azure/autorest/issues/3300
+ */
+export default class NullableNotRequiredTransformer
+  extends OpenApiTransformerBase {
+  hasNullType = undefined;
+
+  refNullable = false;
+
+  requireUnconstrained = false;
+
+  constructor(options) {
+    super();
+    this.refNullable = Boolean(options?.refNullable);
+    this.requireUnconstrained = Boolean(options?.requireUnconstrained);
+  }
+
+  transformSchema(schema) {
+    const newSchema = super.transformSchema(schema);
+    if (!Array.isArray(newSchema?.required)
+      || newSchema.required.length === 0) {
+      // No properties are required. None to remove.
+      return newSchema;
+    }
+
+    const transformed = {
+      ...newSchema,
+      required: newSchema.required
+        .filter(
+          (reqName) => !(isPropNullable(
+            newSchema,
+            reqName,
+            this.hasNullType,
+            this.refNullable,
+          ) ?? !this.requireUnconstrained),
+        ),
+    };
+
+    if (transformed.required.length === 0) {
+      delete transformed.required;
+    }
+
+    return transformed;
+  }
+
+  transformOpenApi(openApi) {
+    const version = openApi?.openapi || openApi?.swagger;
+    const verParts = version ? String(version).split('.').map(Number) : [];
+    if (verParts[0] > 3 || (verParts[0] === 3 &amp;&amp; verParts[1] >= 1)) {
+      this.hasNullType = true;
+    } else if (verParts[0] &lt; 3 || (verParts[0] === 3 &amp;&amp; verParts[1] &lt; 1)) {
+      this.hasNullType = false;
+    }
+
+    try {
+      return super.transformOpenApi(openApi);
+    } finally {
+      this.hasNullType = undefined;
+    }
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-_openapi-transformers_.html">"openapi-transformers"</a></li><li><a href="module-_openapi-transformers_add-tag-to-operation-ids.js_.html">"openapi-transformers/add-tag-to-operation-ids.js"</a></li><li><a href="module-_openapi-transformers_add-x-ms-enum-name.js_.html">"openapi-transformers/add-x-ms-enum-name.js"</a></li><li><a href="module-_openapi-transformers_add-x-ms-enum-value-names.js_.html">"openapi-transformers/add-x-ms-enum-value-names.js"</a></li><li><a href="module-_openapi-transformers_additional-properties-to-object.js_.html">"openapi-transformers/additional-properties-to-object.js"</a></li><li><a href="module-_openapi-transformers_additional-properties-to-unconstrained.js_.html">"openapi-transformers/additional-properties-to-unconstrained.js"</a></li><li><a href="module-_openapi-transformers_any-of-null-to-nullable.js_.html">"openapi-transformers/any-of-null-to-nullable.js"</a></li><li><a href="module-_openapi-transformers_assert-properties.js_.html">"openapi-transformers/assert-properties.js"</a></li><li><a href="module-_openapi-transformers_binary-string-to-file.js_.html">"openapi-transformers/binary-string-to-file.js"</a></li><li><a href="module-_openapi-transformers_bool-enum-to-bool.js_.html">"openapi-transformers/bool-enum-to-bool.js"</a></li><li><a href="module-_openapi-transformers_clear-html-response-schema.js_.html">"openapi-transformers/clear-html-response-schema.js"</a></li><li><a href="module-_openapi-transformers_client-params-to-global.js_.html">"openapi-transformers/client-params-to-global.js"</a></li><li><a href="module-_openapi-transformers_const-to-enum.js_.html">"openapi-transformers/const-to-enum.js"</a></li><li><a href="module-_openapi-transformers_escape-enum-values.js_.html">"openapi-transformers/escape-enum-values.js"</a></li><li><a href="module-_openapi-transformers_exclusive-min-max-to-bool.js_.html">"openapi-transformers/exclusive-min-max-to-bool.js"</a></li><li><a href="module-_openapi-transformers_format-to-type.js_.html">"openapi-transformers/format-to-type.js"</a></li><li><a href="module-_openapi-transformers_inline-non-object-schemas.js_.html">"openapi-transformers/inline-non-object-schemas.js"</a></li><li><a href="module-_openapi-transformers_merge-all-of.js_.html">"openapi-transformers/merge-all-of.js"</a></li><li><a href="module-_openapi-transformers_merge-any-of.js_.html">"openapi-transformers/merge-any-of.js"</a></li><li><a href="module-_openapi-transformers_merge-one-of.js_.html">"openapi-transformers/merge-one-of.js"</a></li><li><a href="module-_openapi-transformers_nullable-not-required.js_.html">"openapi-transformers/nullable-not-required.js"</a></li><li><a href="module-_openapi-transformers_nullable-to-type-null.js_.html">"openapi-transformers/nullable-to-type-null.js"</a></li><li><a href="module-_openapi-transformers_openapi31to30.js_.html">"openapi-transformers/openapi31to30.js"</a></li><li><a href="module-_openapi-transformers_path-parameters-to-operations.js_.html">"openapi-transformers/path-parameters-to-operations.js"</a></li><li><a href="module-_openapi-transformers_pattern-properties-to-additional-properties.js_.html">"openapi-transformers/pattern-properties-to-additional-properties.js"</a></li><li><a href="module-_openapi-transformers_queries-to-x-ms-paths.js_.html">"openapi-transformers/queries-to-x-ms-paths.js"</a></li><li><a href="module-_openapi-transformers_read-only-not-required.js_.html">"openapi-transformers/read-only-not-required.js"</a></li><li><a href="module-_openapi-transformers_ref-path-parameters.js_.html">"openapi-transformers/ref-path-parameters.js"</a></li><li><a href="module-_openapi-transformers_remove-default-only-response-produces.js_.html">"openapi-transformers/remove-default-only-response-produces.js"</a></li><li><a href="module-_openapi-transformers_remove-paths-with-servers.js_.html">"openapi-transformers/remove-paths-with-servers.js"</a></li><li><a href="module-_openapi-transformers_remove-query-from-paths.js_.html">"openapi-transformers/remove-query-from-paths.js"</a></li><li><a href="module-_openapi-transformers_remove-ref-siblings.js_.html">"openapi-transformers/remove-ref-siblings.js"</a></li><li><a href="module-_openapi-transformers_remove-request-body.js_.html">"openapi-transformers/remove-request-body.js"</a></li><li><a href="module-_openapi-transformers_remove-response-headers.js_.html">"openapi-transformers/remove-response-headers.js"</a></li><li><a href="module-_openapi-transformers_remove-type-if.js_.html">"openapi-transformers/remove-type-if.js"</a></li><li><a href="module-_openapi-transformers_rename-components.js_.html">"openapi-transformers/rename-components.js"</a></li><li><a href="module-_openapi-transformers_replaced-by-to-description.js_.html">"openapi-transformers/replaced-by-to-description.js"</a></li><li><a href="module-_openapi-transformers_server-vars-to-path-params.js_.html">"openapi-transformers/server-vars-to-path-params.js"</a></li><li><a href="module-_openapi-transformers_server-vars-to-x-ms-parameterized-host.js_.html">"openapi-transformers/server-vars-to-x-ms-parameterized-host.js"</a></li><li><a href="module-_openapi-transformers_type-null-to-enum.js_.html">"openapi-transformers/type-null-to-enum.js"</a></li><li><a href="module-_openapi-transformers_type-null-to-nullable.js_.html">"openapi-transformers/type-null-to-nullable.js"</a></li><li><a href="module-_openapi-transformers_urlencoded-to-string.js_.html">"openapi-transformers/urlencoded-to-string.js"</a></li><li><a href="module-_openapi-transformers_x-enum-to-ms.js_.html">"openapi-transformers/x-enum-to-ms.js"</a></li></ul><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li><li><a href="module-_openapi-transformers_add-tag-to-operation-ids.js_.html">"openapi-transformers/add-tag-to-operation-ids.js"</a></li><li><a href="module-_openapi-transformers_add-x-ms-enum-name.js_.html">"openapi-transformers/add-x-ms-enum-name.js"</a></li><li><a href="module-_openapi-transformers_add-x-ms-enum-value-names.js_.html">"openapi-transformers/add-x-ms-enum-value-names.js"</a></li><li><a href="module-_openapi-transformers_additional-properties-to-object.js_.html">"openapi-transformers/additional-properties-to-object.js"</a></li><li><a href="module-_openapi-transformers_additional-properties-to-unconstrained.js_.html">"openapi-transformers/additional-properties-to-unconstrained.js"</a></li><li><a href="module-_openapi-transformers_any-of-null-to-nullable.js_.html">"openapi-transformers/any-of-null-to-nullable.js"</a></li><li><a href="module-_openapi-transformers_assert-properties.js_.html">"openapi-transformers/assert-properties.js"</a></li><li><a href="module-_openapi-transformers_binary-string-to-file.js_.html">"openapi-transformers/binary-string-to-file.js"</a></li><li><a href="module-_openapi-transformers_bool-enum-to-bool.js_.html">"openapi-transformers/bool-enum-to-bool.js"</a></li><li><a href="module-_openapi-transformers_clear-html-response-schema.js_.html">"openapi-transformers/clear-html-response-schema.js"</a></li><li><a href="module-_openapi-transformers_client-params-to-global.js_.html">"openapi-transformers/client-params-to-global.js"</a></li><li><a href="module-_openapi-transformers_const-to-enum.js_.html">"openapi-transformers/const-to-enum.js"</a></li><li><a href="module-_openapi-transformers_escape-enum-values.js_.html">"openapi-transformers/escape-enum-values.js"</a></li><li><a href="module-_openapi-transformers_exclusive-min-max-to-bool.js_.html">"openapi-transformers/exclusive-min-max-to-bool.js"</a></li><li><a href="module-_openapi-transformers_format-to-type.js_.html">"openapi-transformers/format-to-type.js"</a></li><li><a href="module-_openapi-transformers_inline-non-object-schemas.js_.html">"openapi-transformers/inline-non-object-schemas.js"</a></li><li><a href="module-_openapi-transformers_merge-all-of.js_.html">"openapi-transformers/merge-all-of.js"</a></li><li><a href="module-_openapi-transformers_merge-any-of.js_.html">"openapi-transformers/merge-any-of.js"</a></li><li><a href="module-_openapi-transformers_merge-one-of.js_.html">"openapi-transformers/merge-one-of.js"</a></li><li><a href="module-_openapi-transformers_nullable-not-required.js_.html">"openapi-transformers/nullable-not-required.js"</a></li><li><a href="module-_openapi-transformers_nullable-to-type-null.js_.html">"openapi-transformers/nullable-to-type-null.js"</a></li><li><a href="module-_openapi-transformers_openapi31to30.js_.html">"openapi-transformers/openapi31to30.js"</a></li><li><a href="module-_openapi-transformers_path-parameters-to-operations.js_.html">"openapi-transformers/path-parameters-to-operations.js"</a></li><li><a href="module-_openapi-transformers_pattern-properties-to-additional-properties.js_.html">"openapi-transformers/pattern-properties-to-additional-properties.js"</a></li><li><a href="module-_openapi-transformers_queries-to-x-ms-paths.js_.html">"openapi-transformers/queries-to-x-ms-paths.js"</a></li><li><a href="module-_openapi-transformers_read-only-not-required.js_.html">"openapi-transformers/read-only-not-required.js"</a></li><li><a href="module-_openapi-transformers_ref-path-parameters.js_.html">"openapi-transformers/ref-path-parameters.js"</a></li><li><a href="module-_openapi-transformers_remove-default-only-response-produces.js_.html">"openapi-transformers/remove-default-only-response-produces.js"</a></li><li><a href="module-_openapi-transformers_remove-paths-with-servers.js_.html">"openapi-transformers/remove-paths-with-servers.js"</a></li><li><a href="module-_openapi-transformers_remove-query-from-paths.js_.html">"openapi-transformers/remove-query-from-paths.js"</a></li><li><a href="module-_openapi-transformers_remove-ref-siblings.js_.html">"openapi-transformers/remove-ref-siblings.js"</a></li><li><a href="module-_openapi-transformers_remove-request-body.js_.html">"openapi-transformers/remove-request-body.js"</a></li><li><a href="module-_openapi-transformers_remove-response-headers.js_.html">"openapi-transformers/remove-response-headers.js"</a></li><li><a href="module-_openapi-transformers_remove-type-if.js_.html">"openapi-transformers/remove-type-if.js"</a></li><li><a href="module-_openapi-transformers_rename-components.js_.html">"openapi-transformers/rename-components.js"</a></li><li><a href="module-_openapi-transformers_replaced-by-to-description.js_.html">"openapi-transformers/replaced-by-to-description.js"</a></li><li><a href="module-_openapi-transformers_server-vars-to-path-params.js_.html">"openapi-transformers/server-vars-to-path-params.js"</a></li><li><a href="module-_openapi-transformers_server-vars-to-x-ms-parameterized-host.js_.html">"openapi-transformers/server-vars-to-x-ms-parameterized-host.js"</a></li><li><a href="module-_openapi-transformers_type-null-to-enum.js_.html">"openapi-transformers/type-null-to-enum.js"</a></li><li><a href="module-_openapi-transformers_type-null-to-nullable.js_.html">"openapi-transformers/type-null-to-nullable.js"</a></li><li><a href="module-_openapi-transformers_urlencoded-to-string.js_.html">"openapi-transformers/urlencoded-to-string.js"</a></li><li><a href="module-_openapi-transformers_x-enum-to-ms.js_.html">"openapi-transformers/x-enum-to-ms.js"</a></li></ul><h3>Global</h3><ul><li><a href="global.html#add">add</a></li><li><a href="global.html#getNames">getNames</a></li><li><a href="global.html#isMatch">isMatch</a></li><li><a href="global.html#stripClientXMsParamLoc">stripClientXMsParamLoc</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat May 30 2026 17:06:23 GMT-0600 (Mountain Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

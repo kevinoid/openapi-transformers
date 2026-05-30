@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: rename-components.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: rename-components.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @copyright Copyright 2021 Kevin Locke &lt;kevin@kevinlocke.name>
+ * @license MIT
+ * @module "openapi-transformers/rename-components.js"
+ */
+
+// Note: Undocumented functions which are part of the public API:
+// https://github.com/flitbit/json-ptr/issues/29
+import {
+  decodeUriFragmentIdentifier,
+  encodeUriFragmentIdentifier,
+} from 'json-ptr';
+import OpenApiTransformerBase from 'openapi-transformer-base';
+
+const renameFuncsSymbol = Symbol('renameFuncs');
+
+// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#fixed-fields-6
+const componentFieldNames = [
+  'schemas',
+  'responses',
+  'parameters',
+  'examples',
+  'requestBodies',
+  'headers',
+  'securitySchemes',
+  'links',
+  'callbacks',
+  'pathItems',
+];
+
+function renameProps(obj, renameFunc) {
+  if (!renameFunc
+    || typeof obj !== 'object'
+    || obj === null
+    || Array.isArray(obj)) {
+    return obj;
+  }
+
+  const newObj = {};
+  for (const [key, value] of Object.entries(obj)) {
+    const newKey = renameFunc(key);
+    if (Object.hasOwn(newObj, newKey)) {
+      throw new Error(
+        `New name ${newKey} for ${key} conflicts with existing name`,
+      );
+    }
+    newObj[newKey] = value;
+  }
+
+  return newObj;
+}
+
+function isJsonRef(obj) {
+  return obj &amp;&amp; typeof obj.$ref === 'string';
+}
+
+function renameRefObj(obj, getPathIndex, renameFunc) {
+  if (!renameFunc) {
+    return obj;
+  }
+
+  const { $ref } = obj;
+  if ($ref[0] !== '#') {
+    return obj;
+  }
+
+  let tokens;
+  try {
+    tokens = decodeUriFragmentIdentifier($ref);
+  } catch {
+    return obj;
+  }
+
+  const renameInd = getPathIndex(tokens);
+  if (renameInd &lt; 0 || renameInd >= tokens.length) {
+    return obj;
+  }
+
+  const name = tokens[renameInd];
+  const newName = renameFunc(name);
+  if (newName !== name) {
+    tokens[renameInd] = newName;
+    return {
+      ...obj,
+      $ref: encodeUriFragmentIdentifier(tokens),
+    };
+  }
+
+  return obj;
+}
+
+/**
+ * Transformer to rename components.
+ */
+export default class RenameComponentsTransformer
+  extends OpenApiTransformerBase {
+  constructor(options) {
+    super();
+
+    if (typeof options !== 'object' || options === null) {
+      throw new TypeError('options must be an object');
+    }
+
+    const renameFuncs = {};
+    for (const componentFieldName of componentFieldNames) {
+      const renameFuncOrMap = options[componentFieldName];
+      if (typeof renameFuncOrMap === 'function') {
+        renameFuncs[componentFieldName] = renameFuncOrMap;
+      } else if (typeof renameFuncOrMap === 'object') {
+        const patterns = Object.entries(renameFuncOrMap)
+          .map(([k, v]) => [new RegExp(k, 'g'), v]);
+        renameFuncs[componentFieldName] = (name) => {
+          for (const [pat, repl] of patterns) {
+            if (pat.test(name)) {
+              return name.replace(pat, repl);
+            }
+          }
+          return name;
+        };
+      } else if (renameFuncOrMap !== undefined) {
+        throw new TypeError(`options.${componentFieldName} must be a function`);
+      }
+    }
+
+    this[renameFuncsSymbol] = renameFuncs;
+  }
+
+  transformExample3(example) {
+    if (isJsonRef(example)) {
+      return renameRefObj(
+        example,
+        (pp) => (pp[0] === 'components' &amp;&amp; pp[1] === 'examples' ? 2 : -1),
+        this[renameFuncsSymbol].examples,
+      );
+    }
+
+    return super.transformExample3(example);
+  }
+
+  transformSchema(schema) {
+    if (isJsonRef(schema)) {
+      return renameRefObj(
+        schema,
+        (pp) => (pp[0] === 'components' &amp;&amp; pp[1] === 'schemas' ? 2
+          : pp[0] === 'definitions' ? 1 : -1),
+        this[renameFuncsSymbol].schemas,
+      );
+    }
+
+    return super.transformSchema(schema);
+  }
+
+  transformHeader(header) {
+    if (isJsonRef(header)) {
+      return renameRefObj(
+        header,
+        (pp) => (pp[0] === 'components' &amp;&amp; pp[1] === 'headers' ? 2 : -1),
+        this[renameFuncsSymbol].headers,
+      );
+    }
+
+    return super.transformHeader(header);
+  }
+
+  transformLink(link) {
+    if (isJsonRef(link)) {
+      return renameRefObj(
+        link,
+        (pp) => (pp[0] === 'components' &amp;&amp; pp[1] === 'links' ? 2 : -1),
+        this[renameFuncsSymbol].links,
+      );
+    }
+
+    return super.transformLink(link);
+  }
+
+  transformResponse(response) {
+    if (isJsonRef(response)) {
+      return renameRefObj(
+        response,
+        (pp) => (pp[0] === 'components' &amp;&amp; pp[1] === 'responses' ? 2 : -1),
+        this[renameFuncsSymbol].responses,
+      );
+    }
+
+    return super.transformResponse(response);
+  }
+
+  transformParameter(parameter) {
+    if (isJsonRef(parameter)) {
+      return renameRefObj(
+        parameter,
+        (pp) => (pp[0] === 'components' &amp;&amp; pp[1] === 'parameters' ? 2 : -1),
+        this[renameFuncsSymbol].parameters,
+      );
+    }
+
+    return super.transformParameter(parameter);
+  }
+
+  transformCallback(callback) {
+    if (isJsonRef(callback)) {
+      return renameRefObj(
+        callback,
+        (pp) => (pp[0] === 'components' &amp;&amp; pp[1] === 'callbacks' ? 2 : -1),
+        this[renameFuncsSymbol].callbacks,
+      );
+    }
+
+    return super.transformCallback(callback);
+  }
+
+  transformRequestBody(requestBody) {
+    if (isJsonRef(requestBody)) {
+      return renameRefObj(
+        requestBody,
+        (pp) => (pp[0] === 'components' &amp;&amp; pp[1] === 'requestBodies' ? 2 : -1),
+        this[renameFuncsSymbol].requestBodies,
+      );
+    }
+
+    return super.transformRequestBody(requestBody);
+  }
+
+  transformSecurityRequirement(securityRequirement) {
+    return renameProps(
+      super.transformSecurityRequirement(securityRequirement),
+      this[renameFuncsSymbol].securitySchemes,
+    );
+  }
+
+  transformPathItem(pathItem) {
+    if (isJsonRef(pathItem)) {
+      return renameRefObj(
+        pathItem,
+        (pp) => (pp[0] === 'components' &amp;&amp; pp[1] === 'pathItems' ? 2 : -1),
+        this[renameFuncsSymbol].pathItems,
+      );
+    }
+
+    return super.transformPathItem(pathItem);
+  }
+
+  transformComponents(components) {
+    components = super.transformComponents(components);
+
+    if (typeof components !== 'object'
+      || components === null
+      || Array.isArray(components)) {
+      return components;
+    }
+
+    const newComponents = { ...components };
+    for (const [propName, renameFunc]
+      of Object.entries(this[renameFuncsSymbol])) {
+      const propValue = components[propName];
+      if (propValue) {
+        newComponents[propName] = renameProps(propValue, renameFunc);
+      }
+    }
+
+    return newComponents;
+  }
+
+  transformOpenApi(openApi) {
+    openApi = super.transformOpenApi(openApi);
+
+    if (typeof openApi !== 'object'
+      || openApi === null
+      || Array.isArray(openApi)) {
+      return openApi;
+    }
+
+    const { definitions } = openApi;
+    const renameSchemas = this[renameFuncsSymbol].schemas;
+    if (definitions &amp;&amp; renameSchemas) {
+      openApi = {
+        ...openApi,
+        definitions: renameProps(definitions, renameSchemas),
+      };
+    }
+
+    return openApi;
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-_openapi-transformers_.html">"openapi-transformers"</a></li><li><a href="module-_openapi-transformers_add-tag-to-operation-ids.js_.html">"openapi-transformers/add-tag-to-operation-ids.js"</a></li><li><a href="module-_openapi-transformers_add-x-ms-enum-name.js_.html">"openapi-transformers/add-x-ms-enum-name.js"</a></li><li><a href="module-_openapi-transformers_add-x-ms-enum-value-names.js_.html">"openapi-transformers/add-x-ms-enum-value-names.js"</a></li><li><a href="module-_openapi-transformers_additional-properties-to-object.js_.html">"openapi-transformers/additional-properties-to-object.js"</a></li><li><a href="module-_openapi-transformers_additional-properties-to-unconstrained.js_.html">"openapi-transformers/additional-properties-to-unconstrained.js"</a></li><li><a href="module-_openapi-transformers_any-of-null-to-nullable.js_.html">"openapi-transformers/any-of-null-to-nullable.js"</a></li><li><a href="module-_openapi-transformers_assert-properties.js_.html">"openapi-transformers/assert-properties.js"</a></li><li><a href="module-_openapi-transformers_binary-string-to-file.js_.html">"openapi-transformers/binary-string-to-file.js"</a></li><li><a href="module-_openapi-transformers_bool-enum-to-bool.js_.html">"openapi-transformers/bool-enum-to-bool.js"</a></li><li><a href="module-_openapi-transformers_clear-html-response-schema.js_.html">"openapi-transformers/clear-html-response-schema.js"</a></li><li><a href="module-_openapi-transformers_client-params-to-global.js_.html">"openapi-transformers/client-params-to-global.js"</a></li><li><a href="module-_openapi-transformers_const-to-enum.js_.html">"openapi-transformers/const-to-enum.js"</a></li><li><a href="module-_openapi-transformers_escape-enum-values.js_.html">"openapi-transformers/escape-enum-values.js"</a></li><li><a href="module-_openapi-transformers_exclusive-min-max-to-bool.js_.html">"openapi-transformers/exclusive-min-max-to-bool.js"</a></li><li><a href="module-_openapi-transformers_format-to-type.js_.html">"openapi-transformers/format-to-type.js"</a></li><li><a href="module-_openapi-transformers_inline-non-object-schemas.js_.html">"openapi-transformers/inline-non-object-schemas.js"</a></li><li><a href="module-_openapi-transformers_merge-all-of.js_.html">"openapi-transformers/merge-all-of.js"</a></li><li><a href="module-_openapi-transformers_merge-any-of.js_.html">"openapi-transformers/merge-any-of.js"</a></li><li><a href="module-_openapi-transformers_merge-one-of.js_.html">"openapi-transformers/merge-one-of.js"</a></li><li><a href="module-_openapi-transformers_nullable-not-required.js_.html">"openapi-transformers/nullable-not-required.js"</a></li><li><a href="module-_openapi-transformers_nullable-to-type-null.js_.html">"openapi-transformers/nullable-to-type-null.js"</a></li><li><a href="module-_openapi-transformers_openapi31to30.js_.html">"openapi-transformers/openapi31to30.js"</a></li><li><a href="module-_openapi-transformers_path-parameters-to-operations.js_.html">"openapi-transformers/path-parameters-to-operations.js"</a></li><li><a href="module-_openapi-transformers_pattern-properties-to-additional-properties.js_.html">"openapi-transformers/pattern-properties-to-additional-properties.js"</a></li><li><a href="module-_openapi-transformers_queries-to-x-ms-paths.js_.html">"openapi-transformers/queries-to-x-ms-paths.js"</a></li><li><a href="module-_openapi-transformers_read-only-not-required.js_.html">"openapi-transformers/read-only-not-required.js"</a></li><li><a href="module-_openapi-transformers_ref-path-parameters.js_.html">"openapi-transformers/ref-path-parameters.js"</a></li><li><a href="module-_openapi-transformers_remove-default-only-response-produces.js_.html">"openapi-transformers/remove-default-only-response-produces.js"</a></li><li><a href="module-_openapi-transformers_remove-paths-with-servers.js_.html">"openapi-transformers/remove-paths-with-servers.js"</a></li><li><a href="module-_openapi-transformers_remove-query-from-paths.js_.html">"openapi-transformers/remove-query-from-paths.js"</a></li><li><a href="module-_openapi-transformers_remove-ref-siblings.js_.html">"openapi-transformers/remove-ref-siblings.js"</a></li><li><a href="module-_openapi-transformers_remove-request-body.js_.html">"openapi-transformers/remove-request-body.js"</a></li><li><a href="module-_openapi-transformers_remove-response-headers.js_.html">"openapi-transformers/remove-response-headers.js"</a></li><li><a href="module-_openapi-transformers_remove-type-if.js_.html">"openapi-transformers/remove-type-if.js"</a></li><li><a href="module-_openapi-transformers_rename-components.js_.html">"openapi-transformers/rename-components.js"</a></li><li><a href="module-_openapi-transformers_replaced-by-to-description.js_.html">"openapi-transformers/replaced-by-to-description.js"</a></li><li><a href="module-_openapi-transformers_server-vars-to-path-params.js_.html">"openapi-transformers/server-vars-to-path-params.js"</a></li><li><a href="module-_openapi-transformers_server-vars-to-x-ms-parameterized-host.js_.html">"openapi-transformers/server-vars-to-x-ms-parameterized-host.js"</a></li><li><a href="module-_openapi-transformers_type-null-to-enum.js_.html">"openapi-transformers/type-null-to-enum.js"</a></li><li><a href="module-_openapi-transformers_type-null-to-nullable.js_.html">"openapi-transformers/type-null-to-nullable.js"</a></li><li><a href="module-_openapi-transformers_urlencoded-to-string.js_.html">"openapi-transformers/urlencoded-to-string.js"</a></li><li><a href="module-_openapi-transformers_x-enum-to-ms.js_.html">"openapi-transformers/x-enum-to-ms.js"</a></li></ul><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li><li><a href="module-_openapi-transformers_add-tag-to-operation-ids.js_.html">"openapi-transformers/add-tag-to-operation-ids.js"</a></li><li><a href="module-_openapi-transformers_add-x-ms-enum-name.js_.html">"openapi-transformers/add-x-ms-enum-name.js"</a></li><li><a href="module-_openapi-transformers_add-x-ms-enum-value-names.js_.html">"openapi-transformers/add-x-ms-enum-value-names.js"</a></li><li><a href="module-_openapi-transformers_additional-properties-to-object.js_.html">"openapi-transformers/additional-properties-to-object.js"</a></li><li><a href="module-_openapi-transformers_additional-properties-to-unconstrained.js_.html">"openapi-transformers/additional-properties-to-unconstrained.js"</a></li><li><a href="module-_openapi-transformers_any-of-null-to-nullable.js_.html">"openapi-transformers/any-of-null-to-nullable.js"</a></li><li><a href="module-_openapi-transformers_assert-properties.js_.html">"openapi-transformers/assert-properties.js"</a></li><li><a href="module-_openapi-transformers_binary-string-to-file.js_.html">"openapi-transformers/binary-string-to-file.js"</a></li><li><a href="module-_openapi-transformers_bool-enum-to-bool.js_.html">"openapi-transformers/bool-enum-to-bool.js"</a></li><li><a href="module-_openapi-transformers_clear-html-response-schema.js_.html">"openapi-transformers/clear-html-response-schema.js"</a></li><li><a href="module-_openapi-transformers_client-params-to-global.js_.html">"openapi-transformers/client-params-to-global.js"</a></li><li><a href="module-_openapi-transformers_const-to-enum.js_.html">"openapi-transformers/const-to-enum.js"</a></li><li><a href="module-_openapi-transformers_escape-enum-values.js_.html">"openapi-transformers/escape-enum-values.js"</a></li><li><a href="module-_openapi-transformers_exclusive-min-max-to-bool.js_.html">"openapi-transformers/exclusive-min-max-to-bool.js"</a></li><li><a href="module-_openapi-transformers_format-to-type.js_.html">"openapi-transformers/format-to-type.js"</a></li><li><a href="module-_openapi-transformers_inline-non-object-schemas.js_.html">"openapi-transformers/inline-non-object-schemas.js"</a></li><li><a href="module-_openapi-transformers_merge-all-of.js_.html">"openapi-transformers/merge-all-of.js"</a></li><li><a href="module-_openapi-transformers_merge-any-of.js_.html">"openapi-transformers/merge-any-of.js"</a></li><li><a href="module-_openapi-transformers_merge-one-of.js_.html">"openapi-transformers/merge-one-of.js"</a></li><li><a href="module-_openapi-transformers_nullable-not-required.js_.html">"openapi-transformers/nullable-not-required.js"</a></li><li><a href="module-_openapi-transformers_nullable-to-type-null.js_.html">"openapi-transformers/nullable-to-type-null.js"</a></li><li><a href="module-_openapi-transformers_openapi31to30.js_.html">"openapi-transformers/openapi31to30.js"</a></li><li><a href="module-_openapi-transformers_path-parameters-to-operations.js_.html">"openapi-transformers/path-parameters-to-operations.js"</a></li><li><a href="module-_openapi-transformers_pattern-properties-to-additional-properties.js_.html">"openapi-transformers/pattern-properties-to-additional-properties.js"</a></li><li><a href="module-_openapi-transformers_queries-to-x-ms-paths.js_.html">"openapi-transformers/queries-to-x-ms-paths.js"</a></li><li><a href="module-_openapi-transformers_read-only-not-required.js_.html">"openapi-transformers/read-only-not-required.js"</a></li><li><a href="module-_openapi-transformers_ref-path-parameters.js_.html">"openapi-transformers/ref-path-parameters.js"</a></li><li><a href="module-_openapi-transformers_remove-default-only-response-produces.js_.html">"openapi-transformers/remove-default-only-response-produces.js"</a></li><li><a href="module-_openapi-transformers_remove-paths-with-servers.js_.html">"openapi-transformers/remove-paths-with-servers.js"</a></li><li><a href="module-_openapi-transformers_remove-query-from-paths.js_.html">"openapi-transformers/remove-query-from-paths.js"</a></li><li><a href="module-_openapi-transformers_remove-ref-siblings.js_.html">"openapi-transformers/remove-ref-siblings.js"</a></li><li><a href="module-_openapi-transformers_remove-request-body.js_.html">"openapi-transformers/remove-request-body.js"</a></li><li><a href="module-_openapi-transformers_remove-response-headers.js_.html">"openapi-transformers/remove-response-headers.js"</a></li><li><a href="module-_openapi-transformers_remove-type-if.js_.html">"openapi-transformers/remove-type-if.js"</a></li><li><a href="module-_openapi-transformers_rename-components.js_.html">"openapi-transformers/rename-components.js"</a></li><li><a href="module-_openapi-transformers_replaced-by-to-description.js_.html">"openapi-transformers/replaced-by-to-description.js"</a></li><li><a href="module-_openapi-transformers_server-vars-to-path-params.js_.html">"openapi-transformers/server-vars-to-path-params.js"</a></li><li><a href="module-_openapi-transformers_server-vars-to-x-ms-parameterized-host.js_.html">"openapi-transformers/server-vars-to-x-ms-parameterized-host.js"</a></li><li><a href="module-_openapi-transformers_type-null-to-enum.js_.html">"openapi-transformers/type-null-to-enum.js"</a></li><li><a href="module-_openapi-transformers_type-null-to-nullable.js_.html">"openapi-transformers/type-null-to-nullable.js"</a></li><li><a href="module-_openapi-transformers_urlencoded-to-string.js_.html">"openapi-transformers/urlencoded-to-string.js"</a></li><li><a href="module-_openapi-transformers_x-enum-to-ms.js_.html">"openapi-transformers/x-enum-to-ms.js"</a></li></ul><h3>Global</h3><ul><li><a href="global.html#add">add</a></li><li><a href="global.html#getNames">getNames</a></li><li><a href="global.html#isMatch">isMatch</a></li><li><a href="global.html#stripClientXMsParamLoc">stripClientXMsParamLoc</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat May 30 2026 17:06:23 GMT-0600 (Mountain Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
