@@ -118,7 +118,6 @@ export function post3(operation, version) {
  * @returns {!object} OpenAPI 2 document containing the given Schema as
  * application/json default response for GET for path /.
  */
-// eslint-disable-next-line import/no-unused-modules
 export function responseSchema2(schema) {
   return {
     ...swagger,

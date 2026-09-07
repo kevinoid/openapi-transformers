@@ -4,8 +4,6 @@
  * @module "openapi-transformers"
  */
 
-/* eslint-disable import/no-unused-modules */
-
 export { default as AdditionalPropertiesToObjectTransformer }
   from './additional-properties-to-object.js';
 export { default as AdditionalPropertiesToUnconstrainedTransformer }
