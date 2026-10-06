@@ -36,40 +36,6 @@ function valueToType(value) {
       : type;
 }
 
-function createConstQueryParam(name, value) {
-  const oasVersion = this[oasVersionSymbol];
-
-  if (oasVersion.startsWith('2.')) {
-    return {
-      name,
-      in: 'query',
-      required: true,
-      type: valueToType(value),
-      enum: [value],
-    };
-  }
-
-  if (oasVersion.startsWith('3.0')) {
-    return {
-      name,
-      in: 'query',
-      required: true,
-      schema: {
-        enum: [value],
-      },
-    };
-  }
-
-  return {
-    name,
-    in: 'query',
-    required: true,
-    schema: {
-      const: value,
-    },
-  };
-}
-
 // FIXME: How to handle unpaired {}
 // FIXME: How to handle = in {}
 // FIXME: How to handle %-encoded characters in {}
@@ -289,6 +255,40 @@ export default class RemoveQueryFromPathsTransformer
     this[pathVarNameToParamsSymbol] = undefined;
   }
 
+  #createConstQueryParam(name, value) {
+    const oasVersion = this[oasVersionSymbol];
+
+    if (oasVersion.startsWith('2.')) {
+      return {
+        name,
+        in: 'query',
+        required: true,
+        type: valueToType(value),
+        enum: [value],
+      };
+    }
+
+    if (oasVersion.startsWith('3.0')) {
+      return {
+        name,
+        in: 'query',
+        required: true,
+        schema: {
+          enum: [value],
+        },
+      };
+    }
+
+    return {
+      name,
+      in: 'query',
+      required: true,
+      schema: {
+        const: value,
+      },
+    };
+  }
+
   transformOperation(operation) {
     if (typeof operation !== 'object'
       || operation === null
@@ -417,8 +417,7 @@ export default class RemoveQueryFromPathsTransformer
       const pathVarNameToParams = new Map();
       for (const [name, value] of queryParams) {
         if (value[0] !== '{') {
-          constParameters.push(createConstQueryParam.call(
-            this,
+          constParameters.push(this.#createConstQueryParam(
             name,
             value,
           ));
