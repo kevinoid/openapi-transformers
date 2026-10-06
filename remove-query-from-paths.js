@@ -101,7 +101,7 @@ function parseQueryParams(query) {
       return undefined;
     }
 
-    if (pvarEnd >= 0) {
+    if (pvarEnd !== -1) {
       this.warn('Unpaired "}" in query param name', param);
       return undefined;
     }
@@ -120,7 +120,7 @@ function parseQueryParams(query) {
     if (qvarEnd < qvarStart) {
       this.warn(
         'Unpaired "%s" in query value',
-        qvarEnd >= 0 ? '}' : '{',
+        qvarEnd !== -1 ? '}' : '{',
         param,
       );
       return undefined;
