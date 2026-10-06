@@ -127,4 +127,17 @@ describe('OpenApi31To30Transformer', () => {
       }),
     );
   });
+
+  // Does not rely on openapi version declaration, since often features from
+  // later versions are used without updating the declared version.
+  it('converts even if declared openapi version is 3.0.0', () => {
+    assert.deepStrictEqual(
+      new OpenApi31To30Transformer().transformOpenApi(deepFreeze(schema3({
+        type: 'null',
+      }, '3.0.0'))),
+      schema3({
+        enum: [null],
+      }),
+    );
+  });
 });
