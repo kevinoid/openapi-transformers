@@ -7,7 +7,11 @@ import assert from 'node:assert';
 
 import deepFreeze from 'deep-freeze';
 
-import { responseSchema3, schema3 } from '../test-lib/skeletons.js';
+import {
+  responseSchema2,
+  responseSchema3,
+  schema3,
+} from '../test-lib/skeletons.js';
 import XEnumToXMsEnumTransformer from '../x-enum-to-ms.js';
 
 describe('XEnumToXMsEnumTransformer', () => {
@@ -98,7 +102,7 @@ describe('XEnumToXMsEnumTransformer', () => {
     );
   });
 
-  it('does not create x-ms-enum without name (in response)', () => {
+  it('does not create x-ms-enum without name (in OAI3 response)', () => {
     assert.deepStrictEqual(
       new XEnumToXMsEnumTransformer().transformOpenApi(deepFreeze(
         responseSchema3({
@@ -118,6 +122,43 @@ describe('XEnumToXMsEnumTransformer', () => {
         }),
       )),
       responseSchema3({
+        type: 'string',
+        enum: [
+          'value1',
+          'value2',
+        ],
+        'x-enum-descriptions': [
+          'Description 1',
+          'Description 2',
+        ],
+        'x-enum-varnames': [
+          'Var1',
+          'Var2',
+        ],
+      }),
+    );
+  });
+
+  it('does not create x-ms-enum without name (in OAI2 response)', () => {
+    assert.deepStrictEqual(
+      new XEnumToXMsEnumTransformer().transformOpenApi(deepFreeze(
+        responseSchema2({
+          type: 'string',
+          enum: [
+            'value1',
+            'value2',
+          ],
+          'x-enum-descriptions': [
+            'Description 1',
+            'Description 2',
+          ],
+          'x-enum-varnames': [
+            'Var1',
+            'Var2',
+          ],
+        }),
+      )),
+      responseSchema2({
         type: 'string',
         enum: [
           'value1',

@@ -12,6 +12,7 @@ import {
   get2,
   get3,
   post3,
+  responseSchema2,
   responseSchema3,
   schema3,
 } from '../test-lib/skeletons.js';
@@ -328,6 +329,37 @@ describe('AddXMsEnumValueNamesTransformer', () => {
         }),
       )),
       responseSchema3({
+        type: 'string',
+        enum: [
+          'my value1',
+          'my value2',
+        ],
+        'x-ms-enum': {
+          name: 'StringEnum',
+          values: [
+            { name: 'MyValue1', value: 'my value1' },
+            { name: 'MyValue2', value: 'my value2' },
+          ],
+        },
+      }),
+    );
+  });
+
+  it('openapi 2 response with x-ms-enum.name', () => {
+    assert.deepStrictEqual(
+      new AddXMsEnumValueNamesTransformer().transformOpenApi(deepFreeze(
+        responseSchema2({
+          type: 'string',
+          enum: [
+            'my value1',
+            'my value2',
+          ],
+          'x-ms-enum': {
+            name: 'StringEnum',
+          },
+        }),
+      )),
+      responseSchema2({
         type: 'string',
         enum: [
           'my value1',

@@ -10,6 +10,7 @@ import deepFreeze from 'deep-freeze';
 import AddXMsEnumNameTransformer from '../add-x-ms-enum-name.js';
 import {
   post3,
+  responseSchema2,
   responseSchema3,
   schema2,
   schema3,
@@ -204,6 +205,30 @@ describe('AddXMsEnumNameTransformer', () => {
         'x-ms-enum': {
           name: 'Test',
         },
+      }),
+    );
+  });
+
+  // Does not infer name from operation name.
+  // If desired, write a transform to move anonymous response schemas to
+  // named components (and deduplicate as appropriate).
+  it('openapi 2 response without x-ms-enum', () => {
+    assert.deepStrictEqual(
+      new AddXMsEnumNameTransformer().transformOpenApi(deepFreeze(
+        responseSchema2({
+          type: 'string',
+          enum: [
+            'value1',
+            'value2',
+          ],
+        }),
+      )),
+      responseSchema2({
+        type: 'string',
+        enum: [
+          'value1',
+          'value2',
+        ],
       }),
     );
   });
