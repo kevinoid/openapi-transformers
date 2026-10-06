@@ -31,9 +31,9 @@ export default async function checkExports(args, options) {
 
   let hasError = false;
   for (const packageFile of packageFiles) {
-    if (packageFile.slice(-3) === '.js'
-      && packageFile !== 'eslint.config.js'
-      && packageFile !== 'index.js') {
+    if (packageFile !== 'eslint.config.js'
+      && packageFile !== 'index.js'
+      && packageFile.slice(-3) === '.js') {
       debug('Checking %s...', packageFile);
 
       const dotPackageFile = `./${packageFile}`;
