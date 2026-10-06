@@ -28,7 +28,7 @@ function valueToType(value) {
     throw new TypeError(`${type} type not available in JSON Schema`);
   }
 
-  return type === 'number' && value % 1 === 0 ? 'integer'
+  return type === 'number' && Number.isSafeInteger(value) ? 'integer'
     : value === null ? 'null'
       : type;
 }
