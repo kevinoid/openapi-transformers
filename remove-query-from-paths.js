@@ -10,9 +10,6 @@ import { isDeepStrictEqual } from 'node:util';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 import visit from 'openapi-transformer-base/visit.js';
 
-const oasVersionSymbol = Symbol('openApiVersion');
-const pathVarNameToParamsSymbol = Symbol('pathVarNameToParams');
-
 const httpMethodSet = new Set(METHODS);
 
 function isArrayEqual(array1, array2) {
@@ -225,14 +222,18 @@ function mergePathItems(pathItem1, pathItem2) {
  */
 export default class RemoveQueryFromPathsTransformer
   extends OpenApiTransformerBase {
+  #oasVersion;
+
+  #pathVarNameToParams;
+
   constructor() {
     super();
-    this[oasVersionSymbol] = undefined;
-    this[pathVarNameToParamsSymbol] = undefined;
+    this.#oasVersion = undefined;
+    this.#pathVarNameToParams = undefined;
   }
 
   #createConstQueryParam(name, value) {
-    const oasVersion = this[oasVersionSymbol];
+    const oasVersion = this.#oasVersion;
 
     if (oasVersion.startsWith('2.')) {
       return {
@@ -294,7 +295,7 @@ export default class RemoveQueryFromPathsTransformer
   }
 
   #transformParameters(parameters) {
-    const pathVarNameToParams = this[pathVarNameToParamsSymbol];
+    const pathVarNameToParams = this.#pathVarNameToParams;
     return parameters.flatMap((param) => {
       if (param === null
         || typeof param !== 'object'
@@ -445,7 +446,7 @@ export default class RemoveQueryFromPathsTransformer
           ),
         };
 
-      this[pathVarNameToParamsSymbol] = pathVarNameToParams;
+      this.#pathVarNameToParams = pathVarNameToParams;
       try {
         newPathItem = visit(
           this,
@@ -454,7 +455,7 @@ export default class RemoveQueryFromPathsTransformer
           newPathItem,
         );
       } finally {
-        this[pathVarNameToParamsSymbol] = undefined;
+        this.#pathVarNameToParams = undefined;
       }
 
       const mergedPathItem = dstPathItem === undefined ? newPathItem : visit(
@@ -504,7 +505,7 @@ export default class RemoveQueryFromPathsTransformer
     }
 
     if (openApi.paths !== undefined) {
-      this[oasVersionSymbol] = oasVersion;
+      this.#oasVersion = oasVersion;
       try {
         openApi = {
           ...openApi,
@@ -516,7 +517,7 @@ export default class RemoveQueryFromPathsTransformer
           ),
         };
       } finally {
-        this[oasVersionSymbol] = undefined;
+        this.#oasVersion = undefined;
       }
     }
 

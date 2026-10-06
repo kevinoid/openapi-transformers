@@ -6,14 +6,16 @@
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const emptyRequirement = {};
-const predicateSymbol = Symbol('predicate');
-const removedSchemesSymbol = Symbol('removedSchemes');
 
 /**
  * Transformer to remove security schemes matching a given predicate.
  */
 export default class RemoveSecuritySchemeIfTransformer
   extends OpenApiTransformerBase {
+  #predicate;
+
+  #removedSchemes;
+
   /** Constructs a new RemoveSecuritySchemeIfTransformer with a given
    * predicate.
    *
@@ -27,19 +29,19 @@ export default class RemoveSecuritySchemeIfTransformer
 
     super();
 
-    this[predicateSymbol] = predicate;
-    this[removedSchemesSymbol] = new Set();
+    this.#predicate = predicate;
+    this.#removedSchemes = new Set();
   }
 
   transformSecuritySchemesEarly(securitySchemes) {
-    const removedSchemes = this[removedSchemesSymbol];
+    const removedSchemes = this.#removedSchemes;
 
     let isEmpty = true;
     const newSecuritySchemes = {};
     for (const [schemeName, securityScheme]
       of Object.entries(securitySchemes)) {
       if (securityScheme !== undefined) {
-        if (this[predicateSymbol](securityScheme)) {
+        if (this.#predicate(securityScheme)) {
           removedSchemes.add(schemeName);
         } else {
           isEmpty = false;
@@ -69,7 +71,7 @@ export default class RemoveSecuritySchemeIfTransformer
       return securityRequirement;
     }
 
-    const removedSchemes = this[removedSchemesSymbol];
+    const removedSchemes = this.#removedSchemes;
     let isEmpty = true;
     let haveRemovedAny = false;
     const newSecurityRequirement = {};
@@ -124,7 +126,7 @@ export default class RemoveSecuritySchemeIfTransformer
         this.transformSecuritySchemesEarly(openApi.securityDefinitions);
     }
 
-    if (this[removedSchemesSymbol].size === 0) {
+    if (this.#removedSchemes.size === 0) {
       return openApi;
     }
 

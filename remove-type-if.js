@@ -6,8 +6,6 @@
 
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const predicateSymbol = Symbol('predicate');
-
 /** Checks if a given type constraint validates all types other than null.
  *
  * The type constraint may or may not include null.
@@ -40,6 +38,8 @@ export function allNonNullTypes(type) {
  * given predicate.
  */
 export default class RemoveTypeIfTransformer extends OpenApiTransformerBase {
+  #predicate;
+
   constructor(predicate) {
     super();
 
@@ -47,7 +47,7 @@ export default class RemoveTypeIfTransformer extends OpenApiTransformerBase {
       throw new TypeError('predicate must be a function');
     }
 
-    this[predicateSymbol] = predicate;
+    this.#predicate = predicate;
   }
 
   transformSchema(schema) {
@@ -60,6 +60,6 @@ export default class RemoveTypeIfTransformer extends OpenApiTransformerBase {
     }
 
     const { type, ...schemaNoType } = newSchema;
-    return this[predicateSymbol](type) ? schemaNoType : newSchema;
+    return this.#predicate(type) ? schemaNoType : newSchema;
   }
 }

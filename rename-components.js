@@ -12,8 +12,6 @@ import {
 } from 'json-ptr';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
-const renameFuncsSymbol = Symbol('renameFuncs');
-
 // https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#fixed-fields-6
 const componentFieldNames = [
   'schemas',
@@ -94,6 +92,8 @@ function renameRefObj(obj, getPathIndex, renameFunc) {
  */
 export default class RenameComponentsTransformer
   extends OpenApiTransformerBase {
+  #renameFuncs;
+
   constructor(options) {
     super();
 
@@ -122,7 +122,7 @@ export default class RenameComponentsTransformer
       }
     }
 
-    this[renameFuncsSymbol] = renameFuncs;
+    this.#renameFuncs = renameFuncs;
   }
 
   transformExample3(example) {
@@ -130,7 +130,7 @@ export default class RenameComponentsTransformer
       return renameRefObj(
         example,
         (pp) => (pp[0] === 'components' && pp[1] === 'examples' ? 2 : -1),
-        this[renameFuncsSymbol].examples,
+        this.#renameFuncs.examples,
       );
     }
 
@@ -143,7 +143,7 @@ export default class RenameComponentsTransformer
         schema,
         (pp) => (pp[0] === 'components' && pp[1] === 'schemas' ? 2
           : pp[0] === 'definitions' ? 1 : -1),
-        this[renameFuncsSymbol].schemas,
+        this.#renameFuncs.schemas,
       );
     }
 
@@ -155,7 +155,7 @@ export default class RenameComponentsTransformer
       return renameRefObj(
         header,
         (pp) => (pp[0] === 'components' && pp[1] === 'headers' ? 2 : -1),
-        this[renameFuncsSymbol].headers,
+        this.#renameFuncs.headers,
       );
     }
 
@@ -167,7 +167,7 @@ export default class RenameComponentsTransformer
       return renameRefObj(
         link,
         (pp) => (pp[0] === 'components' && pp[1] === 'links' ? 2 : -1),
-        this[renameFuncsSymbol].links,
+        this.#renameFuncs.links,
       );
     }
 
@@ -179,7 +179,7 @@ export default class RenameComponentsTransformer
       return renameRefObj(
         response,
         (pp) => (pp[0] === 'components' && pp[1] === 'responses' ? 2 : -1),
-        this[renameFuncsSymbol].responses,
+        this.#renameFuncs.responses,
       );
     }
 
@@ -191,7 +191,7 @@ export default class RenameComponentsTransformer
       return renameRefObj(
         parameter,
         (pp) => (pp[0] === 'components' && pp[1] === 'parameters' ? 2 : -1),
-        this[renameFuncsSymbol].parameters,
+        this.#renameFuncs.parameters,
       );
     }
 
@@ -203,7 +203,7 @@ export default class RenameComponentsTransformer
       return renameRefObj(
         callback,
         (pp) => (pp[0] === 'components' && pp[1] === 'callbacks' ? 2 : -1),
-        this[renameFuncsSymbol].callbacks,
+        this.#renameFuncs.callbacks,
       );
     }
 
@@ -215,7 +215,7 @@ export default class RenameComponentsTransformer
       return renameRefObj(
         requestBody,
         (pp) => (pp[0] === 'components' && pp[1] === 'requestBodies' ? 2 : -1),
-        this[renameFuncsSymbol].requestBodies,
+        this.#renameFuncs.requestBodies,
       );
     }
 
@@ -225,7 +225,7 @@ export default class RenameComponentsTransformer
   transformSecurityRequirement(securityRequirement) {
     return renameProps(
       super.transformSecurityRequirement(securityRequirement),
-      this[renameFuncsSymbol].securitySchemes,
+      this.#renameFuncs.securitySchemes,
     );
   }
 
@@ -234,7 +234,7 @@ export default class RenameComponentsTransformer
       return renameRefObj(
         pathItem,
         (pp) => (pp[0] === 'components' && pp[1] === 'pathItems' ? 2 : -1),
-        this[renameFuncsSymbol].pathItems,
+        this.#renameFuncs.pathItems,
       );
     }
 
@@ -252,7 +252,7 @@ export default class RenameComponentsTransformer
 
     const newComponents = { ...components };
     for (const [propName, renameFunc]
-      of Object.entries(this[renameFuncsSymbol])) {
+      of Object.entries(this.#renameFuncs)) {
       const propValue = components[propName];
       if (propValue) {
         newComponents[propName] = renameProps(propValue, renameFunc);
@@ -272,7 +272,7 @@ export default class RenameComponentsTransformer
     }
 
     const { definitions } = openApi;
-    const renameSchemas = this[renameFuncsSymbol].schemas;
+    const renameSchemas = this.#renameFuncs.schemas;
     if (definitions && renameSchemas) {
       openApi = {
         ...openApi,

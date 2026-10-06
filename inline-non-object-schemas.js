@@ -11,9 +11,6 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
 
 const debug = debuglog('inline-non-object-schemas');
 
-const inlineAllSymbol = Symbol('inlineAll');
-const resolveRefSymbol = Symbol('resolveRef');
-
 // JSON Schema validation keywords supported by Autorest which must be inlined
 // https://github.com/Azure/azure-sdk-for-net/blob/master/sdk/mgmtcommon/ClientRuntime/ClientRuntime/ValidationRules.cs
 // Note: exclusiveMaximum/Minimum only modify maximum/minimum validation.
@@ -37,6 +34,10 @@ const validationKeywords = {
  */
 export default class InlineNonObjectSchemaTransformer
   extends OpenApiTransformerBase {
+  #inlineAll;
+
+  #resolveRef;
+
   constructor({ inlineAll, resolveRef } = {}) {
     super();
 
@@ -44,8 +45,8 @@ export default class InlineNonObjectSchemaTransformer
       throw new TypeError('resolveRef must be a function');
     }
 
-    this[inlineAllSymbol] = Boolean(inlineAll);
-    this[resolveRefSymbol] = resolveRef;
+    this.#inlineAll = Boolean(inlineAll);
+    this.#resolveRef = resolveRef;
   }
 
   transformSchema(schema) {
@@ -54,7 +55,7 @@ export default class InlineNonObjectSchemaTransformer
       return super.transformSchema(schema);
     }
 
-    const refSchema = this[resolveRefSymbol]($ref);
+    const refSchema = this.#resolveRef($ref);
     if (refSchema === undefined) {
       debug('Unable to resolve $ref %s', $ref);
       return super.transformSchema(schema);
@@ -70,7 +71,7 @@ export default class InlineNonObjectSchemaTransformer
       return super.transformSchema(schema);
     }
 
-    if (!this[inlineAllSymbol]
+    if (!this.#inlineAll
       && Object.keys(refSchema).every((prop) => !validationKeywords[prop])
       // exclusiveMaximum/exclusiveMinimum are numbers in JSON Schema
       // Draft 2020-12 referenced by OAS 3.1.0 and apply on their own:
@@ -99,11 +100,11 @@ export default class InlineNonObjectSchemaTransformer
   }
 
   transformOpenApi(openapi) {
-    // If resolveRefSymbol was not set from options, resolve against OpenAPI
+    // If resolveRef was not set from options, resolve against OpenAPI
     // Object being transformed.
-    const optResolve = this[resolveRefSymbol];
+    const optResolve = this.#resolveRef;
     if (!optResolve) {
-      this[resolveRefSymbol] = function resolveRef($ref) {
+      this.#resolveRef = function resolveRef($ref) {
         // JsonPointer.get would throw for non-local refs
         return $ref[0] === '#' ? JsonPointer.get(openapi, $ref) : undefined;
       };
@@ -113,7 +114,7 @@ export default class InlineNonObjectSchemaTransformer
       return super.transformOpenApi(openapi);
     } finally {
       if (optResolve) {
-        this[resolveRefSymbol] = optResolve;
+        this.#resolveRef = optResolve;
       }
     }
   }
