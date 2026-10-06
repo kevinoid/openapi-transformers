@@ -71,13 +71,13 @@ export default class RemoveSecuritySchemeIfTransformer
 
     const removedSchemes = this[removedSchemesSymbol];
     let isEmpty = true;
-    let removedAny = false;
+    let haveRemovedAny = false;
     const newSecurityRequirement = {};
     for (const [schemeName, securityScheme]
       of Object.entries(securityRequirement)) {
       if (securityScheme !== undefined) {
         if (removedSchemes.has(schemeName)) {
-          removedAny = true;
+          haveRemovedAny = true;
         } else {
           isEmpty = false;
           newSecurityRequirement[schemeName] = securityScheme;
@@ -87,7 +87,7 @@ export default class RemoveSecuritySchemeIfTransformer
 
     // Return empty marker only if it was made empty by removing scheme(s).
     // Leave already (effectively) empty Security Requirements as-is.
-    return removedAny && isEmpty ? emptyRequirement : newSecurityRequirement;
+    return haveRemovedAny && isEmpty ? emptyRequirement : newSecurityRequirement;
   }
 
   transformOperation(operation) {

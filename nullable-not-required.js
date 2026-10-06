@@ -74,15 +74,15 @@ function isPropNullable(schema, propName, hasNullType, refNullable) {
     oneOf,
     properties,
   } = schema;
-  let constrained = false;
+  let isConstrained = false;
   const propSchema = properties?.[propName];
   if (propSchema) {
-    constrained = true;
+    isConstrained = true;
     if (!isNullable(propSchema, hasNullType, refNullable)) {
       return false;
     }
   } else if (additionalProperties) {
-    constrained = true;
+    isConstrained = true;
     if (!isNullable(additionalProperties, hasNullType, refNullable)) {
       // schema in additionalProperties does not allow null
       return false;
@@ -101,7 +101,7 @@ function isPropNullable(schema, propName, hasNullType, refNullable) {
 
         case true:
           // An allOf schema allows null
-          constrained = true;
+          isConstrained = true;
           break;
 
         default:
@@ -112,8 +112,8 @@ function isPropNullable(schema, propName, hasNullType, refNullable) {
   }
 
   if (Array.isArray(anyOf)) {
-    let anyNullable = false;
-    let anyUnconstrained = false;
+    let hasNullable = false;
+    let hasUnconstrained = false;
     for (const anySchema of anyOf) {
       switch (isPropNullable(anySchema, propName, hasNullType, refNullable)) {
         case false:
@@ -122,28 +122,28 @@ function isPropNullable(schema, propName, hasNullType, refNullable) {
 
         case true:
           // An anyOf schema allows null
-          anyNullable = true;
+          hasNullable = true;
           break;
 
         default:
           // An anyOf schema doesn't constrain propName
-          anyUnconstrained = true;
+          hasUnconstrained = true;
           break;
       }
     }
 
-    if (!anyNullable && !anyUnconstrained) {
+    if (!hasNullable && !hasUnconstrained) {
       return false;
     }
 
-    if (!anyUnconstrained) {
-      constrained = true;
+    if (!hasUnconstrained) {
+      isConstrained = true;
     }
   }
 
   if (Array.isArray(oneOf)) {
-    let anyNullable = false;
-    let anyUnconstrained = false;
+    let hasNullable = false;
+    let hasUnconstrained = false;
     for (const oneSchema of oneOf) {
       switch (isPropNullable(oneSchema, propName, hasNullType, refNullable)) {
         case false:
@@ -152,26 +152,26 @@ function isPropNullable(schema, propName, hasNullType, refNullable) {
 
         case true:
           // A oneOf schema allows null
-          anyNullable = true;
+          hasNullable = true;
           break;
 
         default:
           // A oneOf schema doesn't constrain propName
-          anyUnconstrained = true;
+          hasUnconstrained = true;
           break;
       }
     }
 
-    if (!anyNullable && !anyUnconstrained) {
+    if (!hasNullable && !hasUnconstrained) {
       return false;
     }
 
-    if (!anyUnconstrained) {
-      constrained = true;
+    if (!hasUnconstrained) {
+      isConstrained = true;
     }
   }
 
-  return constrained ? true : undefined;
+  return isConstrained ? true : undefined;
 }
 
 /**

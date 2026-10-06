@@ -74,7 +74,7 @@ function addXMsEnumValueNamesToSchema(schema) {
   const autorestNames = stringValues.map(autorestEnumMemberName);
   const microsoftNames = stringValues.map(dotnetCase);
 
-  let anyNameChanged = false;
+  let hasNameChanged = false;
   let newXMsEnumValues;
   if (Array.isArray(xMsEnumValues)) {
     newXMsEnumValues = xMsEnumValues.map((xMsEnumValue, i) => {
@@ -88,7 +88,7 @@ function addXMsEnumValueNamesToSchema(schema) {
         return xMsEnumValue;
       }
 
-      anyNameChanged = true;
+      hasNameChanged = true;
       return {
         ...xMsEnumValue,
         name: microsoftName,
@@ -100,14 +100,14 @@ function addXMsEnumValueNamesToSchema(schema) {
       const microsoftName = microsoftNames[i];
       const newXMsEnumValue = { value };
       if (autorestName !== microsoftName) {
-        anyNameChanged = true;
+        hasNameChanged = true;
         newXMsEnumValue.name = microsoftName;
       }
       return newXMsEnumValue;
     });
   }
 
-  if (!anyNameChanged) {
+  if (!hasNameChanged) {
     return schema;
   }
 
