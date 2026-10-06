@@ -117,8 +117,7 @@ export default class ServerVarsToPathParamsTransformer
       let haveNewVars = false;
       const newVars = {};
       const suffixVars = {};
-      for (const varName of Object.keys(variables)) {
-        const variable = variables[varName];
+      for (const [varName, variable] of Object.entries(variables)) {
         if (pathSuffixVarNames.includes(varName)) {
           // Variable in path suffix
           if (this.options.omitDefault.includes(varName)
@@ -175,33 +174,33 @@ export default class ServerVarsToPathParamsTransformer
     }
     const paramManager = new MatchingParameterManager(parameters);
 
-    const serverParamRefs = Object.keys(pathSuffixVars).map((name) => {
-      const serverVar = pathSuffixVars[name];
-      const serverParam = {
-        name,
-        in: 'path',
-        required: true,
-      };
-      if (spec.openapi) {
-        serverParam.schema = {
-          type: 'string',
-          ...serverVar,
+    const serverParamRefs = Object.entries(pathSuffixVars)
+      .map(([name, serverVar]) => {
+        const serverParam = {
+          name,
+          in: 'path',
+          required: true,
         };
+        if (spec.openapi) {
+          serverParam.schema = {
+            type: 'string',
+            ...serverVar,
+          };
 
-        if (Object.hasOwn(serverVar, 'description')) {
-          serverParam.description = serverVar.description;
-          delete serverParam.schema.description;
+          if (Object.hasOwn(serverVar, 'description')) {
+            serverParam.description = serverVar.description;
+            delete serverParam.schema.description;
+          }
+        } else {
+          serverParam.type = 'string';
+          Object.assign(serverParam, serverVar);
         }
-      } else {
-        serverParam.type = 'string';
-        Object.assign(serverParam, serverVar);
-      }
 
-      const defName = paramManager.add(serverParam, name);
-      return {
-        $ref: encodeUriFragmentIdentifier([...paramRefPrefix, defName]),
-      };
-    });
+        const defName = paramManager.add(serverParam, name);
+        return {
+          $ref: encodeUriFragmentIdentifier([...paramRefPrefix, defName]),
+        };
+      });
 
     const newPathPrefix = pathSuffix.replace(/\/$/, '');
     const newSpec = {
