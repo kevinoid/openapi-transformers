@@ -9,6 +9,8 @@ import assert from 'node:assert';
 import dotnetCase from '@kevinoid/dotnet-identifier-case';
 import OpenApiTransformerBase from 'openapi-transformer-base';
 
+// This module will misbehave if Unicode property escapes aren't supported.
+// eslint-disable-next-line unicorn/no-top-level-side-effects
 assert.ok(/\p{L}/u.test('X'), 'Unicode property escapes are supported.');
 
 function firstToLower(word) {

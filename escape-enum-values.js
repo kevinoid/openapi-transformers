@@ -130,10 +130,12 @@ function makeEscapeString(lang) {
       return str;
     }
 
+    // eslint-disable-next-line unicorn/no-unsafe-string-replacement
     const charEscaped = str.replace(charPattern, replaceChar);
     const astralEscaped =
       !toAstralEscape ? charEscaped : charEscaped.replaceAll(
         /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
+        // eslint-disable-next-line unicorn/no-unsafe-string-replacement
         replaceAstral,
       );
     return astralEscaped;

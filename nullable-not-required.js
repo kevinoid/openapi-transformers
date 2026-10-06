@@ -92,6 +92,8 @@ function isPropNullable(schema, propName, hasNullType, refNullable) {
     return false;
   }
 
+  /* eslint-disable unicorn/no-break-in-nested-loop */
+
   if (Array.isArray(allOf)) {
     for (const allSchema of allOf) {
       switch (isPropNullable(allSchema, propName, hasNullType, refNullable)) {
@@ -170,6 +172,8 @@ function isPropNullable(schema, propName, hasNullType, refNullable) {
       isConstrained = true;
     }
   }
+
+  /* eslint-enable unicorn/no-break-in-nested-loop */
 
   return isConstrained ? true : undefined;
 }

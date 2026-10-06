@@ -112,6 +112,7 @@ export default class RenameComponentsTransformer
         renameFuncs[componentFieldName] = (name) => {
           for (const [pat, repl] of patterns) {
             if (pat.test(name)) {
+              // eslint-disable-next-line unicorn/no-unsafe-string-replacement
               return name.replace(pat, repl);
             }
           }
