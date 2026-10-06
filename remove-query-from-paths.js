@@ -485,7 +485,7 @@ export default class RemoveQueryFromPathsTransformer
 
     let oasVersion = '3.1.0';
     if (openApi.openapi !== undefined) {
-      const openapi = `${openApi.openapi}`;
+      const openapi = String(openApi.openapi);
       if (openapi.startsWith('3.')) {
         oasVersion = openapi;
       } else if (openapi === '3') {
@@ -494,7 +494,7 @@ export default class RemoveQueryFromPathsTransformer
         this.warn('Unrecognized OpenAPI version', openApi.openapi);
       }
     } else if (openApi.swagger !== undefined) {
-      const swagger = `${openApi.swagger}`;
+      const swagger = String(openApi.swagger);
       if (swagger === '2.0' || swagger === '2') {
         oasVersion = '2.0';
       } else {
