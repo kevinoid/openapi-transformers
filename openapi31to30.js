@@ -4,6 +4,8 @@
  * @module "openapi-transformers/openapi31to30.js"
  */
 
+import OpenApiTransformerBase from 'openapi-transformer-base';
+
 import AnyOfNullToNullableTransformer from './any-of-null-to-nullable.js';
 import ConstToEnumTransformer from './const-to-enum.js';
 import ExclusiveMinMaxToBoolTransformer from './exclusive-min-max-to-bool.js';
@@ -19,6 +21,8 @@ import TypeNullToNullableTransformer from './type-null-to-nullable.js';
  * Transformer to convert an OpenAPI 3.1.* document to OpenAPI 3.0.3.
  */
 export default class OpenApi31To30Transformer {
+  warn = OpenApiTransformerBase.prototype.warn;
+
   constructor() {
     this.transformers = [
       new ExclusiveMinMaxToBoolTransformer(),
