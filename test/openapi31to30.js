@@ -11,6 +11,13 @@ import OpenApi31To30Transformer from '../openapi31to30.js';
 import { schema3 } from '../test-lib/skeletons.js';
 
 describe('OpenApi31To30Transformer', () => {
+  it('returns non-object unchanged', () => {
+    assert.deepStrictEqual(
+      new OpenApi31To30Transformer().transformOpenApi(1),
+      1,
+    );
+  });
+
   it('converts schema with numeric exclusiveMaximum/exclusiveMinimum', () => {
     assert.deepStrictEqual(
       new OpenApi31To30Transformer().transformOpenApi(deepFreeze(schema3({
