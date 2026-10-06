@@ -21,7 +21,7 @@ import OpenApiTransformerBase from 'openapi-transformer-base';
  * Schema types other than "null" (handled by `nullable`) and "integer"
  * (covered by "number"), which may or may not be present.  Otherwise false.
  */
-export function allNonNullTypes(type) {
+export function hasAllNonNullTypes(type) {
   return Array.isArray(type)
     && type.length >= 5
     && [

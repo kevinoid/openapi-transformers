@@ -7,7 +7,9 @@ import assert from 'node:assert';
 
 import deepFreeze from 'deep-freeze';
 
-import RemoveTypeIfTransformer, { allNonNullTypes } from '../remove-type-if.js';
+import RemoveTypeIfTransformer, {
+  hasAllNonNullTypes,
+} from '../remove-type-if.js';
 import { openapi, schema3 } from '../test-lib/skeletons.js';
 
 describe('RemoveTypeIfTransformer', () => {
@@ -142,7 +144,7 @@ describe('RemoveTypeIfTransformer', () => {
 
   describe('validatesAllNonNullTypes', () => {
     it('removes type with all 5 non-null/integer types', () => {
-      const transformer = new RemoveTypeIfTransformer(allNonNullTypes);
+      const transformer = new RemoveTypeIfTransformer(hasAllNonNullTypes);
       assert.deepStrictEqual(
         transformer.transformOpenApi(deepFreeze(schema3({
           type: ['array', 'boolean', 'number', 'object', 'string'],
@@ -152,7 +154,7 @@ describe('RemoveTypeIfTransformer', () => {
     });
 
     it('removes type with all 7 types', () => {
-      const transformer = new RemoveTypeIfTransformer(allNonNullTypes);
+      const transformer = new RemoveTypeIfTransformer(hasAllNonNullTypes);
       assert.deepStrictEqual(
         transformer.transformOpenApi(deepFreeze(schema3({
           type: [
@@ -170,7 +172,7 @@ describe('RemoveTypeIfTransformer', () => {
     });
 
     it('does not remove single type', () => {
-      const transformer = new RemoveTypeIfTransformer(allNonNullTypes);
+      const transformer = new RemoveTypeIfTransformer(hasAllNonNullTypes);
       assert.deepStrictEqual(
         transformer.transformOpenApi(deepFreeze(schema3({
           type: 'boolean',
@@ -182,7 +184,7 @@ describe('RemoveTypeIfTransformer', () => {
     });
 
     it('does not remove type missing array', () => {
-      const transformer = new RemoveTypeIfTransformer(allNonNullTypes);
+      const transformer = new RemoveTypeIfTransformer(hasAllNonNullTypes);
       assert.deepStrictEqual(
         transformer.transformOpenApi(deepFreeze(schema3({
           type: [
@@ -210,7 +212,7 @@ describe('RemoveTypeIfTransformer', () => {
     // JSON Schema specifies type array elements "MUST be unique".
     // Check that invalid documents are handled correctly anyway.
     it('removes type with 7 + duplicate types', () => {
-      const transformer = new RemoveTypeIfTransformer(allNonNullTypes);
+      const transformer = new RemoveTypeIfTransformer(hasAllNonNullTypes);
       assert.deepStrictEqual(
         transformer.transformOpenApi(deepFreeze(schema3({
           type: [
@@ -232,7 +234,7 @@ describe('RemoveTypeIfTransformer', () => {
     // JSON Schema specifies type array elements "MUST be unique".
     // Check that invalid documents are handled correctly anyway.
     it('does not remove type with duplicates missing number', () => {
-      const transformer = new RemoveTypeIfTransformer(allNonNullTypes);
+      const transformer = new RemoveTypeIfTransformer(hasAllNonNullTypes);
       assert.deepStrictEqual(
         transformer.transformOpenApi(deepFreeze(schema3({
           type: [

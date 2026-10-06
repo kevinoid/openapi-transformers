@@ -9,7 +9,9 @@ import ConstToEnumTransformer from './const-to-enum.js';
 import ExclusiveMinMaxToBoolTransformer from './exclusive-min-max-to-bool.js';
 import PatternPropertiesToAdditionalPropertiesTransformer
   from './pattern-properties-to-additional-properties.js';
-import RemoveTypeIfTransformer, { allNonNullTypes } from './remove-type-if.js';
+import RemoveTypeIfTransformer, {
+  hasAllNonNullTypes,
+} from './remove-type-if.js';
 import TypeNullToEnumTransformer from './type-null-to-enum.js';
 import TypeNullToNullableTransformer from './type-null-to-nullable.js';
 
@@ -24,7 +26,7 @@ export default class OpenApi31To30Transformer {
       new AnyOfNullToNullableTransformer(),
       new TypeNullToEnumTransformer(),
       new TypeNullToNullableTransformer(),
-      new RemoveTypeIfTransformer(allNonNullTypes),
+      new RemoveTypeIfTransformer(hasAllNonNullTypes),
       new PatternPropertiesToAdditionalPropertiesTransformer(),
     ];
   }
