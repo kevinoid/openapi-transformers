@@ -51,7 +51,7 @@ export default class TypeNullToNullableTransformer
     return {
       ...newSchema,
       type: newType.length === 1 ? newType[0] : newType,
-      nullable: nullable === undefined ? true : nullable,
+      nullable: (nullable === undefined) || nullable,
     };
   }
 }

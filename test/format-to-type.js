@@ -37,7 +37,7 @@ describe('FormatToTypeTransformer', () => {
             prop: {
               type,
               // format is removed if format === type
-              ...format === type ? undefined : { format },
+              ...format !== type && { format },
             },
           },
         }),

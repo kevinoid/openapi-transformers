@@ -99,8 +99,7 @@ describe('MatchingComponentManager', () => {
         // eslint-disable-next-line class-methods-use-this
         getKey(keyVal) {
           return keyVal === origValue ? 'true'
-            : keyVal === value ? true
-              : assert.fail('unexpected keyVal');
+            : (keyVal === value) || assert.fail('unexpected keyVal');
         }
       }
       const newName = new TestManager(component).add(value, name);
