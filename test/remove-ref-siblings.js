@@ -183,10 +183,12 @@ describe('RemoveRefSiblingsTransformer', () => {
 
   it('preserves property order', () => {
     // eslint-disable-next-line unicorn/consistent-function-scoping
-    function retain(propName) {
+    function isNotRequired(propName) {
       return propName !== 'required';
     }
-    const transformer = new RemoveRefSiblingsTransformer({ retain });
+    const transformer = new RemoveRefSiblingsTransformer({
+      retain: isNotRequired,
+    });
     const origSchema = {
       title: 'Test',
       description: 'Test',
@@ -197,7 +199,7 @@ describe('RemoveRefSiblingsTransformer', () => {
       transformer.transformOpenApi(deepFreeze(schema3(origSchema)));
     const newSchema = openapi.components.schemas.Test;
     assert.deepStrictEqual(
-      Object.keys(origSchema).filter(retain),
+      Object.keys(origSchema).filter(isNotRequired),
       Object.keys(newSchema),
     );
   });
