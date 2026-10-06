@@ -89,7 +89,8 @@ export default class RemoveSecuritySchemeIfTransformer
 
     // Return empty marker only if it was made empty by removing scheme(s).
     // Leave already (effectively) empty Security Requirements as-is.
-    return haveRemovedAny && isEmpty ? emptyRequirement : newSecurityRequirement;
+    return haveRemovedAny && isEmpty ? emptyRequirement
+      : newSecurityRequirement;
   }
 
   transformOperation(operation) {
