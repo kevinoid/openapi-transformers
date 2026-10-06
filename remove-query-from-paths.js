@@ -99,42 +99,6 @@ function moveServers(pathItem) {
   return newPathItem;
 }
 
-function mergePathItems(pathItem1, pathItem2) {
-  if (!isArrayEqual(pathItem1.parameters, pathItem2.parameters)) {
-    // TODO: Keep common parameters at Path Item level
-    pathItem1 = moveParameters(pathItem1);
-    pathItem2 = moveParameters(pathItem2);
-  }
-
-  if (!isArrayEqual(pathItem1.servers, pathItem2.servers)) {
-    pathItem1 = moveServers(pathItem1);
-    pathItem2 = moveServers(pathItem2);
-  }
-
-  const combined = { ...pathItem2 };
-  for (const [prop, value1] of Object.entries(pathItem1)) {
-    if (value1 !== undefined
-      && prop !== 'parameters'
-      && prop !== 'servers') {
-      const value2 = pathItem2[prop];
-      if (value2 !== undefined && !isDeepStrictEqual(value1, value2)) {
-        this.transformPath.push(prop);
-        this.warn(
-          'Refusing to overwrite %o with %o',
-          value2,
-          value1,
-        );
-        this.transformPath.pop();
-        return undefined;
-      }
-
-      combined[prop] = value1;
-    }
-  }
-
-  return combined;
-}
-
 /**
  * Transformer to remove query component of path in paths object.
  *
@@ -191,6 +155,42 @@ export default class RemoveQueryFromPathsTransformer
         const: value,
       },
     };
+  }
+
+  #mergePathItems(pathItem1, pathItem2) {
+    if (!isArrayEqual(pathItem1.parameters, pathItem2.parameters)) {
+      // TODO: Keep common parameters at Path Item level
+      pathItem1 = moveParameters(pathItem1);
+      pathItem2 = moveParameters(pathItem2);
+    }
+
+    if (!isArrayEqual(pathItem1.servers, pathItem2.servers)) {
+      pathItem1 = moveServers(pathItem1);
+      pathItem2 = moveServers(pathItem2);
+    }
+
+    const combined = { ...pathItem2 };
+    for (const [prop, value1] of Object.entries(pathItem1)) {
+      if (value1 !== undefined
+        && prop !== 'parameters'
+        && prop !== 'servers') {
+        const value2 = pathItem2[prop];
+        if (value2 !== undefined && !isDeepStrictEqual(value1, value2)) {
+          this.transformPath.push(prop);
+          this.warn(
+            'Refusing to overwrite %o with %o',
+            value2,
+            value1,
+          );
+          this.transformPath.pop();
+          return undefined;
+        }
+
+        combined[prop] = value1;
+      }
+    }
+
+    return combined;
   }
 
   // FIXME: How to handle unpaired {}
@@ -460,7 +460,7 @@ export default class RemoveQueryFromPathsTransformer
 
       const mergedPathItem = dstPathItem === undefined ? newPathItem : visit(
         this,
-        mergePathItems,
+        this.#mergePathItems,
         dstPath,
         dstPathItem,
         newPathItem,
