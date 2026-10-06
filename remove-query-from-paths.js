@@ -266,6 +266,30 @@ export default class RemoveQueryFromPathsTransformer
     };
   }
 
+  #transformParameters(parameters) {
+    const pathVarNameToParams = this.#pathVarNameToParams;
+    return parameters.flatMap((param) => {
+      if (param === null
+        || typeof param !== 'object'
+        || param.in !== 'path') {
+        return param;
+      }
+
+      const newParams = pathVarNameToParams.get(param.name);
+      if (newParams === undefined) {
+        return param;
+      }
+
+      return newParams
+        .map((newParam) => ({ ...param, ...newParam }))
+        // If the parameter already exists, avoid duplicating it
+        .filter((newParam) => parameters.every((p) => !(p
+          && p !== param
+          && p.name === newParam.name
+          && p.in === newParam.in)));
+    });
+  }
+
   transformOperation(operation) {
     if (typeof operation !== 'object'
       || operation === null
@@ -292,30 +316,6 @@ export default class RemoveQueryFromPathsTransformer
         parameters,
       ),
     };
-  }
-
-  #transformParameters(parameters) {
-    const pathVarNameToParams = this.#pathVarNameToParams;
-    return parameters.flatMap((param) => {
-      if (param === null
-        || typeof param !== 'object'
-        || param.in !== 'path') {
-        return param;
-      }
-
-      const newParams = pathVarNameToParams.get(param.name);
-      if (newParams === undefined) {
-        return param;
-      }
-
-      return newParams
-        .map((newParam) => ({ ...param, ...newParam }))
-        // If the parameter already exists, avoid duplicating it
-        .filter((newParam) => parameters.every((p) => !(p
-          && p !== param
-          && p.name === newParam.name
-          && p.in === newParam.in)));
-    });
   }
 
   transformPathItem(pathItem) {
