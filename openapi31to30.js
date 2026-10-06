@@ -19,6 +19,9 @@ import TypeNullToNullableTransformer from './type-null-to-nullable.js';
 
 /**
  * Transformer to convert an OpenAPI 3.1.* document to OpenAPI 3.0.3.
+ *
+ * It does not inherit from OpenApiTransformerBase, since only the
+ * transformOpenApi method is functional.
  */
 export default class OpenApi31To30Transformer {
   warn = OpenApiTransformerBase.prototype.warn;
