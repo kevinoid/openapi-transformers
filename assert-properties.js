@@ -29,7 +29,7 @@ export default class AssertPropertiesTransformer
       throw new TypeError('options.schema.excludes must be an Array');
     }
 
-    if (!options.schema.excludes.every((s) => typeof s === 'string')) {
+    if (options.schema.excludes.some((s) => typeof s !== 'string')) {
       throw new TypeError(
         'options.schema.excludes must only contain property names',
       );

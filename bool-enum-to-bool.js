@@ -34,7 +34,7 @@ export default class BoolEnumToBoolTransformer
     const { type } = schema;
     if (!this[inStringContextSymbol]
       && type !== 'boolean'
-      && !enumValues.every((ev) => typeof ev === 'boolean')) {
+      && enumValues.some((ev) => typeof ev !== 'boolean')) {
       // If schema validates non-boolean values in a type-sensitive context,
       // limiting to boolean would change validation.
       return schema;

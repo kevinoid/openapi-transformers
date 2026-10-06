@@ -34,7 +34,7 @@ export default class PatternPropertiesToAdditionalPropertiesTransformer
     const uniquePropSchemas = [];
     for (const propSchema of Object.values(patternProperties)) {
       if (propSchema !== undefined
-        && !uniquePropSchemas.some((s) => isDeepStrictEqual(s, propSchema))) {
+        && uniquePropSchemas.every((s) => !isDeepStrictEqual(s, propSchema))) {
         uniquePropSchemas.push(propSchema);
       }
     }
@@ -46,8 +46,8 @@ export default class PatternPropertiesToAdditionalPropertiesTransformer
 
     const { additionalProperties } = schema;
     if (additionalProperties !== undefined
-      && !uniquePropSchemas
-        .some((s) => isDeepStrictEqual(s, additionalProperties))) {
+      && uniquePropSchemas
+        .every((s) => !isDeepStrictEqual(s, additionalProperties))) {
       uniquePropSchemas.push(additionalProperties);
     }
 

@@ -160,9 +160,9 @@ function combineParameters(opParams, pathParams) {
     ...opParams,
     ...pathParams
       // Don't include params from Path Item overridden by Operation
-      .filter((pp) => pp && !opParams.some((op) => op
+      .filter((pp) => pp && opParams.every((op) => !(op
         && op.name === pp.name
-        && op.in === pp.in)),
+        && op.in === pp.in))),
   ];
 }
 
@@ -262,10 +262,10 @@ function transformParameters(parameters) {
     return newParams
       .map((newParam) => ({ ...param, ...newParam }))
       // If the parameter already exists, avoid duplicating it
-      .filter((newParam) => !parameters.some((p) => p
+      .filter((newParam) => parameters.every((p) => !(p
         && p !== param
         && p.name === newParam.name
-        && p.in === newParam.in));
+        && p.in === newParam.in)));
   });
 }
 

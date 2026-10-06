@@ -71,7 +71,7 @@ export default class InlineNonObjectSchemaTransformer
     }
 
     if (!this[inlineAllSymbol]
-      && !Object.keys(refSchema).some((prop) => validationKeywords[prop])
+      && Object.keys(refSchema).every((prop) => !validationKeywords[prop])
       // exclusiveMaximum/exclusiveMinimum are numbers in JSON Schema
       // Draft 2020-12 referenced by OAS 3.1.0 and apply on their own:
       // https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema-validation-00#section-6.2.3
