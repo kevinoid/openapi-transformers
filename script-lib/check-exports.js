@@ -27,9 +27,10 @@ export default async function checkExports(args, options) {
   const indexJs = await indexJsP;
   const packageJson = JSON.parse(await packageJsonStrP);
   const readme = await readmeP;
+  const packageFiles = await packageFilesP;
 
   let hasError = false;
-  for (const packageFile of await packageFilesP) {
+  for (const packageFile of packageFiles) {
     if (packageFile.slice(-3) === '.js'
       && packageFile !== 'eslint.config.js'
       && packageFile !== 'index.js') {
