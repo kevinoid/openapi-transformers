@@ -33,79 +33,6 @@ function valueToType(value) {
       : type;
 }
 
-// FIXME: How to handle unpaired {}
-// FIXME: How to handle = in {}
-// FIXME: How to handle %-encoded characters in {}
-// FIXME: How to handle missing variable name (e.g. /a/{}/b)
-function parseQueryParams(query) {
-  const ampQuery = `&${query}`;
-  const paramValueRE =
-    /&([^{}&=]*(?:\{[^{}]*\}[^{}&=]*)*)(?:=([^{}&]*(?:\{[^{}]*\}[^{}&]*)*))?/y;
-  const paramMap = new Map();
-  let paramValueMatch;
-  while (paramValueRE.lastIndex < ampQuery.length
-    // eslint-disable-next-line no-cond-assign
-    && (paramValueMatch = paramValueRE.exec(ampQuery)) !== null) {
-    if (paramValueMatch[0] === '&') {
-      // Nothing after &
-      continue;
-    }
-
-    const param = paramValueMatch[1];
-    const pvarStart = param.indexOf('{');
-    const pvarEnd = param.indexOf('}');
-    if (pvarStart > 0) {
-      if (pvarEnd > pvarStart) {
-        this.warn('Unable to handle query param with variable name', param);
-      } else {
-        this.warn('Unpaired "{" in query param name', param);
-      }
-
-      return undefined;
-    }
-
-    if (pvarEnd !== -1) {
-      this.warn('Unpaired "}" in query param name', param);
-      return undefined;
-    }
-
-    const value = paramValueMatch[2] || '';
-    const qvarStart = value.indexOf('{');
-    const qvarEnd = value.indexOf('}');
-    if (qvarStart > 0 || (qvarStart === 0 && qvarEnd !== value.length - 1)) {
-      this.warn(
-        'Unable to handle query value with constant and variable parts',
-        value,
-      );
-      return undefined;
-    }
-
-    if (qvarEnd < qvarStart) {
-      this.warn(
-        'Unpaired "%s" in query value',
-        qvarEnd !== -1 ? '}' : '{',
-        param,
-      );
-      return undefined;
-    }
-
-    // TODO: Convert to param with `type: array` and `explode: true`?
-    if (paramMap.has(param)) {
-      this.warn('Ignoring path with duplicate query parameter', param);
-      return undefined;
-    }
-
-    paramMap.set(param, value);
-  }
-
-  if (paramValueRE.lastIndex !== ampQuery.length) {
-    this.warn('Unable to parse query parameters', query);
-    return undefined;
-  }
-
-  return paramMap;
-}
-
 function combineParameters(opParams, pathParams) {
   if (opParams === undefined) {
     return pathParams;
@@ -266,6 +193,79 @@ export default class RemoveQueryFromPathsTransformer
     };
   }
 
+  // FIXME: How to handle unpaired {}
+  // FIXME: How to handle = in {}
+  // FIXME: How to handle %-encoded characters in {}
+  // FIXME: How to handle missing variable name (e.g. /a/{}/b)
+  #parseQueryParams(query) {
+    const ampQuery = `&${query}`;
+    const paramValueRE =
+      /&([^{}&=]*(?:\{[^{}]*\}[^{}&=]*)*)(?:=([^{}&]*(?:\{[^{}]*\}[^{}&]*)*))?/y;
+    const paramMap = new Map();
+    let paramValueMatch;
+    while (paramValueRE.lastIndex < ampQuery.length
+      // eslint-disable-next-line no-cond-assign
+      && (paramValueMatch = paramValueRE.exec(ampQuery)) !== null) {
+      if (paramValueMatch[0] === '&') {
+        // Nothing after &
+        continue;
+      }
+
+      const param = paramValueMatch[1];
+      const pvarStart = param.indexOf('{');
+      const pvarEnd = param.indexOf('}');
+      if (pvarStart > 0) {
+        if (pvarEnd > pvarStart) {
+          this.warn('Unable to handle query param with variable name', param);
+        } else {
+          this.warn('Unpaired "{" in query param name', param);
+        }
+
+        return undefined;
+      }
+
+      if (pvarEnd !== -1) {
+        this.warn('Unpaired "}" in query param name', param);
+        return undefined;
+      }
+
+      const value = paramValueMatch[2] || '';
+      const qvarStart = value.indexOf('{');
+      const qvarEnd = value.indexOf('}');
+      if (qvarStart > 0 || (qvarStart === 0 && qvarEnd !== value.length - 1)) {
+        this.warn(
+          'Unable to handle query value with constant and variable parts',
+          value,
+        );
+        return undefined;
+      }
+
+      if (qvarEnd < qvarStart) {
+        this.warn(
+          'Unpaired "%s" in query value',
+          qvarEnd !== -1 ? '}' : '{',
+          param,
+        );
+        return undefined;
+      }
+
+      // TODO: Convert to param with `type: array` and `explode: true`?
+      if (paramMap.has(param)) {
+        this.warn('Ignoring path with duplicate query parameter', param);
+        return undefined;
+      }
+
+      paramMap.set(param, value);
+    }
+
+    if (paramValueRE.lastIndex !== ampQuery.length) {
+      this.warn('Unable to parse query parameters', query);
+      return undefined;
+    }
+
+    return paramMap;
+  }
+
   #transformParameters(parameters) {
     const pathVarNameToParams = this.#pathVarNameToParams;
     return parameters.flatMap((param) => {
@@ -405,7 +405,7 @@ export default class RemoveQueryFromPathsTransformer
       let queryParams;
       this.transformPath.push(pathQuery);
       try {
-        queryParams = parseQueryParams(query);
+        queryParams = this.#parseQueryParams(query);
       } finally {
         this.transformPath.pop();
       }
