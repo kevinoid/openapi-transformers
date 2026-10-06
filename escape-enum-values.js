@@ -11,7 +11,7 @@ const escapeStringSymbol = Symbol('escapeString');
 function makeEscapeString(lang) {
   let charToEscape = {
     '\0': '\\0',
-    '\x07': '\\a',
+    '\u{7}': '\\a',
     '\b': '\\b',
     '\t': '\\t',
     '\n': '\\n',
@@ -23,13 +23,13 @@ function makeEscapeString(lang) {
     '\\': '\\\\',
   };
   // Escape control characters for all languages for readability
-  let charRange = '\0-\x1F\x7F';
+  let charRange = '\0-\u{1F}\u{7F}';
 
   let toAstralEscape, toCodeEscape;
   switch (lang) {
     case 'csharp':
       // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/lexical-structure#string-literals
-      charRange += '\n\r"\\\\\x85\u2028\u2029';
+      charRange += '\n\r"\\\\\u{85}\u{2028}\u{2029}';
       // Note: Although \x can be shorter, must be careful to provide 4
       // digits when next character is hex digit.  Use \u for consistency.
       toCodeEscape =
@@ -52,7 +52,7 @@ function makeEscapeString(lang) {
       // https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.5
       charRange += '\n"\\\\';
       delete charToEscape['\0'];
-      delete charToEscape['\x07'];
+      delete charToEscape['\u{7}'];
       delete charToEscape['\v'];
       toCodeEscape =
         (c) => `\\u${c.codePointAt(0).toString(16).padStart(4, '0')}`;
@@ -64,7 +64,7 @@ function makeEscapeString(lang) {
       // Note: AutoRest currently produces single-quoted strings, but the
       // bloat from extra quoting is minor compared to risk.
       charRange += '\n"\'\\\\';
-      delete charToEscape['\x07'];
+      delete charToEscape['\u{7}'];
       toCodeEscape = (c) => {
         const code = c.codePointAt(0);
         return code <= 0xFF ? `\\x${code.toString(16).padStart(2, '0')}`
@@ -78,9 +78,9 @@ function makeEscapeString(lang) {
       // FIXME: Does AutoRest produce single- or double-quoted strings?
       // Can't test due to https://github.com/Azure/autorest/issues/3372
       charRange += '\n"\\\\';
-      delete charToEscape['\x07'];
+      delete charToEscape['\u{7}'];
       delete charToEscape['\b'];
-      charToEscape['\x1B'] = '\\e';
+      charToEscape['\u{1B}'] = '\\e';
       toCodeEscape = (c) => {
         const code = c.codePointAt(0);
         return code <= 0xFF ? `\\x${code.toString(16).padStart(2, '0')}`
