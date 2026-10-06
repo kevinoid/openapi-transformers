@@ -22,40 +22,6 @@ function getSchemeAuthority(url) {
   return match && match[0];
 }
 
-function parseServerUrl(url) {
-  if (typeof url !== 'string') {
-    this.warn('Ignoring Server with non-string url', url);
-    return undefined;
-  }
-
-  const schemeAuth = getSchemeAuthority(url);
-  if (!schemeAuth) {
-    this.warn('Unable to determine scheme and authority for url', url);
-    return undefined;
-  }
-
-  // Remove non-templated scheme, if present
-  const hostTemplate = schemeAuth.replace(/^[a-zA-Z_+.-]+:\/\//, '');
-  if (!hostTemplate) {
-    this.warn('Unable to determine host for url', url);
-    return undefined;
-  }
-
-  const hostTemplateExprs = hostTemplate.match(/\{[^{}]*\}/g);
-  if (!hostTemplateExprs) {
-    this.warn('No template expressions in scheme and authority for url', url);
-    return undefined;
-  }
-
-  return {
-    hostTemplate,
-    // If non-templated scheme was removed, use the declared schemes
-    useSchemePrefix: hostTemplate !== schemeAuth,
-    hostTemplateVarNames: hostTemplateExprs
-      .map((templateExpr) => templateExpr.slice(1, -1)),
-  };
-}
-
 /**
  * Transformer to convert Server Variables in host portion to
  * x-ms-parameterized-host for use with OpenAPI 2.
@@ -92,6 +58,40 @@ export default class ServerVarsToParamHostTransformer
       omitDefault: omitDefault || [],
       parameter,
       xMsParameterizedHost,
+    };
+  }
+
+  #parseServerUrl(url) {
+    if (typeof url !== 'string') {
+      this.warn('Ignoring Server with non-string url', url);
+      return undefined;
+    }
+
+    const schemeAuth = getSchemeAuthority(url);
+    if (!schemeAuth) {
+      this.warn('Unable to determine scheme and authority for url', url);
+      return undefined;
+    }
+
+    // Remove non-templated scheme, if present
+    const hostTemplate = schemeAuth.replace(/^[a-zA-Z_+.-]+:\/\//, '');
+    if (!hostTemplate) {
+      this.warn('Unable to determine host for url', url);
+      return undefined;
+    }
+
+    const hostTemplateExprs = hostTemplate.match(/\{[^{}]*\}/g);
+    if (!hostTemplateExprs) {
+      this.warn('No template expressions in scheme and authority for url', url);
+      return undefined;
+    }
+
+    return {
+      hostTemplate,
+      // If non-templated scheme was removed, use the declared schemes
+      useSchemePrefix: hostTemplate !== schemeAuth,
+      hostTemplateVarNames: hostTemplateExprs
+        .map((templateExpr) => templateExpr.slice(1, -1)),
     };
   }
 
@@ -164,7 +164,7 @@ export default class ServerVarsToParamHostTransformer
 
     const { url, variables = {} } = server;
 
-    const urlParts = visit(this, parseServerUrl, 'url', url);
+    const urlParts = visit(this, this.#parseServerUrl, 'url', url);
     if (!urlParts) {
       return undefined;
     }
