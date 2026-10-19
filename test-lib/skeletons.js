@@ -192,10 +192,10 @@ export function schema2(schema) {
  * @returns {!object} OpenAPI 3 document of the given version (or 3.0.3)
  * containing the given schema named Test.
  */
-export function schema3(schema, version) {
+export function schema3(schema, version = '3.0.3') {
   return {
     ...openapi,
-    openapi: version ?? '3.0.3',
+    openapi: version,
     components: {
       schemas: {
         Test: schema,

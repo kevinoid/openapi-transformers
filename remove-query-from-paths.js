@@ -365,7 +365,7 @@ export default class RemoveQueryFromPathsTransformer
 
     paths = { ...paths };
 
-    for (const [pathQuery, pathname, query, frag] of pathMatches) {
+    for (const [pathQuery, pathname, query, frag = ''] of pathMatches) {
       const srcPathItem = paths[pathQuery];
       if (srcPathItem === undefined) {
         continue;
@@ -388,7 +388,7 @@ export default class RemoveQueryFromPathsTransformer
         continue;
       }
 
-      const dstPath = pathname + (frag || '');
+      const dstPath = pathname + frag;
       const dstPathItem = paths[dstPath];
       if (dstPathItem === null
         || (dstPathItem !== undefined && typeof dstPathItem !== 'object')
